@@ -8,15 +8,15 @@ public class Channel extends Entity{
 
     private String channelName; //채널 이름
     private final String channelId; //채널 아이디 (채널이름 + 숫자)
-    private String ownerID; //채널장
+    private String ownerId; //채널장
     private final List<String> members; //채널 내 멤버아이디들
 
-    public Channel(String channelName, String ownerID, String channelId) {
+    public Channel(String channelName, String ownerId, String channelId) {
         this.channelName = channelName;
         this.channelId = channelId;
-        this.ownerID = ownerID;
+        this.ownerId = ownerId;
         members = new ArrayList<>();
-        members.add(ownerID);
+        members.add(ownerId);
     }
 
 
@@ -28,8 +28,8 @@ public class Channel extends Entity{
         return channelId;
     }
 
-    public String getOwner() {
-        return ownerID;
+    public String getOwnerId() {
+        return ownerId;
     }
 
     public List<String> getMembers() {
@@ -38,17 +38,21 @@ public class Channel extends Entity{
 
     public void updateChannelName(String channelName) {
         this.channelName = channelName;
-        super.updateUpdatedtime();
+        super.updateUpdatedAt();
     }
-    public void addMember(String memberID){
-        members.add(memberID);
+    public void addMember(String memberId){
+        members.add(memberId);
+        super.updateUpdatedAt();
     }
-    public void removeMember(String memberID){
-        members.remove(memberID);
+    public void removeMember(String memberId){
+
+        members.remove(memberId);
+        super.updateUpdatedAt();
+
     }
-    public void updateOwner(String ownerID){
-        this.ownerID = ownerID;
-        super.updateUpdatedtime();
+    public void updateOwner(String ownerId){
+        this.ownerId = ownerId;
+        super.updateUpdatedAt();
     }
 
 
@@ -59,7 +63,7 @@ public class Channel extends Entity{
         return "Channel{" +
                 "channelName='" + channelName + '\'' +
                 ", channelId='" + channelId + '\'' +
-                ", ownerID=" + ownerID +
+                ", ownerID=" + ownerId +
                 ", members=" + members +
                 '}';
     }

@@ -29,7 +29,7 @@ public abstract class Entity {
         return updatedAt;
     }
 
-    public void updateUpdatedtime(){
+    public void updateUpdatedAt(){
 
         updatedAt   = System.currentTimeMillis();
 

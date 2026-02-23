@@ -6,10 +6,11 @@ import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class JCFMessageService implements MessageService {
 
-    HashMap<String, Message> data;
+    private final Map<String, Message> data;
     UserService userService;
     ChannelService channelService;
 
@@ -41,9 +42,9 @@ public class JCFMessageService implements MessageService {
 
 
 
-        data.put(messageEntity.getMessageID(),messageEntity);
+        data.put(messageEntity.getMessageId(),messageEntity);
 
-        String messageID = messageEntity.getMessageID();
+        String messageID = messageEntity.getMessageId();
 
         System.out.println("\"" + message + "\"" + " 메시지를 채널에 보냈습니다.");
         return messageID;
@@ -81,7 +82,7 @@ public class JCFMessageService implements MessageService {
             Message messageEntity = data.get(messageId);
             oldMessage = messageEntity.getMessage();
 
-            messageEntity.UpdateMessage(message);
+            messageEntity.updateMessage(message);
             System.out.println("메시지 수정 완료! " + oldMessage + " -> " + message);
             return;
 

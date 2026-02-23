@@ -14,9 +14,9 @@ public class JCFChannelService implements ChannelService {
 
     Map<String,Channel > data;
 
-    JCFUserService userService;
+    UserService userService;
 
-    public JCFChannelService(JCFUserService userService){
+    public JCFChannelService(UserService userService){
 
         data = new HashMap<>();
         this.userService = userService;
@@ -148,10 +148,13 @@ public class JCFChannelService implements ChannelService {
                 members.remove(memberId);
                 System.out.println("멤버 제거 완료");
 
+
+
+
                 if(members.isEmpty()){
                     channel.removeMember(memberId);
                 }
-                else {
+                else if(channel.getOwnerId().equals(memberId)) {
                     String oid = members.get(0);
                     updateChannelOwner(channelId,oid);
 
@@ -199,6 +202,11 @@ public class JCFChannelService implements ChannelService {
     }
 
     public boolean isChannelsMember(String channelId, String memberId){
+
+
+        if(!isExistChannel(channelId))
+            return false;
+
 
         Channel channel = data.get(channelId);
         return channel.getMembers().contains(memberId);

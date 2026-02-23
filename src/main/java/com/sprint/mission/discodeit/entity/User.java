@@ -40,7 +40,7 @@ public class User extends Entity{
 
     public void updateStatus(Status status){
         this.status = status;
-        super.updateUpdatedtime();
+        super.updateUpdatedAt();
     }
     public boolean updatePassword(String oldPassword, String newPassword) {
 
@@ -50,7 +50,7 @@ public class User extends Entity{
         }
 
         this.password = newPassword;
-        super.updateUpdatedtime();
+        super.updateUpdatedAt();
         return true;
 
     }
@@ -59,7 +59,7 @@ public class User extends Entity{
     public void updateNickname(String nickname) {
 
         this.nickname = nickname;
-        super.updateUpdatedtime();
+        super.updateUpdatedAt();
 
     }
 
