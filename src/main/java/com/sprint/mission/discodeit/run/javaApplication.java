@@ -4,7 +4,6 @@ package com.sprint.mission.discodeit.run;
 
 import com.sprint.mission.discodeit.service.*;
 import com.sprint.mission.discodeit.service.file.*;
-import com.sprint.mission.discodeit.service.jcf.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +53,7 @@ public class javaApplication {
         System.out.println("1-3. Update User");
 
         //닉네임 변경
-        userService.updateNickname("khn0101","김한나");
+        userService.updateNickname("khn0101","hanakim1111","김한나");
 
         // 비밀번호 변경(틀린 비밀번호)
         userService.updatePassword("khn0101","wrongpassword","wrongpassword2");
@@ -62,7 +61,7 @@ public class javaApplication {
         //비밀번호 변경(정상적)
         userService.updatePassword("khn0101","hanakim1111","hannakim1111");
         //상태 변경(비활성화)
-        userService.updateStatus("khn0101",INACTIVE);
+        userService.updateStatus("khn0101", "hannakim1111", INACTIVE);
 
         //전체 출력
         userService.readUser("khn0101");

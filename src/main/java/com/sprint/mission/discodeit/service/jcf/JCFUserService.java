@@ -63,7 +63,7 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public void updateNickname(String userId, String nickname) {
+    public void updateNickname(String userId, String password,String nickname) {
 
 
         if(!isExistUser(userId)){
@@ -71,7 +71,7 @@ public class JCFUserService implements UserService {
             return;
         }
         User user = data.get(userId);
-        user.updateNickname(nickname);
+        user.updateNickname(nickname,password);
 
 
 
@@ -98,7 +98,7 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public void updateStatus(String userId, User.Status status) {
+    public void updateStatus(String userId, String password, User.Status status) {
 
         if(!isExistUser(userId)){
 
@@ -107,7 +107,7 @@ public class JCFUserService implements UserService {
 
         }
         User user = data.get(userId);
-        user.updateStatus(status);
+        user.updateStatus(status,password);
 
 
     }

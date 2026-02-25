@@ -3,13 +3,12 @@ package com.sprint.mission.discodeit.service.file;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.UserService;
 
-import java.io.*;
 import java.nio.file.Path;
 import java.util.List;
 
 public class FILEUserService extends FILEServiceSystem implements UserService {
 
-    private final Path directory = Path.of("src/main/resources/Users/");
+    private final static Path directory = Path.of("src/main/resources/Users/");
 
 
 
@@ -29,7 +28,7 @@ public class FILEUserService extends FILEServiceSystem implements UserService {
 
         User user = new User(userId, password, nickname);
 
-        save(idToPath(userId), user);
+        save(getPathToId(userId), user);
 
         System.out.println( nickname + "님 생성 완료!");
 
@@ -37,10 +36,12 @@ public class FILEUserService extends FILEServiceSystem implements UserService {
 
     @Override
     public void readUser(String userId) {
-        List<User> users = load(directory);
-        users.stream()
-                .filter(user -> user.getUserId().equals(userId))
-                .forEach(System.out::println);
+        User user = getUserToId(userId);
+        if(user != null){
+            System.out.println(user);
+        }
+
+
 
     }
 
@@ -55,73 +56,61 @@ public class FILEUserService extends FILEServiceSystem implements UserService {
     }
 
     @Override
-    public void updateNickname(String userId, String nickname) {
+    public void updateNickname(String userId, String password, String nickname) {
 
-        if(!isExistUser(userId)){
-            System.out.println("존재하지 않는 유저 아이디입니다.");
+
+        User user = getUserToId(userId);
+
+        if(user == null){
             return;
         }
 
-        List<User> users = load(directory);
+        if(!user.updateNickname(password,nickname)){
 
-        User user = users.stream()
-                .filter(user1 -> user1.getUserId().equals(userId))
-                .findFirst()
-                .orElseThrow();
-        user.updateNickname(nickname);
+            System.out.println("잘못된 비밀번호입니다.");
+            return;
 
-        save(idToPath(userId) , user);
+        }
+
+        //저장
+        save(getPathToId(userId) , user);
 
         System.out.println("유저 닉네임 업데이트 완료!");
-
-
-
-
 
     }
 
     @Override
     public void updatePassword(String userId, String oldPassword, String newPassword) {
 
-        if(!isExistUser(userId)){
-            System.out.println("존재하지 않는 유저 아이디입니다.");
-            return;
-        }
+        User user = getUserToId(userId);
 
-        List<User> users = load(directory);
-
-        User user = users.stream()
-                .filter(user1 -> user1.getUserId().equals(userId))
-                .findFirst()
-                .orElseThrow();
         if(!user.updatePassword(oldPassword, newPassword)){
             System.out.println("비밀번호가 일치하지 않습니다");
             return;
 
         }
 
-        save(idToPath(userId) , user);
+        save(getPathToId(userId) , user);
 
         System.out.println("유저 비밀번호 변경 완료!");
     }
 
     @Override
-    public void updateStatus(String userId, User.Status status) {
+    public void updateStatus(String userId, String password, User.Status status) {
 
-        if(!isExistUser(userId)){
-            System.out.println("존재하지 않는 유저 아이디입니다.");
+        User user = getUserToId(userId);
+
+        if(user == null){
             return;
         }
 
-        List<User> users = load(directory);
+        if(!user.updateStatus(status, password)){
+            System.out.println("비밀번호가 일치하지 않습니다.");
+            return;
 
-        User user = users.stream()
-                .filter(user1 -> user1.getUserId().equals(userId))
-                .findFirst()
-                .orElseThrow();
-        user.updateStatus(status);
+        }
 
-        save(idToPath(userId) , user);
+        save(getPathToId(userId) , user);
 
         System.out.println("유저 상태 업데이트 완료!");
 
@@ -136,16 +125,12 @@ public class FILEUserService extends FILEServiceSystem implements UserService {
             return;
 
         }
-        delete(idToPath(userId));
-
-
-
-
+        delete(getPathToId(userId));
 
     }
 
-    @Override
-    public boolean isExistUser(String userId) {
+
+    public static boolean isExistUser(String userId) {
 
         List<User> users = load(directory);
         for(User user : users){
@@ -158,11 +143,31 @@ public class FILEUserService extends FILEServiceSystem implements UserService {
 
     }
 
+    public static User getUserToId(String userId){
+
+        List<User> users = load(directory);
+        User user;
+        try{
+            user = users.stream()
+                        .filter(user1 -> user1.getUserId().equals(userId))
+                        .findFirst()
+                        .orElseThrow();
+        }
+        catch (RuntimeException e){
+            System.out.println("존재하지 않는 유저 아이디입니다.");
+            return null;
+        }
+
+        return user;
+
+    }
 
 
-    Path idToPath(String userId){
+
+    Path getPathToId(String userId){
         return directory.resolve(userId+".dat");
     }
 
 
 }
+

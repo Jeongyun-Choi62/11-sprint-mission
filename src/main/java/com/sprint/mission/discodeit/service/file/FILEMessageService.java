@@ -31,17 +31,12 @@ public class FILEMessageService extends FILEServiceSystem implements MessageServ
 
     @Override
     public void readMessage(String messageId) {
-        if(!isExistMessage(messageId)){
-            System.out.println("존재하지 않는 메시지 아이디입니다.");
+
+        Message message = getMessageToId(messageId);
+
+        if(message == null){
             return;
-
         }
-
-        List<Message> Messages = load(directory);
-        Message message = Messages.stream()
-                .filter(m -> m.getMessageId().equals(messageId))
-                .findFirst()
-                .orElseThrow();
 
         System.out.println(message);
 
@@ -64,17 +59,10 @@ public class FILEMessageService extends FILEServiceSystem implements MessageServ
     @Override
     public void updateMessage(String messageId, String message) {
 
-        if(!isExistMessage(messageId)){
-            System.out.println("존재하지 않는 메시지 아이디입니다.");
-
+        Message messageEntity = getMessageToId(messageId);
+        if(messageEntity == null){
+            return;
         }
-
-        List<Message> Messages = load(directory);
-
-        Message messageEntity = Messages.stream()
-                .filter(m -> m.getMessageId().equals(messageId))
-                .findFirst()
-                .orElseThrow();
 
         messageEntity.updateMessage(message);
 
@@ -89,11 +77,9 @@ public class FILEMessageService extends FILEServiceSystem implements MessageServ
     @Override
     public void deleteMessage(String messageId) {
 
-        if(!isExistMessage(messageId)){
-
-            System.out.println("존재하지 않는 메시지 아이디 입니다.");
+        Message message = getMessageToId(messageId);
+        if(message == null){
             return;
-
         }
 
         delete(idtoPath(messageId));
@@ -114,6 +100,25 @@ public class FILEMessageService extends FILEServiceSystem implements MessageServ
         return false;
 
 
+
+
+
+    }
+
+
+    public Message getMessageToId(String messageId){
+
+        List<Message> Messages = load(directory);
+
+        Message message;
+
+        message = Messages.stream()
+                .filter(m -> m.getMessageId().equals(messageId))
+                .findFirst()
+                .orElse(null);
+
+
+        return message;
 
 
 

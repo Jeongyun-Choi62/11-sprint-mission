@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.sprint.mission.discodeit.service.file.FILEUserService.isExistUser;
+
 public class JCFChannelService implements ChannelService {
 
     Map<String,Channel > data;
@@ -119,7 +121,7 @@ public class JCFChannelService implements ChannelService {
             Channel channel = data.get(channelId);
 
 
-            if(!userService.isExistUser(memberId)){
+            if(!isExistUser(memberId)){
                 System.out.println("존재하지 않는 멤버 아이디입니다.");
                 return;
 

@@ -1,12 +1,16 @@
 package com.sprint.mission.discodeit.entity;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User extends Entity{
 
     private String nickname;
     private final String userId;
     private String password;
     private Status status;
+    private final List<Message>  defaultMessages;
 
 
     public enum Status {
@@ -18,6 +22,7 @@ public class User extends Entity{
         this.password = password;
         this.userId = userId;
         this.nickname = nickname;
+        defaultMessages = new ArrayList<>();
         status = Status.ACTIVE;
     }
 
@@ -38,16 +43,19 @@ public class User extends Entity{
         return userId;
     }
 
-    public void updateStatus(Status status){
+    public boolean updateStatus(Status status, String password){
+
+        if(!checkSamePassword(password))
+            return false;
         this.status = status;
         super.updateUpdatedAt();
+        return true;
     }
     public boolean updatePassword(String oldPassword, String newPassword) {
 
 
-        if(!oldPassword.equals(password)){
+        if(!checkSamePassword(oldPassword))
             return false;
-        }
 
         this.password = newPassword;
         super.updateUpdatedAt();
@@ -56,10 +64,15 @@ public class User extends Entity{
     }
 
 
-    public void updateNickname(String nickname) {
+    public boolean updateNickname(String nickname, String password) {
+
+        if(!checkSamePassword(password))
+            return false;
 
         this.nickname = nickname;
         super.updateUpdatedAt();
+        return true;
+
 
     }
 

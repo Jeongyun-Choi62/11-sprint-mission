@@ -1,10 +1,14 @@
 package com.sprint.mission.discodeit.service.file;
 
 import com.sprint.mission.discodeit.entity.Channel;
+import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.ChannelService;
 
 import java.nio.file.Path;
 import java.util.List;
+
+import static com.sprint.mission.discodeit.service.file.FILEUserService.getUserToId;
+import static com.sprint.mission.discodeit.service.file.FILEUserService.isExistUser;
 
 public class FILEChannelService extends FILEServiceSystem implements ChannelService {
 
@@ -23,11 +27,15 @@ public class FILEChannelService extends FILEServiceSystem implements ChannelServ
             return;
 
         }
+        if(!isExistUser(ownerID)){
+            System.out.println("존재하지 않는 유저 아이디 입니다");
+            return;
 
+        }
 
         Channel channel = new Channel(channelName,ownerID,channelId);
 
-        save(idToPath(channelId),channel);
+        save(getPathToId(channelId),channel);
 
         System.out.println(channel.getChannelName()+ " 채널 생성 완료!");
 
@@ -38,18 +46,13 @@ public class FILEChannelService extends FILEServiceSystem implements ChannelServ
     @Override
     public void readChannel(String channelId) {
 
-        if(!isExistChannel(channelId)){
-            System.out.println("존재하지 않는 채널 아이디입니다.");
+        Channel channel = getChannelToId(channelId);
+
+        if(channel == null){
+
             return;
+
         }
-
-        List<Channel> Channels =  load(directory);
-
-        Channel channel = Channels.stream().
-                filter(c -> c.getChannelId().equals(channelId)).
-                findFirst().orElse(null);
-
-
         System.out.println(channel);
 
 
@@ -68,20 +71,27 @@ public class FILEChannelService extends FILEServiceSystem implements ChannelServ
     }
 
     @Override
-    public void updateChannelName(String channelId, String channelName) {
-        if(!isExistChannel(channelId)){
-            System.out.println("존재하지 않는 채널 아이디입니다.");
+    public void updateChannelName(String channelId,String channelName) {
+
+        Channel channel = getChannelToId(channelId);
+
+        if(channel == null){
+
             return;
         }
 
-        List<Channel> Channels =  load(directory);
-        Channel channel = Channels.stream()
-                            .filter(c -> c.getChannelId().equals(channelId))
-                            .findFirst()
-                            .orElseThrow();
+        User user;
+        user = getUserToId(channel.getOwnerId());
+
+
+
+        if (user == null) {
+            throw new RuntimeException("유효하지 않은 owner ID");
+        }
+
         channel.updateChannelName(channelName);
 
-        save(idToPath(channelId),channel);
+        save(getPathToId(channelId),channel);
 
         System.out.println("채널 이름 업데이트 완료!");
 
@@ -90,26 +100,18 @@ public class FILEChannelService extends FILEServiceSystem implements ChannelServ
 
     @Override
     public void updateChannelOwner(String channelId, String ownerID) {
-        if(!isExistChannel(channelId)){
-            System.out.println("존재하지 않는 채널 아이디입니다.");
-            return;
-        }
 
-        List<Channel> Channels =  load(directory);
-        Channel channel = Channels.stream()
-                .filter(c -> c.getChannelId().equals(channelId))
-                .findFirst()
-                .orElseThrow();
+        Channel channel = getChannelToId(channelId);
 
-        if(!isChannelsMember(channelId,ownerID)){
-            System.out.println("해당 유저는 해당 채널에 없습니다.");
+        if(channel == null){
             return;
+
         }
 
         channel.updateOwner(ownerID);
 
 
-        save(idToPath(channelId),channel);
+        save(getPathToId(channelId),channel);
 
         System.out.println("채널장 업데이트 완료!");
 
@@ -121,21 +123,16 @@ public class FILEChannelService extends FILEServiceSystem implements ChannelServ
     @Override
     public void addMember(String channelId, String memberId) {
 
-        if(!isExistChannel(channelId)){
-            System.out.println("존재하지 않는 채널 아이디입니다.");
+        Channel channel = getChannelToId(channelId);
+
+        if(channel == null){
             return;
         }
 
-        List<Channel> Channels =  load(directory);
-
-        Channel channel = Channels.stream()
-                .filter(c -> c.getChannelId().equals(channelId))
-                .findFirst()
-                .orElseThrow();
 
         channel.addMember(memberId);
 
-        save(idToPath(channelId),channel);
+        save(getPathToId(channelId),channel);
 
         System.out.println(channel.getChannelName() +"채널에 멤버 추가 완료!");
 
@@ -145,21 +142,25 @@ public class FILEChannelService extends FILEServiceSystem implements ChannelServ
     @Override
     public void removeMember(String channelId, String memberId) {
 
-        if(!isExistChannel(channelId)){
-            System.out.println("존재하지 않는 채널 아이디입니다.");
+        Channel channel = getChannelToId(channelId);
+
+        if(channel == null){
+
             return;
         }
 
-        List<Channel> Channels =  load(directory);
+        if(channel.removeMember(memberId) == 0)
+        {
+            System.out.println("채널에서 유저가 나갔습니다!");
+            delete(getPathToId(channelId));
+            return;
 
-        Channel channel = Channels.stream()
-                .filter(c -> c.getChannelId().equals(channelId))
-                .findFirst()
-                .orElseThrow();
 
-        channel.removeMember(memberId);
+        }
 
-        save(idToPath(channelId),channel);
+
+
+        save(getPathToId(channelId),channel);
 
         System.out.println("채널에서 유저가 나갔습니다!");
 
@@ -173,7 +174,7 @@ public class FILEChannelService extends FILEServiceSystem implements ChannelServ
             return;
 
         }
-        delete(idToPath(channelId));
+        delete(getPathToId(channelId));
 
 
     }
@@ -214,7 +215,37 @@ public class FILEChannelService extends FILEServiceSystem implements ChannelServ
         return false;
     }
 
-    Path idToPath(String channelId){
+    Channel getChannelToId(String channelId){
+
+        List<Channel> channels =  load(directory);
+        Channel channel;
+
+
+        channel = channels.stream()
+                    .filter(c -> c.getChannelId().equals(channelId))
+                    .findFirst()
+                    .orElse(null);
+
+
+        if(channel == null){
+            System.out.println("존재하지 않는 채널 아이디입니다.");
+
+        }
+
+        return channel;
+
+
+
+
+
+
+
+
+
+    }
+
+    Path getPathToId(String channelId){
         return directory.resolve(channelId+".dat");
     }
 }
+

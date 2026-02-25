@@ -4,14 +4,14 @@ import com.sprint.mission.discodeit.entity.User;
 
 public interface UserService {
 
-    public void createUser(String nickname, String password, String userId);
-    public void readUser(String userId);
-    public void readAllUser();
-    public void updateNickname(String userId, String nickname);
-    public void updatePassword(String userId, String oldPassword, String newPassword);
-    public void updateStatus(String userId, User.Status status);
-    public void deleteUser(String userId, String password);
-    public boolean isExistUser(String userId);
+    void createUser(String nickname, String password, String userId);
+    void readUser(String userId);
+    void readAllUser();
+    void updateNickname(String userId, String password,String nickname);
+    void updatePassword(String userId, String oldPassword, String newPassword);
+    void updateStatus(String userId, String password, User.Status status);
+    void deleteUser(String userId, String password);
+
 
 
 
