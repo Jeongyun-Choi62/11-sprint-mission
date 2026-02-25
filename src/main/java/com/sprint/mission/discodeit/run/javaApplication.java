@@ -1,7 +1,16 @@
 package com.sprint.mission.discodeit.run;
 
 
+
+import com.sprint.mission.discodeit.service.*;
+import com.sprint.mission.discodeit.service.file.*;
 import com.sprint.mission.discodeit.service.jcf.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Comparator;
 
 import static com.sprint.mission.discodeit.entity.User.Status.*;
 
@@ -9,9 +18,14 @@ public class javaApplication {
 
     public static void main(String[] args) {
 
-        JCFUserService userService = new JCFUserService();
-        JCFChannelService channelService = new JCFChannelService(userService);
-        JCFMessageService messageService = new JCFMessageService(userService,channelService);
+//        JCFUserService userService = new JCFUserService();
+//        JCFChannelService channelService = new JCFChannelService(userService);
+//        JCFMessageService messageService = new JCFMessageService(userService,channelService);
+
+        UserService userService = new FILEUserService();
+        ChannelService channelService = new FILEChannelService();
+        MessageService messageService = new FILEMessageService();
+
 
         System.out.println("---------------------------------------------------");
         System.out.println("1. 유저 CRUD 테스트");
@@ -181,6 +195,43 @@ public class javaApplication {
         messageService.deleteMessage(mID1);
         messageService.readAllMessage();
 
+
+
+
+        try (var stream = Files.list(Path.of("src/main/resources/users/"))) {
+            stream.sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+
+
+
+        } catch (IOException e) {
+            throw new RuntimeException("삭제 중 오류 발생", e);
+
+        }
+
+        try (var stream = Files.list(Path.of("src/main/resources/Channels/"))) {
+            stream.sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+
+
+
+        } catch (IOException e) {
+            throw new RuntimeException("삭제 중 오류 발생", e);
+
+        }
+        try (var stream = Files.list(Path.of("src/main/resources/Messages/"))) {
+            stream.sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+
+
+
+        } catch (IOException e) {
+            throw new RuntimeException("삭제 중 오류 발생", e);
+
+        }
     }
 
 }
