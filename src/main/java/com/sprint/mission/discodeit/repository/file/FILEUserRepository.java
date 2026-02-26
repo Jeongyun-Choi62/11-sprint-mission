@@ -57,7 +57,9 @@ public class FILEUserRepository  implements UserRepository {
 
     @Override
     public boolean updateUser(User user) {
-        return false;
+        Map<String,User> map = load(directory);
+
+        return map.put(user.getUserId(),user)!= null;
     }
 
     @Override
@@ -124,7 +126,7 @@ public class FILEUserRepository  implements UserRepository {
         }
     }
 
-     private boolean save(Path filePath, User user) {
+     private void save(Path filePath, User user) {
         try(
                 FileOutputStream fos = new FileOutputStream(filePath.toFile());
                 ObjectOutputStream oos = new ObjectOutputStream(fos)
@@ -133,7 +135,7 @@ public class FILEUserRepository  implements UserRepository {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return true;
+
     }
     private Path pathToUserId(String userId){
 
