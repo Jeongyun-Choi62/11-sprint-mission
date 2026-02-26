@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface ChannelRepository {
 
-    void saveChannel(Channel channel);
-    User getChannel(Channel channel);
+    boolean saveChannel(Channel channel);
+    Channel getChannel(String channelId);
     List<Channel> getAllChannel();
-    void updateChannel(Channel channel);
-    void deleteChannel(String channelId);
+    boolean updateChannel(Channel channel);
+    boolean deleteChannel(String channelId);
     boolean isExistChannel(String channelId);
 
 
