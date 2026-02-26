@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface UserRepository {
 
-    void saveUser(User user);
+    boolean saveUser(User user);
     User getUser(String userId);
     List<User> getAllUser();
-    void updateUser(User user);
-    void deleteUser(String userId);
+    boolean updateUser(User user);
+    boolean deleteUser(String userId);
     boolean isExistUser(String userId);
 
 
