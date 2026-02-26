@@ -25,10 +25,9 @@ public class FILEUserRepository  implements UserRepository {
     @Override
     public boolean saveUser(User user) {
 
-        Map<String,User> map = load(directory);
-
-        if(map.containsKey(user.getUserId()))
+        if(isExistUser(user.getUserId())){
             return false;
+        }
 
         save(pathToUserId(user.getUserId()),user);
         return true;

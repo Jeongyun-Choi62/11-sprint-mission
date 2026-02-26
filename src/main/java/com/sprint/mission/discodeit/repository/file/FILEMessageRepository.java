@@ -1,7 +1,7 @@
 package com.sprint.mission.discodeit.repository.file;
 
-import com.sprint.mission.discodeit.entity.Channel;
-import com.sprint.mission.discodeit.repository.ChannelRepository;
+import com.sprint.mission.discodeit.entity.Message;
+import com.sprint.mission.discodeit.repository.MessageRepository;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -13,84 +13,76 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class FILEChannelRepository implements ChannelRepository {
+public class FILEMessageRepository implements MessageRepository {
 
     private final Path directory;
 
-    public FILEChannelRepository() {
-
-        directory = Path.of("src/main/resources/Channels/");
+    public FILEMessageRepository() {
+        this.directory = Path.of("src/main/resources/Messages/");
     }
 
     @Override
-    public boolean saveChannel(Channel channel) {
-        if(isExistChannel(channel.getChannelId())){
+    public boolean saveMessage(Message message) {
+
+        if(isExistMessage(message.getMessageId())){
             return false;
         }
-
-        save(pathToUserId(channel.getChannelId()),channel);
+        save(pathToUserId(message.getMessageId()), message);
         return true;
 
 
     }
 
     @Override
-    public Channel getChannel(String channelId) {
-        Map<String,Channel> map = load(directory);
-
-        return map.getOrDefault(channelId,null);
+    public Message getMessage(String messageId) {
+        Map<String,Message> map = load(directory);
+        return map.getOrDefault(messageId,null);
     }
 
     @Override
-    public List<Channel> getAllChannel() {
-        Map<String,Channel> map = load(directory);
-
+    public List<Message> getAllMessage() {
+        Map<String,Message> map = load(directory);
         return map.values().stream().toList();
     }
 
     @Override
-    public boolean updateChannel(Channel channel) {
-
-        Map<String,Channel> map = load(directory);
-
-        return map.put(channel.getChannelId(), channel) != null;
-
+    public boolean updateMessage(Message message) {
+        Map<String,Message> map = load(directory);
+        return map.put(message.getMessageId(), message) != null;
     }
 
     @Override
-    public boolean deleteChannel(String channelId) {
+    public boolean deleteMessage(String messageId) {
 
-        if(!isExistChannel(channelId))
+        if(!isExistMessage(messageId))
             return false;
-
         try {
-            Files.deleteIfExists(pathToUserId(channelId));
+            Files.deleteIfExists(pathToUserId(messageId));
         }
         catch(IOException e){
             return false;
-
-
         }
         return true;
     }
 
 
-    @Override
-    public boolean isExistChannel(String channelId) {
-        Map<String, Channel> map = load(directory);
 
-        return map.containsKey(channelId);
+    @Override
+    public boolean isExistMessage(String messageId) {
+        Map<String, Message> map = load(directory);
+
+        return map.containsKey(messageId);
 
     }
 
-    private Map<String,Channel> load(Path directory) {
+    private Map<String,Message> load(Path directory) {
         if (Files.exists(directory)) {
 
 
             try (Stream<Path> stream =  Files.list(directory))
 
             {
-                Map<String,Channel> map;
+                Map<String,Message> map;
 
 
                 map = stream.map(path -> {
@@ -99,13 +91,13 @@ public class FILEChannelRepository implements ChannelRepository {
                                     ObjectInputStream ois = new ObjectInputStream(fis)
                             ) {
                                 Object data = ois.readObject();
-                                return  (Channel)data;
+                                return  (Message)data;
                             } catch (IOException | ClassNotFoundException e) {
                                 throw new RuntimeException(e);
                             }
                         })
                         .collect(Collectors.toMap(
-                                Channel::getChannelId,
+                                Message::getMessageId,
                                 Function.identity()
 
                         ));
@@ -118,31 +110,20 @@ public class FILEChannelRepository implements ChannelRepository {
         }
     }
 
-    private void save(Path filePath, Channel channel) {
+    private void save(Path filePath, Message message) {
         try(
                 FileOutputStream fos = new FileOutputStream(filePath.toFile());
                 ObjectOutputStream oos = new ObjectOutputStream(fos)
         ) {
-            oos.writeObject(channel);
+            oos.writeObject(message);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
     }
-    private Path pathToUserId(String channelId){
+    private Path pathToUserId(String messageId){
 
-        return directory.resolve(channelId + ".dat");
+        return directory.resolve(messageId + ".dat");
 
     }
-
-
-
-
-
-
-
-
-
-
-
 }
