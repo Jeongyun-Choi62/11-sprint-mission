@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class JCFChannelRepository implements ChannelRepository {
 
-    Map<String, Channel> data;
+    private final Map<String, Channel> data;
 
     public JCFChannelRepository() {
 

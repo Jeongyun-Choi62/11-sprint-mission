@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface MessageRepository {
 
-    void saveMessage(Message message);
+    boolean saveMessage(Message message);
     Message getMessage(String messageId);
     List<Message> getAllMessage();
-    void updateMessage(Message message);
-    void deleteMessage(String messageId);
+    boolean updateMessage(Message message);
+    boolean deleteMessage(String messageId);
     boolean isExistMessage(String messageId);
 
 

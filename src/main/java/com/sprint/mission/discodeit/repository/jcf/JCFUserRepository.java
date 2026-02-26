@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class JCFUserRepository implements UserRepository {
 
-    Map<String, User> data;
+    public final Map<String, User> data;
 
     public JCFUserRepository(){
 
