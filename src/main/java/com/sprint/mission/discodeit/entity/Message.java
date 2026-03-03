@@ -6,6 +6,11 @@ public class Message extends Entity {
     private final String messageId;
     private final String senderId;
     private final String channelId;
+    private messageStatus status;
+
+    public enum messageStatus {
+        ACTIVE, INACTIVE
+    }
 
     public Message(String senderId, String channelId, String message) {
 
@@ -14,6 +19,7 @@ public class Message extends Entity {
         this.senderId = senderId;
         this.channelId = channelId;
         this.message = message;
+        status = messageStatus.ACTIVE;
     }
 
     public String getMessageId() {
@@ -38,6 +44,13 @@ public class Message extends Entity {
         super.updateUpdatedAt();
     }
 
+    public messageStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(messageStatus status) {
+        this.status = status;
+    }
 
     @Override
     public String toString() {

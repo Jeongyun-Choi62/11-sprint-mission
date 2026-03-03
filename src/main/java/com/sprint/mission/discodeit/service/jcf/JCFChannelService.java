@@ -88,13 +88,13 @@ public class JCFChannelService implements ChannelService {
     }
 
     @Override
-    public void updateChannelOwner(String channelId, String ownerID) {
+    public void updateChannelOwner(String channelId, String ownerId) {
         if(isExistChannel(channelId)){
             Channel channel = data.get(channelId);
 
             List<String> members = channel.getMembers();
 
-            if(!members.contains(ownerID)){
+            if(!members.contains(ownerId)){
                 System.out.println("해당 유저는 현재 채널에 없습니다.");
                 return;
 
@@ -103,7 +103,7 @@ public class JCFChannelService implements ChannelService {
 
 
 
-            channel.updateOwner(ownerID);
+            channel.updateOwner(ownerId);
 
 
 

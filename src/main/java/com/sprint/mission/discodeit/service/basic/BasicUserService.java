@@ -55,6 +55,13 @@ public class BasicUserService implements UserService {
 
         List<User> users = userRepository.getAllUser();
 
+        if(users == null){
+            System.err.println("유저 리스트를 불러오는데 문제가 발생했습니다.");
+            return;
+        }
+
+
+
         users.stream()
                 .sorted(User::compareTo)
                 .forEach(System.out::println);
@@ -178,6 +185,9 @@ public class BasicUserService implements UserService {
             return;
 
         }
+
+
+
 
         //삭제
         if(!userRepository.deleteUser(userId)){

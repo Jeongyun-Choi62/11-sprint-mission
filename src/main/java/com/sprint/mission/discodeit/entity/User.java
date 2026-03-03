@@ -35,6 +35,7 @@ public class User extends Entity{
     }
 
 
+
     public String getNickname() {
         return nickname;
     }
@@ -74,6 +75,14 @@ public class User extends Entity{
         return true;
 
 
+    }
+
+    public List<Message> getDefaultMessages() {
+        return defaultMessages;
+    }
+
+    public void addDefaultMessage(Message message){
+        defaultMessages.add(message);
     }
 
     public boolean checkSamePassword(String password){

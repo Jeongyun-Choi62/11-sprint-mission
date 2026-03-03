@@ -8,7 +8,7 @@ public interface ChannelService {
     void readChannel(String channelId);
     void readAllChannel();
     public void updateChannelName(String channelId, String channelName);
-    public void updateChannelOwner(String channelId, String ownerID);
+    public void updateChannelOwner(String channelId, String ownerId);
     public void addMember(String channelId, String memberId);
     public void removeMember(String channelId, String memberId);
     public void deleteChannel(String channelId);

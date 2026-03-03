@@ -99,7 +99,7 @@ public class FILEChannelService extends FILEServiceSystem implements ChannelServ
     }
 
     @Override
-    public void updateChannelOwner(String channelId, String ownerID) {
+    public void updateChannelOwner(String channelId, String ownerId) {
 
         Channel channel = getChannelToId(channelId);
 
@@ -108,7 +108,7 @@ public class FILEChannelService extends FILEServiceSystem implements ChannelServ
 
         }
 
-        channel.updateOwner(ownerID);
+        channel.updateOwner(ownerId);
 
 
         save(getPathToId(channelId),channel);
