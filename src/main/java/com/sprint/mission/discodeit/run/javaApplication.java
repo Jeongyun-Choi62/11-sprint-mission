@@ -2,6 +2,8 @@ package com.sprint.mission.discodeit.run;
 
 
 
+import com.sprint.mission.discodeit.repository.ChannelRepository;
+import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.repository.jcf.JCFChannelRepository;
 import com.sprint.mission.discodeit.repository.jcf.JCFMessageRepository;
@@ -28,17 +30,21 @@ public class javaApplication {
         ChannelService channelService;
         MessageService messageService;
 
-        userService = new BasicUserService(new JCFUserRepository());
-        channelService = new BasicChannelService(new JCFChannelRepository(),new JCFUserRepository(),new JCFMessageRepository());
-        messageService = new BasicMessageService(new JCFMessageRepository(),new JCFChannelRepository(),new JCFUserRepository());
+        UserRepository userRepository;
+        ChannelRepository channelRepository;
+        MessageRepository messageRepository;
 
-//        UserService userService = new JCFUserService();
-//        ChannelService channelService = new JCFChannelService(userService);
-//        MessageService messageService = new JCFMessageService(userService,channelService);
+        userRepository = new JCFUserRepository();
+        channelRepository = new JCFChannelRepository();
+        messageRepository = new JCFMessageRepository();
 
-//        UserService userService = new FILEUserService();
-//        ChannelService channelService = new FILEChannelService();
-//        MessageService messageService = new FILEMessageService();
+
+
+        userService = new BasicUserService(userRepository);
+        channelService = new BasicChannelService(channelRepository,userRepository,messageRepository);
+        messageService = new BasicMessageService(messageRepository,channelRepository,userRepository);
+
+
 
 
 
