@@ -23,7 +23,8 @@ public class JCFChannelRepository implements ChannelRepository {
         if(data.containsKey(channel.getChannelId())){
             return false;
         }
-        return data.put(channel.getChannelId(), channel) != null;
+        data.put(channel.getChannelId(), channel);
+        return true;
 
     }
 
@@ -41,14 +42,19 @@ public class JCFChannelRepository implements ChannelRepository {
     @Override
     public boolean updateChannel(Channel channel) {
 
-        return data.put(channel.getChannelId(), channel) != null;
+
+
+        data.put(channel.getChannelId(), channel);
+        return true;
 
     }
 
     @Override
     public boolean deleteChannel(String channelId) {
 
-        return data.remove(channelId) != null;
+        data.remove(channelId);
+        return true;
+
     }
 
     @Override
