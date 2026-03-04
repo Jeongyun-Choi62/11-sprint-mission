@@ -297,6 +297,39 @@ public class BasicChannelService implements ChannelService {
     @Override
     public void deleteChannel(String channelId) {
 
+        Channel channel = channelRepository.getChannel(channelId);
+
+        //채널 여부 체크
+        if(channel == null){
+            System.out.println("존재하지 않는 채널입니다.");
+            return;
+        }
+
+
+        //TODO : 비밀번호 체크 로직 넣기. 인터페이스 및 이전 코드들 약간씩 수정 필요
+
+//        User user = userRepository.getUser(channel.getOwnerId());
+//
+//        if(!user.checkSamePassword(password)){
+//
+//            System.out.println("비밀번호가 일치하지 않습니다.");
+//            return;
+//
+//        }
+
+
+        if(!channelRepository.deleteChannel(channelId)){
+            System.out.println("채널 삭제중 문제가 발생했습니다.");
+            return;
+
+
+        }
+
+        System.out.println(channel.getChannelName() + " 채널 삭제 완료!");
+
+
+
+
 
 
 
