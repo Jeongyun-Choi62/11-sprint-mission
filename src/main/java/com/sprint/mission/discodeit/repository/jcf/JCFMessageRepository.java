@@ -22,7 +22,8 @@ public class JCFMessageRepository implements MessageRepository {
         if(data.containsKey(message.getMessageId()))
             return false;
 
-        return data.put(message.getMessageId(),message) != null;
+        data.put(message.getMessageId(),message);
+        return true;
 
     }
 
@@ -39,14 +40,17 @@ public class JCFMessageRepository implements MessageRepository {
     @Override
     public boolean updateMessage(Message message) {
 
-        return data.put(message.getMessageId(), message) != null;
+        data.put(message.getMessageId(), message);
+        return true;
 
     }
 
     @Override
+
     public boolean deleteMessage(String messageId) {
 
-        return data.remove(messageId) != null;
+        data.remove(messageId);
+        return true;
     }
 
     @Override

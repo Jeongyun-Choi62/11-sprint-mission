@@ -48,7 +48,7 @@ public class BasicMessageService  implements MessageService {
 
 
         System.out.println("메시지 보내기 완료!");
-        return msg.getMessage();
+        return msg.getMessageId();
 
 
 
