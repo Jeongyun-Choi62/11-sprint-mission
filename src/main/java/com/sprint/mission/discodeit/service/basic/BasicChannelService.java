@@ -281,7 +281,7 @@ public class BasicChannelService implements ChannelService {
 
         }
 
-        if(channelRepository.updateChannel(channel)){
+        if(!channelRepository.updateChannel(channel)){
             System.out.println("채널 업데이트 중 문제가 발생했습니다.");
             return;
         }
