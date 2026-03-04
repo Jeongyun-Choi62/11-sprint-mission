@@ -38,7 +38,7 @@ public class BasicChannelService implements ChannelService {
 
         //유효 유저 확인
         if(user == null){
-            System.err.println("존재하지 않는 유저입니다.");
+            System.out.println("존재하지 않는 유저입니다.");
             return;
         }
 
@@ -48,7 +48,7 @@ public class BasicChannelService implements ChannelService {
 
         //채널 저장.
         if(!channelRepository.saveChannel(channel)){
-            System.err.println("이미 존재하는 채널입니다.");
+            System.out.println("이미 존재하는 채널입니다.");
             return;
 
         }
@@ -71,7 +71,7 @@ public class BasicChannelService implements ChannelService {
 
         //채널 여부 체크
         if(channel == null){
-            System.err.println("존재하지 않는 채널입니다.");
+            System.out.println("존재하지 않는 채널입니다.");
             return;
         }
 
@@ -88,7 +88,7 @@ public class BasicChannelService implements ChannelService {
 
         //리스트 null 체크
         if(channels == null){
-            System.err.println("채널 리스트를 불러오는데 문제가 발생했습니다.");
+            System.out.println("채널 리스트를 불러오는데 문제가 발생했습니다.");
             return;
         }
 
@@ -106,7 +106,7 @@ public class BasicChannelService implements ChannelService {
 
         //채널 여부 체크
         if(channel == null){
-            System.err.println("존재하지 않는 채널입니다.");
+            System.out.println("존재하지 않는 채널입니다.");
             return;
         }
 
@@ -118,7 +118,7 @@ public class BasicChannelService implements ChannelService {
 //
 //        if(!user.checkSamePassword(password)){
 //
-//            System.err.println("비밀번호가 일치하지 않습니다.");
+//            System.out.println("비밀번호가 일치하지 않습니다.");
 //            return;
 //
 //        }
@@ -130,7 +130,7 @@ public class BasicChannelService implements ChannelService {
         //repository에 반영
         if(!channelRepository.updateChannel(channel)){
 
-            System.err.println("채널 업데이트 중 문제가 발생했습니다.");
+            System.out.println("채널 업데이트 중 문제가 발생했습니다.");
         }
 
 
@@ -146,7 +146,7 @@ public class BasicChannelService implements ChannelService {
 
         //채널 여부 체크
         if(channel == null){
-            System.err.println("존재하지 않는 채널입니다.");
+            System.out.println("존재하지 않는 채널입니다.");
             return;
         }
 
@@ -157,7 +157,7 @@ public class BasicChannelService implements ChannelService {
 //
 //        if(!user.checkSamePassword(password)){
 //
-//            System.err.println("비밀번호가 일치하지 않습니다.");
+//            System.out.println("비밀번호가 일치하지 않습니다.");
 //            return;
 //
 //        }
@@ -168,7 +168,7 @@ public class BasicChannelService implements ChannelService {
 
 
         if(!channelsUserIdList.contains(ownerId)){
-            System.err.println("해당 유저가 채널에 없습니다.");
+            System.out.println("해당 유저가 채널에 없습니다.");
             return;
         }
 
@@ -181,7 +181,7 @@ public class BasicChannelService implements ChannelService {
         //repository에 반영
         if(!channelRepository.updateChannel(channel)){
 
-            System.err.println("채널 업데이트 중 문제가 발생했습니다.");
+            System.out.println("채널 업데이트 중 문제가 발생했습니다.");
             return;
         }
 
@@ -203,7 +203,7 @@ public class BasicChannelService implements ChannelService {
 
         //채널 여부 체크
         if(channel == null){
-            System.err.println("존재하지 않는 채널입니다.");
+            System.out.println("존재하지 않는 채널입니다.");
             return;
         }
 
@@ -212,7 +212,7 @@ public class BasicChannelService implements ChannelService {
 
         //유효 유저 확인
         if(user == null){
-            System.err.println("존재하지 않는 유저입니다.");
+            System.out.println("존재하지 않는 유저입니다.");
             return;
         }
 
@@ -221,7 +221,7 @@ public class BasicChannelService implements ChannelService {
 
         //repository에 반영
         if(!channelRepository.updateChannel(channel)){
-            System.err.println("채널 업데이트 중 문제가 발생했습니다.");
+            System.out.println("채널 업데이트 중 문제가 발생했습니다.");
             return;
 
         }
@@ -241,7 +241,7 @@ public class BasicChannelService implements ChannelService {
 
         //채널 여부 체크
         if(channel == null){
-            System.err.println("존재하지 않는 채널입니다.");
+            System.out.println("존재하지 않는 채널입니다.");
             return;
         }
 
@@ -251,7 +251,7 @@ public class BasicChannelService implements ChannelService {
 
 
         if(!channelsUserIdList.contains(memberId)){
-            System.err.println("해당 유저가 채널에 없습니다.");
+            System.out.println("해당 유저가 채널에 없습니다.");
             return;
         }
 
@@ -282,7 +282,7 @@ public class BasicChannelService implements ChannelService {
         }
 
         if(channelRepository.updateChannel(channel)){
-            System.err.println("채널 업데이트 중 문제가 발생했습니다.");
+            System.out.println("채널 업데이트 중 문제가 발생했습니다.");
             return;
         }
 

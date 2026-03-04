@@ -28,19 +28,19 @@ public class BasicMessageService  implements MessageService {
         Channel channel = channelRepository.getChannel(channelId);
         //채널 여부 체크
         if(channel == null){
-            System.err.println("존재하지 않는 채널입니다.");
+            System.out.println("존재하지 않는 채널입니다.");
             return null;
         }
 
         if(!channel.getMembers().contains(senderId)){
-            System.err.println("해당 채널에 존재하지 않는 유저입니다.");
+            System.out.println("해당 채널에 존재하지 않는 유저입니다.");
             return null;
         }
 
         Message msg = new Message(senderId,channelId,message);
 
         if(!messageRepository.saveMessage(msg)){
-            System.err.println("메시지 저장 중 문제가 발생했습니다.");
+            System.out.println("메시지 저장 중 문제가 발생했습니다.");
 
 
 
@@ -66,7 +66,7 @@ public class BasicMessageService  implements MessageService {
 
         //메시지 유효 체크
         if(message == null){
-            System.err.println("존재하지 않는 메시지 입니다.");
+            System.out.println("존재하지 않는 메시지 입니다.");
             return;
 
         }
@@ -82,7 +82,7 @@ public class BasicMessageService  implements MessageService {
 
         if(messageRepository.getAllMessage() == null){
 
-            System.err.println("메시지 리스트를 불러오는데 문제가 발생했습니다.");
+            System.out.println("메시지 리스트를 불러오는데 문제가 발생했습니다.");
             return;
 
         }
@@ -103,7 +103,7 @@ public class BasicMessageService  implements MessageService {
 
         //메시지 유효 체크
         if(messageEntity == null){
-            System.err.println("존재하지 않는 메시지 입니다.");
+            System.out.println("존재하지 않는 메시지 입니다.");
             return;
 
         }
@@ -111,7 +111,7 @@ public class BasicMessageService  implements MessageService {
         //메시지 활성화 체크
         if(messageEntity.getStatus() != Message.messageStatus.ACTIVE){
 
-            System.err.println("비활성화된 메시지 입니다.");
+            System.out.println("비활성화된 메시지 입니다.");
             return;
 
         }
@@ -121,7 +121,7 @@ public class BasicMessageService  implements MessageService {
         messageEntity.updateMessage(message);
 
         if(!messageRepository.saveMessage(messageEntity)){
-            System.err.println("메시지 저장중 문제가 발생했습니다.");
+            System.out.println("메시지 저장중 문제가 발생했습니다.");
             return;
         }
 
@@ -144,7 +144,7 @@ public class BasicMessageService  implements MessageService {
 
         //메시지 유효 체크
         if(messageEntity == null){
-            System.err.println("존재하지 않는 메시지 입니다.");
+            System.out.println("존재하지 않는 메시지 입니다.");
             return;
 
         }
@@ -153,7 +153,7 @@ public class BasicMessageService  implements MessageService {
         // TODO : 비밀번호 체크 로직
 
         if(!messageRepository.deleteMessage(messageId)){
-            System.err.println("삭제 도중 문제가 발생했습니다.");
+            System.out.println("삭제 도중 문제가 발생했습니다.");
             return;
 
         }
