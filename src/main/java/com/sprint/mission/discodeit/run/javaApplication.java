@@ -224,10 +224,12 @@ public class javaApplication {
         messageService.deleteMessage(mID1);
         messageService.readAllMessage();
 
+        userService.deleteUser("joy0505","oyeongjeong5555");
+        channelService.readChannel("bigmaclove0001");
 
 
 
-        
+
 
         //파일 정리
         try (var stream = Files.list(Path.of("src/main/resources/users/"))) {

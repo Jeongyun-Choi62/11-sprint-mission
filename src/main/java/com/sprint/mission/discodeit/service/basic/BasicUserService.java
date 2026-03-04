@@ -217,7 +217,7 @@ public class BasicUserService implements UserService {
                                 .filter(Objects::nonNull)
                                         .forEach(channel ->{
                                             channel.getMembers().remove(userId);
-                                            channelRepository.saveChannel(channel);
+                                            channelRepository.updateChannel(channel);
                                         });
 
 
