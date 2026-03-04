@@ -77,6 +77,18 @@ public class FILEMessageRepository implements MessageRepository {
 
     }
 
+    @Override
+    public boolean channelsMessagedelete(String channelId) {
+        Map<String, Message> map = load(directory);
+
+        map.values().stream()
+                .filter(msg-> msg.getChannelId().equals(channelId))
+                .forEach(msg -> deleteMessage(msg.getMessageId()));
+
+        return true;
+
+    }
+
     private Map<String,Message> load(Path directory) {
         if (Files.exists(directory)) {
 
@@ -128,4 +140,6 @@ public class FILEMessageRepository implements MessageRepository {
         return directory.resolve(messageId + ".dat");
 
     }
+
+
 }

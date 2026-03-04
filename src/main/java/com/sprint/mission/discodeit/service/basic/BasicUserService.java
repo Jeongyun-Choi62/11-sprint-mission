@@ -227,6 +227,7 @@ public class BasicUserService implements UserService {
 
                                             channel.getMembers().remove(userId);
 
+                                            //채널 주인인 경우 처리
                                             if(channel.getOwnerId().equals(userId)){
                                                 if(channel.getMembers().isEmpty()){
 

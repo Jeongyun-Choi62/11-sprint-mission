@@ -12,6 +12,7 @@ public interface MessageRepository {
     boolean updateMessage(Message message);
     boolean deleteMessage(String messageId);
     boolean isExistMessage(String messageId);
+    boolean channelsMessagedelete(String channelId);
 
 
 }

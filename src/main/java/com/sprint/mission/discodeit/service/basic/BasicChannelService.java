@@ -331,7 +331,8 @@ public class BasicChannelService implements ChannelService {
 
         }
 
-
+        //채널 삭제시 메시지 전부 삭제
+        messageRepository.channelsMessagedelete(channelId);
 
 
 

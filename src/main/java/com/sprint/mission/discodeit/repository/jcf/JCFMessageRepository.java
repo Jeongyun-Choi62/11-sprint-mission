@@ -6,6 +6,8 @@ import com.sprint.mission.discodeit.repository.MessageRepository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class JCFMessageRepository implements MessageRepository {
 
@@ -56,5 +58,16 @@ public class JCFMessageRepository implements MessageRepository {
     @Override
     public boolean isExistMessage(String messageId) {
         return data.containsKey(messageId);
+    }
+
+
+    @Override
+    public boolean channelsMessagedelete(String channelId) {
+        data.values().stream()
+                .filter(msg -> msg.getChannelId().equals(channelId))
+                .forEach(msg-> deleteMessage(msg.getMessageId()));
+
+
+        return true;
     }
 }
