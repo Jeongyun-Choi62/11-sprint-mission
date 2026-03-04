@@ -310,17 +310,11 @@ public class BasicChannelService implements ChannelService {
     @Override
     public boolean isExistChannel(String channelId) {
 
-
-
-
         return false;
     }
 
     @Override
     public boolean isChannelsMember(String channelId, String memberId) {
-
-
-
 
         return false;
     }

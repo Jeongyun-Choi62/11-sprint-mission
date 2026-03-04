@@ -2,7 +2,14 @@ package com.sprint.mission.discodeit.run;
 
 
 
+import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.repository.jcf.JCFChannelRepository;
+import com.sprint.mission.discodeit.repository.jcf.JCFMessageRepository;
+import com.sprint.mission.discodeit.repository.jcf.JCFUserRepository;
 import com.sprint.mission.discodeit.service.*;
+import com.sprint.mission.discodeit.service.basic.BasicChannelService;
+import com.sprint.mission.discodeit.service.basic.BasicMessageService;
+import com.sprint.mission.discodeit.service.basic.BasicUserService;
 import com.sprint.mission.discodeit.service.file.*;
 
 import java.io.File;
@@ -17,13 +24,23 @@ public class javaApplication {
 
     public static void main(String[] args) {
 
-//        JCFUserService userService = new JCFUserService();
-//        JCFChannelService channelService = new JCFChannelService(userService);
-//        JCFMessageService messageService = new JCFMessageService(userService,channelService);
+        UserService userService;
+        ChannelService channelService;
+        MessageService messageService;
 
-        UserService userService = new FILEUserService();
-        ChannelService channelService = new FILEChannelService();
-        MessageService messageService = new FILEMessageService();
+        userService = new BasicUserService(new JCFUserRepository());
+        channelService = new BasicChannelService(new JCFChannelRepository(),new JCFUserRepository(),new JCFMessageRepository());
+        messageService = new BasicMessageService(new JCFMessageRepository(),new JCFChannelRepository(),new JCFUserRepository());
+
+//        UserService userService = new JCFUserService();
+//        ChannelService channelService = new JCFChannelService(userService);
+//        MessageService messageService = new JCFMessageService(userService,channelService);
+
+//        UserService userService = new FILEUserService();
+//        ChannelService channelService = new FILEChannelService();
+//        MessageService messageService = new FILEMessageService();
+
+
 
 
         System.out.println("---------------------------------------------------");

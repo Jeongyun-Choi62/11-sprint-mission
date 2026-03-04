@@ -1,0 +1,164 @@
+package com.sprint.mission.discodeit.service.basic;
+
+import com.sprint.mission.discodeit.entity.Channel;
+import com.sprint.mission.discodeit.entity.Message;
+import com.sprint.mission.discodeit.repository.ChannelRepository;
+import com.sprint.mission.discodeit.repository.MessageRepository;
+import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.service.MessageService;
+import com.sprint.mission.discodeit.service.UserService;
+
+public class BasicMessageService  implements MessageService {
+
+
+    private final MessageRepository messageRepository;
+    private final ChannelRepository channelRepository;
+    private final UserRepository userRepository;
+
+
+    public BasicMessageService(MessageRepository messageRepository, ChannelRepository channelRepository, UserRepository userRepository) {
+        this.messageRepository = messageRepository;
+        this.channelRepository = channelRepository;
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public String sendMessage(String senderId, String channelId, String message) {
+
+        Channel channel = channelRepository.getChannel(channelId);
+        //채널 여부 체크
+        if(channel == null){
+            System.err.println("존재하지 않는 채널입니다.");
+            return null;
+        }
+
+        if(!channel.getMembers().contains(senderId)){
+            System.err.println("해당 채널에 존재하지 않는 유저입니다.");
+            return null;
+        }
+
+        Message msg = new Message(senderId,channelId,message);
+
+        if(!messageRepository.saveMessage(msg)){
+            System.err.println("메시지 저장 중 문제가 발생했습니다.");
+
+
+
+        }
+
+
+        System.out.println("메시지 보내기 완료!");
+        return msg.getMessage();
+
+
+
+
+
+
+
+    }
+
+    @Override
+    public void readMessage(String messageId) {
+
+
+        Message message = messageRepository.getMessage(messageId);
+
+        //메시지 유효 체크
+        if(message == null){
+            System.err.println("존재하지 않는 메시지 입니다.");
+            return;
+
+        }
+
+        System.out.println(message);
+
+
+
+    }
+
+    @Override
+    public void readAllMessage() {
+
+        if(messageRepository.getAllMessage() == null){
+
+            System.err.println("메시지 리스트를 불러오는데 문제가 발생했습니다.");
+            return;
+
+        }
+
+
+        messageRepository.getAllMessage().stream()
+                .sorted(Message::compareTo)
+                .forEach(System.out::println);
+
+
+
+    }
+
+    @Override
+    public void updateMessage(String messageId, String message) {
+
+        Message messageEntity = messageRepository.getMessage(messageId);
+
+        //메시지 유효 체크
+        if(messageEntity == null){
+            System.err.println("존재하지 않는 메시지 입니다.");
+            return;
+
+        }
+
+        //메시지 활성화 체크
+        if(messageEntity.getStatus() != Message.messageStatus.ACTIVE){
+
+            System.err.println("비활성화된 메시지 입니다.");
+            return;
+
+        }
+
+        //TODO : 메시지 비번 체크
+
+        messageEntity.updateMessage(message);
+
+        if(!messageRepository.saveMessage(messageEntity)){
+            System.err.println("메시지 저장중 문제가 발생했습니다.");
+            return;
+        }
+
+        System.out.println("메시지 수정 완료!");
+
+
+
+
+
+
+
+
+
+    }
+
+    @Override
+    public void deleteMessage(String messageId) {
+
+        Message messageEntity = messageRepository.getMessage(messageId);
+
+        //메시지 유효 체크
+        if(messageEntity == null){
+            System.err.println("존재하지 않는 메시지 입니다.");
+            return;
+
+        }
+
+
+        // TODO : 비밀번호 체크 로직
+
+        if(!messageRepository.deleteMessage(messageId)){
+            System.err.println("삭제 도중 문제가 발생했습니다.");
+            return;
+
+        }
+
+        System.out.println("메시지 삭제 완료!");
+
+    }
+}
