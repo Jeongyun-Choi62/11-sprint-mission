@@ -40,7 +40,7 @@ public class BasicUserService implements UserService {
         User user = userRepository.getUser(userId);
 
         if(user == null){
-            System.err.println("유저를 읽어오지 못했습니다.");
+            System.out.println("유저를 읽어오지 못했습니다.");
             return;
         }
 
@@ -56,7 +56,7 @@ public class BasicUserService implements UserService {
         List<User> users = userRepository.getAllUser();
 
         if(users == null){
-            System.err.println("유저 리스트를 불러오는데 문제가 발생했습니다.");
+            System.out.println("유저 리스트를 불러오는데 문제가 발생했습니다.");
             return;
         }
 
@@ -78,25 +78,25 @@ public class BasicUserService implements UserService {
 
         // 잘못된 유저 아이디 체크
         if(user == null){
-            System.err.println("존재하지 않는 유저 아이디입니다.");
+            System.out.println("존재하지 않는 유저 아이디입니다.");
             return;
         }
 
         // 닉네임 업데이트
         if(!user.updateNickname(nickname,password)){
             //비밀번호 불일치
-            System.err.println("패스워드가 일치하지 않습니다.");
+            System.out.println("패스워드가 일치하지 않습니다.");
             return;
 
         }
 
         //repository에 반영
         if(!userRepository.updateUser(user)){
-            System.err.println("유저 업데이트 중 이상이 발생했습니다.");
-
+            System.out.println("유저 업데이트 중 이상이 발생했습니다.");
+            return;
         }
 
-
+        System.out.println( user.getUserId() + " 님 닉네임 " + user.getNickname()  + " 으로 변경 완료!" );
 
 
 
@@ -110,25 +110,25 @@ public class BasicUserService implements UserService {
 
         // 잘못된 유저 아이디 체크
         if(user == null){
-            System.err.println("존재하지 않는 유저 아이디입니다.");
+            System.out.println("존재하지 않는 유저 아이디입니다.");
             return;
         }
 
         // 비밀번호 업데이트
         if(!user.updatePassword(oldPassword,newPassword)){
             //비밀번호 불일치
-            System.err.println("패스워드가 일치하지 않습니다.");
+            System.out.println("패스워드가 일치하지 않습니다.");
             return;
 
         }
 
         //repository에 반영
         if(!userRepository.updateUser(user)){
-            System.err.println("유저 업데이트 중 이상이 발생했습니다.");
-
+            System.out.println("유저 업데이트 중 이상이 발생했습니다.");
+            return;
         }
 
-
+        System.out.println("유저 비밀번호 업데이트 완료!");
 
     }
 
@@ -139,26 +139,27 @@ public class BasicUserService implements UserService {
 
         // 잘못된 유저 아이디 체크
         if(user == null){
-            System.err.println("존재하지 않는 유저 아이디입니다.");
+            System.out.println("존재하지 않는 유저 아이디입니다.");
             return;
         }
 
         // 비밀번호 업데이트
         if(!user.updateStatus(status,password)){
             //비밀번호 불일치
-            System.err.println("패스워드가 일치하지 않습니다.");
+            System.out.println("패스워드가 일치하지 않습니다.");
             return;
 
         }
 
         //repository에 반영
         if(!userRepository.updateUser(user)){
-            System.err.println("유저 업데이트 중 이상이 발생했습니다.");
+            System.out.println("유저 업데이트 중 이상이 발생했습니다.");
+            return;
 
         }
 
 
-
+        System.out.println("유저 상태 변경 완료 -> " + user.getStatus());
 
 
 
@@ -175,13 +176,13 @@ public class BasicUserService implements UserService {
 
         // 잘못된 유저 아이디 체크
         if(user == null){
-            System.err.println("존재하지 않는 유저 아이디입니다.");
+            System.out.println("존재하지 않는 유저 아이디입니다.");
             return;
         }
 
         //잘못된 비밀번호 체크
         if(!user.checkSamePassword(password)){
-            System.err.println("패스워드가 일치하지 않습니다.");
+            System.out.println("패스워드가 일치하지 않습니다.");
             return;
 
         }
@@ -191,10 +192,11 @@ public class BasicUserService implements UserService {
 
         //삭제
         if(!userRepository.deleteUser(userId)){
-            System.err.println("삭제 도중 이상이 발생했습니다.");
+            System.out.println("삭제 도중 이상이 발생했습니다.");
+            return;
         }
 
-
+        System.out.println(user.getNickname() + " 님 삭제 완료!");
 
 
 
