@@ -216,7 +216,31 @@ public class BasicUserService implements UserService {
                         .map(message -> channelRepository.getChannel(message.getChannelId()))
                                 .filter(Objects::nonNull)
                                         .forEach(channel ->{
+
+
+
+
+
+
+
+
+
                                             channel.getMembers().remove(userId);
+
+                                            if(channel.getOwnerId().equals(userId)){
+                                                if(channel.getMembers().isEmpty()){
+
+                                                    channelRepository.deleteChannel(channel.getChannelId());
+                                                    return;
+                                                }
+                                                else{
+                                                    channel.updateOwner(channel.getMembers().get(0));
+
+                                                }
+
+
+                                            }
+
                                             channelRepository.updateChannel(channel);
                                         });
 
@@ -237,3 +261,5 @@ public class BasicUserService implements UserService {
 
 
 }
+
+
