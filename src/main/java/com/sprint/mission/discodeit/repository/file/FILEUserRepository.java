@@ -59,6 +59,8 @@ public class FILEUserRepository  implements UserRepository {
         Map<String,User> map = load(directory);
 
         map.put(user.getUserId(),user);
+
+        save(pathToUserId(user.getUserId()),user);
         return true;
     }
 
