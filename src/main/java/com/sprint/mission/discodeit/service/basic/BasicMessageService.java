@@ -120,7 +120,7 @@ public class BasicMessageService  implements MessageService {
 
         messageEntity.updateMessage(message);
 
-        if(!messageRepository.saveMessage(messageEntity)){
+        if(!messageRepository.updateMessage(messageEntity)){
             System.out.println("메시지 저장중 문제가 발생했습니다.");
             return;
         }
