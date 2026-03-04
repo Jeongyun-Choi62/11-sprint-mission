@@ -227,6 +227,9 @@ public class javaApplication {
 
 
 
+        
+
+        //파일 정리
         try (var stream = Files.list(Path.of("src/main/resources/users/"))) {
             stream.sorted(Comparator.reverseOrder())
                     .map(Path::toFile)
