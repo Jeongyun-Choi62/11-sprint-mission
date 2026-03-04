@@ -45,14 +45,18 @@ public class JCFUserRepository implements UserRepository {
     @Override
     public boolean updateUser(User user) {
 
-        return data.put(user.getUserId(), user) != null;
+
+        data.put(user.getUserId(), user);
+        return true;
+
 
     }
 
     @Override
     public boolean deleteUser(String userId) {
 
-        return data.remove(userId) != null;
+        data.remove(userId);
+        return true;
 
     }
 
