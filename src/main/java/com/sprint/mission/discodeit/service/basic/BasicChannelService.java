@@ -219,6 +219,12 @@ public class BasicChannelService implements ChannelService {
         //채널에 멤버 추가
         channel.addMember(memberId);
 
+
+        Message msg = new Message(memberId,channelId,"default message");
+        msg.setStatus(Message.messageStatus.INACTIVE);
+        messageRepository.saveMessage(msg);
+
+
         //repository에 반영
         if(!channelRepository.updateChannel(channel)){
             System.out.println("채널 업데이트 중 문제가 발생했습니다.");
