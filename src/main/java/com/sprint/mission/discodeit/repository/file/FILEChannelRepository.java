@@ -53,7 +53,12 @@ public class FILEChannelRepository implements ChannelRepository {
 
         Map<String,Channel> map = load(directory);
 
-        return map.put(channel.getChannelId(), channel) != null;
+        map.put(channel.getChannelId(), channel);
+
+        save(pathToUserId(channel.getChannelId()),channel);
+
+
+        return true;
 
     }
 
