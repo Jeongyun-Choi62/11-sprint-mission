@@ -5,6 +5,9 @@ package com.sprint.mission.discodeit.run;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.repository.file.FILEChannelRepository;
+import com.sprint.mission.discodeit.repository.file.FILEMessageRepository;
+import com.sprint.mission.discodeit.repository.file.FILEUserRepository;
 import com.sprint.mission.discodeit.repository.jcf.JCFChannelRepository;
 import com.sprint.mission.discodeit.repository.jcf.JCFMessageRepository;
 import com.sprint.mission.discodeit.repository.jcf.JCFUserRepository;
@@ -34,11 +37,14 @@ public class javaApplication {
         ChannelRepository channelRepository;
         MessageRepository messageRepository;
 
-        userRepository = new JCFUserRepository();
-        channelRepository = new JCFChannelRepository();
-        messageRepository = new JCFMessageRepository();
+//        userRepository = new JCFUserRepository();
+//        channelRepository = new JCFChannelRepository();
+//        messageRepository = new JCFMessageRepository();
 
 
+        userRepository = new FILEUserRepository();
+        channelRepository = new FILEChannelRepository();
+        messageRepository = new FILEMessageRepository();
 
         userService = new BasicUserService(userRepository);
         channelService = new BasicChannelService(channelRepository,userRepository,messageRepository);

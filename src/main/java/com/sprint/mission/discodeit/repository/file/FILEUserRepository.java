@@ -58,7 +58,8 @@ public class FILEUserRepository  implements UserRepository {
     public boolean updateUser(User user) {
         Map<String,User> map = load(directory);
 
-        return map.put(user.getUserId(),user)!= null;
+        map.put(user.getUserId(),user);
+        return true;
     }
 
     @Override

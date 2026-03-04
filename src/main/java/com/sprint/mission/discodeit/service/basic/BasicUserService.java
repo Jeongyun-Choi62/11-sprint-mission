@@ -143,7 +143,7 @@ public class BasicUserService implements UserService {
             return;
         }
 
-        // 비밀번호 업데이트
+        // 상태 업데이트
         if(!user.updateStatus(status,password)){
             //비밀번호 불일치
             System.out.println("패스워드가 일치하지 않습니다.");
