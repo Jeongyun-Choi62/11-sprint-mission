@@ -23,7 +23,10 @@ public class JCFUserRepository implements UserRepository {
         if(data.containsKey(user.getUserId())){
             return false;
         }
-        return data.put(user.getUserId(), user) != null;
+
+        data.put(user.getUserId(), user);
+
+        return true;
 
     }
 

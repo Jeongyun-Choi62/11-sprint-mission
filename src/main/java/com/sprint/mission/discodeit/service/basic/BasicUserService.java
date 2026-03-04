@@ -23,7 +23,7 @@ public class BasicUserService implements UserService {
 
         if(!userRepository.saveUser(user)){
 
-            System.err.println("저장에 실패했습니다.");
+            System.out.println("저장에 실패했습니다.");
             return;
         }
 
