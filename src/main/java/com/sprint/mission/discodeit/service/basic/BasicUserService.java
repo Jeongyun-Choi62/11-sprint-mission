@@ -1,18 +1,27 @@
 package com.sprint.mission.discodeit.service.basic;
 
+import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.repository.ChannelRepository;
+import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class BasicUserService implements UserService {
 
     UserRepository userRepository;
+    ChannelRepository channelRepository;
+    MessageRepository messageRepository;
 
-    public BasicUserService(UserRepository userRepository) {
+    public BasicUserService(UserRepository userRepository, ChannelRepository channelRepository, MessageRepository messageRepository) {
 
         this.userRepository = userRepository;
+        this.channelRepository = channelRepository;
+        this.messageRepository = messageRepository;
     }
 
 
@@ -190,13 +199,35 @@ public class BasicUserService implements UserService {
 
 
 
+
+
+
         //삭제
         if(!userRepository.deleteUser(userId)){
             System.out.println("삭제 도중 이상이 발생했습니다.");
             return;
         }
 
+
+
+        List<Channel> channels = new ArrayList<>();
+
+        user.getDefaultMessages().stream()
+                        .map(message -> channelRepository.getChannel(message.getChannelId()))
+                                .filter(Objects::nonNull)
+                                        .forEach(channel ->{
+                                            channel.getMembers().remove(userId);
+                                            channelRepository.saveChannel(channel);
+                                        });
+
+
+
+
+
+
+
         System.out.println(user.getNickname() + " 님 삭제 완료!");
+
 
 
 

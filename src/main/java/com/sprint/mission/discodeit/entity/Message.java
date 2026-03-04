@@ -8,6 +8,7 @@ public class Message extends Entity {
     private final String channelId;
     private messageStatus status;
 
+
     public enum messageStatus {
         ACTIVE, INACTIVE
     }

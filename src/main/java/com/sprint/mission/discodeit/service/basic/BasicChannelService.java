@@ -331,20 +331,37 @@ public class BasicChannelService implements ChannelService {
 
         }
 
+
+
+
+
+
+
+
+
+
         System.out.println(channel.getChannelName() + " 채널 삭제 완료!");
 
-
-
-
-
-
-
-
-
-
-
-
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //안쓰는 메서드
 
     @Override
     public boolean isExistChannel(String channelId) {

@@ -46,7 +46,7 @@ public class javaApplication {
         channelRepository = new FILEChannelRepository();
         messageRepository = new FILEMessageRepository();
 
-        userService = new BasicUserService(userRepository);
+        userService = new BasicUserService(userRepository, channelRepository, messageRepository);
         channelService = new BasicChannelService(channelRepository,userRepository,messageRepository);
         messageService = new BasicMessageService(messageRepository,channelRepository,userRepository);
 
@@ -101,6 +101,7 @@ public class javaApplication {
         System.out.println("1-4. Delete User");
         userService.deleteUser("ldr0202","durilee2222");
         userService.readAllUser();
+
         System.out.println("\n");
 
 
