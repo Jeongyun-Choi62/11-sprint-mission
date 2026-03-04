@@ -48,7 +48,9 @@ public class FILEMessageRepository implements MessageRepository {
     @Override
     public boolean updateMessage(Message message) {
         Map<String,Message> map = load(directory);
-        return map.put(message.getMessageId(), message) != null;
+        map.put(message.getMessageId(), message);
+        save(pathToUserId(message.getMessageId()),message);
+        return true;
     }
 
     @Override
