@@ -27,7 +27,7 @@ public class BasicChannelService implements ChannelService {
 
 
         //채널 생성
-        Channel channel = new Channel(channelId,channelName,ownerID);
+        Channel channel = new Channel(channelName,ownerID,channelId);
 
         //채널 주인 가져오기
         User user = userRepository.getUser(ownerID);
