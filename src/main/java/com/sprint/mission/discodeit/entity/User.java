@@ -30,9 +30,6 @@ public class User extends Entity{
         return status;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
 
 
