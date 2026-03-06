@@ -32,21 +32,21 @@ public class BasicMessageService  implements MessageService {
             return null;
         }
 
+        //유효 유저 체크
         if(!channel.getMembers().contains(senderId)){
             System.out.println("해당 채널에 존재하지 않는 유저입니다.");
             return null;
         }
 
+        //메시지 생성
         Message msg = new Message(senderId,channelId,message);
 
         if(!messageRepository.saveMessage(msg)){
             System.out.println("메시지 저장 중 문제가 발생했습니다.");
 
-
-
         }
 
-
+        // 출력 메시지
         System.out.println("메시지 보내기 완료!");
         return msg.getMessageId();
 
@@ -61,7 +61,7 @@ public class BasicMessageService  implements MessageService {
     @Override
     public void readMessage(String messageId) {
 
-
+        //메시지 생성
         Message message = messageRepository.getMessage(messageId);
 
         //메시지 유효 체크
@@ -70,7 +70,7 @@ public class BasicMessageService  implements MessageService {
             return;
 
         }
-
+        //메시지 출력
         System.out.println(message);
 
 
@@ -80,6 +80,7 @@ public class BasicMessageService  implements MessageService {
     @Override
     public void readAllMessage() {
 
+        //메시지 리스트 체크
         if(messageRepository.getAllMessage() == null){
 
             System.out.println("메시지 리스트를 불러오는데 문제가 발생했습니다.");
@@ -87,7 +88,7 @@ public class BasicMessageService  implements MessageService {
 
         }
 
-
+        //stream으로 출력
         messageRepository.getAllMessage().stream()
                 .sorted(Message::compareTo)
                 .forEach(System.out::println);
@@ -118,28 +119,24 @@ public class BasicMessageService  implements MessageService {
 
         //TODO : 메시지 비번 체크
 
+        //메시지 수정
         messageEntity.updateMessage(message);
 
+        //저장소에 반영
         if(!messageRepository.updateMessage(messageEntity)){
             System.out.println("메시지 저장중 문제가 발생했습니다.");
             return;
         }
 
+        //출력 메시지
         System.out.println("메시지 수정 완료!");
-
-
-
-
-
-
-
-
 
     }
 
     @Override
     public void deleteMessage(String messageId) {
 
+        //메시지 가져오기
         Message messageEntity = messageRepository.getMessage(messageId);
 
         //메시지 유효 체크
@@ -157,18 +154,7 @@ public class BasicMessageService  implements MessageService {
             return;
 
         }
-
-
-
-
-
-
-
-
-
-
-
-
+        //출력 메시지
         System.out.println("메시지 삭제 완료!");
 
     }
