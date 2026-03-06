@@ -28,15 +28,17 @@ public class BasicUserService implements UserService {
     @Override
     public void createUser(String nickname, String password, String userId) {
 
+        //유저 생성
         User user = new User(userId, password, nickname);
 
+        //리포지토리에 저장. (이미 있는 아이디라면 false 반환)
         if(!userRepository.saveUser(user)){
 
-            System.out.println("저장에 실패했습니다.");
+            System.out.println("이미 존재하는 유저 아이디 입니다.");
             return;
         }
 
-
+        //출력
         System.out.println(user.getNickname()+ " 님 생성 완료!");
 
 
@@ -46,13 +48,16 @@ public class BasicUserService implements UserService {
     @Override
     public void readUser(String userId) {
 
+        //유저 가져오기
         User user = userRepository.getUser(userId);
 
+        //없는 유저라면
         if(user == null){
-            System.out.println("유저를 읽어오지 못했습니다.");
+            System.out.println("존재하지 않는 유저입니다.");
             return;
         }
 
+        //출력
         System.out.println(user);
 
 
@@ -62,15 +67,18 @@ public class BasicUserService implements UserService {
     @Override
     public void readAllUser() {
 
+        //유저 리스트 가져오기
         List<User> users = userRepository.getAllUser();
 
+
+        //리스트를 가져오는데 문제가 있는경우
         if(users == null){
             System.out.println("유저 리스트를 불러오는데 문제가 발생했습니다.");
             return;
         }
 
 
-
+        //stream으로 전체 출력
         users.stream()
                 .sorted(User::compareTo)
                 .forEach(System.out::println);
@@ -83,6 +91,7 @@ public class BasicUserService implements UserService {
     @Override
     public void updateNickname(String userId, String password, String nickname) {
 
+        //유저 가져오기
         User user = userRepository.getUser(userId);
 
         // 잘못된 유저 아이디 체크
@@ -212,51 +221,33 @@ public class BasicUserService implements UserService {
 
         List<Channel> channels = new ArrayList<>();
 
+        //모든 디폴트 메시지를 확인하면서
         user.getDefaultMessages().stream()
                         .map(message -> channelRepository.getChannel(message.getChannelId()))
                                 .filter(Objects::nonNull)
                                         .forEach(channel ->{
 
-
-
-
-
-
-
-
-
+                                            //디폴트 메시지가 있는 채널에서 유저 삭제
                                             channel.getMembers().remove(userId);
 
                                             //채널 주인인 경우 처리
                                             if(channel.getOwnerId().equals(userId)){
+                                                //채널에 아무도 없게 되었다면 채널 삭제
                                                 if(channel.getMembers().isEmpty()){
-
                                                     channelRepository.deleteChannel(channel.getChannelId());
                                                     return;
                                                 }
+                                                //채널 남은 사람한테 채널장 넘겨주기
                                                 else{
                                                     channel.updateOwner(channel.getMembers().get(0));
-
                                                 }
-
-
                                             }
-
+                                            //리포지토리에 반영
                                             channelRepository.updateChannel(channel);
                                         });
 
-
-
-
-
-
-
+        //출력
         System.out.println(user.getNickname() + " 님 삭제 완료!");
-
-
-
-
-
 
     }
 
