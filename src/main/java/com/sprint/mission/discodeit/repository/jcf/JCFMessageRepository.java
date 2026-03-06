@@ -61,8 +61,10 @@ public class JCFMessageRepository implements MessageRepository {
     }
 
 
+    //메시지 전체 삭제 (채널 삭제때)
     @Override
     public boolean channelsMessagedelete(String channelId) {
+
         data.values().stream()
                 .filter(msg -> msg.getChannelId().equals(channelId))
                 .forEach(msg-> deleteMessage(msg.getMessageId()));
