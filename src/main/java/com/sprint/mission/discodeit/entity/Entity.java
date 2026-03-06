@@ -8,9 +8,9 @@ public abstract class Entity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
-    private final UUID id;
-    private final Long createdAt;
-    private Long updatedAt;
+    private final UUID id; // 인스턴스 아이디
+    private final Long createdAt; //생성 시간
+    private Long updatedAt; //변경 시간
 
 
 

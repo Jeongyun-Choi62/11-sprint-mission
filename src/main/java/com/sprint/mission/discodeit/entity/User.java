@@ -6,11 +6,11 @@ import java.util.List;
 
 public class User extends Entity{
 
-    private String nickname;
-    private final String userId;
-    private String password;
-    private Status status;
-    private final List<Message>  defaultMessages;
+    private String nickname; //닉네임
+    private final String userId; //유저 아이디
+    private String password; //비밀번호
+    private Status status; // 현재 상태(온라인, 부재중), 현재 구현에서는 의미 없음
+    private final List<Message>  defaultMessages; //채널 입장시 디폴트 메시지(어느 채널 소속 체크용)
 
 
     public enum Status {
@@ -44,6 +44,8 @@ public class User extends Entity{
         return userId;
     }
 
+
+    // 업데이트 되는 모든 유저 필드는 비밀번호를 필요
     public boolean updateStatus(Status status, String password){
 
         if(!checkSamePassword(password))

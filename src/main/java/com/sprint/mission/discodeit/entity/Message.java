@@ -3,13 +3,13 @@ package com.sprint.mission.discodeit.entity;
 public class Message extends Entity {
 
     private String message;
-    private final String messageId;
-    private final String senderId;
-    private final String channelId;
-    private messageStatus status;
+    private final String messageId; //메시지 아이디 ("msg-" + UUID)
+    private final String senderId; //전송자 아이디
+    private final String channelId; //채널 아이디
+    private messageStatus status; // 활성화, 비활성화 상태
 
 
-    public enum messageStatus {
+    public enum messageStatus { //
         ACTIVE, INACTIVE
     }
 
