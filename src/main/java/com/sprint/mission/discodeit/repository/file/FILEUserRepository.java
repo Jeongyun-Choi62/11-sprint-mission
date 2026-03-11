@@ -92,7 +92,7 @@ public class FILEUserRepository  implements UserRepository {
         return map.containsKey(userId);
 
     }
-    
+
      private Map<String,User> load(Path directory) {
         if (Files.exists(directory)) {
 
