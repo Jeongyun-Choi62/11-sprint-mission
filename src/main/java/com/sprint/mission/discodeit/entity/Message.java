@@ -1,5 +1,8 @@
 package com.sprint.mission.discodeit.entity;
 
+import lombok.Getter;
+
+@Getter
 public class Message extends Entity {
 
     private String message;
@@ -23,21 +26,7 @@ public class Message extends Entity {
         status = messageStatus.ACTIVE;
     }
 
-    public String getMessageId() {
-        return messageId;
-    }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public String getSenderId() {
-        return senderId;
-    }
-
-    public String getChannelId() {
-        return channelId;
-    }
 
     public void updateMessage(String message){
 
@@ -45,15 +34,14 @@ public class Message extends Entity {
         super.updateUpdatedAt();
     }
 
-    public messageStatus getStatus() {
-        return status;
-    }
 
-    public void setStatus(messageStatus status) {
+
+    public void updateStatus(messageStatus status) {
         this.status = status;
     }
 
     @Override
+
     public String toString() {
         return "Message{" +
                 "message='" + message + '\'' +

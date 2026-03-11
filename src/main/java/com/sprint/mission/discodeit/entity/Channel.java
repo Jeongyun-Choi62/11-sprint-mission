@@ -1,9 +1,11 @@
 package com.sprint.mission.discodeit.entity;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Getter
 public class Channel extends Entity{
 
     private String channelName; //채널 이름
@@ -22,21 +24,6 @@ public class Channel extends Entity{
     }
 
 
-    public String getChannelName() {
-        return channelName;
-    }
-
-    public String getChannelId() {
-        return channelId;
-    }
-
-    public String getOwnerId() {
-        return ownerId;
-    }
-
-    public List<String> getMembers() {
-        return members;
-    }
 
     public void updateChannelName(String channelName) {
         this.channelName = channelName;

@@ -7,20 +7,19 @@ import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
+@RequiredArgsConstructor
 public class BasicChannelService implements ChannelService {
 
-    ChannelRepository channelRepository;
-    UserRepository userRepository;
-    MessageRepository messageRepository;
+    private final ChannelRepository channelRepository;
+    private final UserRepository userRepository;
+    private final MessageRepository messageRepository;
 
-    public BasicChannelService(ChannelRepository channelRepository, UserRepository userRepository, MessageRepository messageRepository) {
-        this.channelRepository = channelRepository;
-        this.userRepository = userRepository;
-        this.messageRepository = messageRepository;
-    }
+
 
     @Override
     public void createChannel(String channelName, String ownerID, String channelId) {
@@ -34,7 +33,7 @@ public class BasicChannelService implements ChannelService {
 
         //디폴트 메시지 생성
         Message msg = new Message(ownerID,channelId,"default message");
-        msg.setStatus(Message.messageStatus.INACTIVE);
+        msg.updateStatus(Message.messageStatus.INACTIVE);
 
         //유효 유저 확인
         if(user == null){
@@ -215,7 +214,7 @@ public class BasicChannelService implements ChannelService {
 
 
         Message msg = new Message(memberId,channelId,"default message");
-        msg.setStatus(Message.messageStatus.INACTIVE);
+        msg.updateStatus(Message.messageStatus.INACTIVE);
         messageRepository.saveMessage(msg);
 
 

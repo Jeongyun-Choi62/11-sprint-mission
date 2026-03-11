@@ -7,7 +7,11 @@ import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
+@RequiredArgsConstructor
 public class BasicMessageService  implements MessageService {
 
 
@@ -16,11 +20,7 @@ public class BasicMessageService  implements MessageService {
     private final UserRepository userRepository;
 
 
-    public BasicMessageService(MessageRepository messageRepository, ChannelRepository channelRepository, UserRepository userRepository) {
-        this.messageRepository = messageRepository;
-        this.channelRepository = channelRepository;
-        this.userRepository = userRepository;
-    }
+
 
     @Override
     public String sendMessage(String senderId, String channelId, String message) {
