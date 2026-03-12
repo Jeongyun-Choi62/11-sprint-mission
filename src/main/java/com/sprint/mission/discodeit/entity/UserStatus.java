@@ -11,7 +11,7 @@ public class UserStatus extends Entity{
     private final UUID userUUID;
     private Status status;
 
-    public UserStatus(UUID userUUID, boolean isOnline) {
+    public UserStatus(UUID userUUID) {
         this.userUUID = userUUID;
         isOnline();
     }

@@ -13,6 +13,7 @@ public class User extends Entity{
     private String email;
     @Getter(AccessLevel.NONE)
     private String password; //비밀번호
+    private BinaryContent profileImage;
 
 
 
@@ -20,13 +21,11 @@ public class User extends Entity{
         ACTIVE, INACTIVE
     }
 
-    public User(String nickname, String email, String password) {
-
-
+    public User(String nickname, String email, String password, BinaryContent profileImage) {
         this.password = password;
         this.nickname = nickname;
-
-
+        this.email = email;
+        this.profileImage = profileImage;
     }
 
 
@@ -53,8 +52,24 @@ public class User extends Entity{
         this.nickname = nickname;
         super.updateUpdatedAt();
         return true;
+    }
+    public boolean updateEmail(String email, String password) {
 
+        if(!checkSamePassword(password))
+            return false;
 
+        this.email = email;
+        super.updateUpdatedAt();
+        return true;
+    }
+
+    public boolean updateProfileImage(BinaryContent profileImage, String password){
+        if(!checkSamePassword(password))
+            return false;
+
+        this.profileImage = profileImage;
+        super.updateUpdatedAt();
+        return true;
     }
 
     public boolean checkSamePassword(String password) {
