@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -26,26 +27,26 @@ public class FILEChannelRepository implements ChannelRepository {
 
     @Override
     public boolean saveChannel(Channel channel) {
-        if(isExistChannel(channel.getChannelId())){
+        if(isExistChannel(channel.getId())){
             return false;
         }
 
-        save(pathToUserId(channel.getChannelId()),channel);
+        save(pathToUserId(channel.getId()),channel);
         return true;
 
 
     }
 
     @Override
-    public Channel getChannel(String channelId) {
-        Map<String,Channel> map = load(directory);
+    public Channel getChannel(UUID channelId) {
+        Map<UUID,Channel> map = load(directory);
 
         return map.getOrDefault(channelId,null);
     }
 
     @Override
     public List<Channel> getAllChannel() {
-        Map<String,Channel> map = load(directory);
+        Map<UUID,Channel> map = load(directory);
 
         return map.values().stream().toList();
     }
@@ -53,11 +54,11 @@ public class FILEChannelRepository implements ChannelRepository {
     @Override
     public boolean updateChannel(Channel channel) {
 
-        Map<String,Channel> map = load(directory);
+        Map<UUID,Channel> map = load(directory);
 
-        map.put(channel.getChannelId(), channel);
+        map.put(channel.getId(), channel);
 
-        save(pathToUserId(channel.getChannelId()),channel);
+        save(pathToUserId(channel.getId()),channel);
 
 
         return true;
@@ -65,7 +66,7 @@ public class FILEChannelRepository implements ChannelRepository {
     }
 
     @Override
-    public boolean deleteChannel(String channelId) {
+    public boolean deleteChannel(UUID channelId) {
 
         if(!isExistChannel(channelId))
             return false;
@@ -83,21 +84,21 @@ public class FILEChannelRepository implements ChannelRepository {
 
 
     @Override
-    public boolean isExistChannel(String channelId) {
-        Map<String, Channel> map = load(directory);
+    public boolean isExistChannel(UUID channelId) {
+        Map<UUID, Channel> map = load(directory);
 
         return map.containsKey(channelId);
 
     }
 
-    private Map<String,Channel> load(Path directory) {
+    private Map<UUID,Channel> load(Path directory) {
         if (Files.exists(directory)) {
 
 
             try (Stream<Path> stream =  Files.list(directory))
 
             {
-                Map<String,Channel> map;
+                Map<UUID,Channel> map;
 
 
                 map = stream.map(path -> {
@@ -112,7 +113,7 @@ public class FILEChannelRepository implements ChannelRepository {
                             }
                         })
                         .collect(Collectors.toMap(
-                                Channel::getChannelId,
+                                Channel::getId,
                                 Function.identity()
 
                         ));
@@ -136,7 +137,7 @@ public class FILEChannelRepository implements ChannelRepository {
         }
 
     }
-    private Path pathToUserId(String channelId){
+    private Path pathToUserId(UUID channelId){
 
         return directory.resolve(channelId + ".dat");
 

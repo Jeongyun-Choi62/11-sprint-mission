@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -26,19 +27,19 @@ public class FILEUserRepository  implements UserRepository {
     @Override
     public boolean saveUser(User user) {
 
-        if(isExistUser(user.getUserId())){
+        if(isExistUser(user.getId())){
             return false;
         }
 
-        save(pathToUserId(user.getUserId()),user);
+        save(pathToUserId(user.getId()),user);
         return true;
 
     }
 
     @Override
-    public User getUser(String userId) {
+    public User getUser(UUID userId) {
 
-        Map<String,User> map = load(directory);
+        Map<UUID,User> map = load(directory);
 
         return map.getOrDefault(userId,null);
 
@@ -49,7 +50,7 @@ public class FILEUserRepository  implements UserRepository {
     @Override
     public List<User> getAllUser() {
 
-        Map<String,User> map = load(directory);
+        Map<UUID,User> map = load(directory);
 
         return map.values().stream().toList();
 
@@ -57,16 +58,16 @@ public class FILEUserRepository  implements UserRepository {
 
     @Override
     public boolean updateUser(User user) {
-        Map<String,User> map = load(directory);
+        Map<UUID,User> map = load(directory);
 
-        map.put(user.getUserId(),user);
+        map.put(user.getId(),user);
 
-        save(pathToUserId(user.getUserId()),user);
+        save(pathToUserId(user.getId()),user);
         return true;
     }
 
     @Override
-    public boolean deleteUser(String userId) {
+    public boolean deleteUser(UUID userId) {
 
 
        if(!isExistUser(userId))
@@ -87,21 +88,21 @@ public class FILEUserRepository  implements UserRepository {
     }
 
     @Override
-    public boolean isExistUser(String userId) {
-        Map<String, User> map = load(directory);
+    public boolean isExistUser(UUID userId) {
+        Map<UUID, User> map = load(directory);
 
         return map.containsKey(userId);
 
     }
 
-     private Map<String,User> load(Path directory) {
+     private Map<UUID,User> load(Path directory) {
         if (Files.exists(directory)) {
 
 
             try (Stream<Path> stream =  Files.list(directory))
 
             {
-                Map<String,User> map;
+                Map<UUID,User> map;
 
 
                 map = stream.map(path -> {
@@ -116,7 +117,7 @@ public class FILEUserRepository  implements UserRepository {
                             }
                         })
                         .collect(Collectors.toMap(
-                                User::getUserId,
+                                User::getId,
                                 Function.identity()
 
                         ));
@@ -140,7 +141,7 @@ public class FILEUserRepository  implements UserRepository {
         }
 
     }
-    private Path pathToUserId(String userId){
+    private Path pathToUserId(UUID userId){
 
         return directory.resolve(userId + ".dat");
 

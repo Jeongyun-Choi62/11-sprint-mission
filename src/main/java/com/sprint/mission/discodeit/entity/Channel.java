@@ -9,17 +9,14 @@ import java.util.List;
 public class Channel extends Entity{
 
     private String channelName; //채널 이름
-    private final String channelId; //채널 아이디 (채널이름 + 숫자)
     private String ownerId; //채널장
     private final List<String> members; //채널 내 멤버아이디들
-    private final List<Message> defaultMessages;
 
     public Channel(String channelName, String ownerId, String channelId) {
         this.channelName = channelName;
-        this.channelId = channelId;
         this.ownerId = ownerId;
         members = new ArrayList<>();
-        defaultMessages = new ArrayList<>();
+
         members.add(ownerId);
     }
 
@@ -57,17 +54,4 @@ public class Channel extends Entity{
         super.updateUpdatedAt();
     }
 
-
-
-
-
-    @Override
-    public String toString() {
-        return "Channel{" +
-                "channelName='" + channelName + '\'' +
-                ", channelId='" + channelId + '\'' +
-                ", ownerID=" + ownerId +
-                ", members=" + members +
-                '}';
-    }
 }
