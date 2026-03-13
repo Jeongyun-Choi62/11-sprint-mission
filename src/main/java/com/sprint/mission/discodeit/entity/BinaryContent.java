@@ -14,7 +14,7 @@ public class BinaryContent extends Entity{
 
 
 
-    enum Type{
+    public enum Type{
         PROFILEIMG,
         IMAGE,
         VIDEO,

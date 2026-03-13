@@ -3,9 +3,8 @@ package com.sprint.mission.discodeit.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import java.util.UUID;
 
-import java.util.ArrayList;
-import java.util.List;
 @Getter
 public class User extends Entity{
 
@@ -13,19 +12,14 @@ public class User extends Entity{
     private String email;
     @Getter(AccessLevel.NONE)
     private String password; //비밀번호
-    private BinaryContent profileImage;
+    private UUID profileId;
 
 
-
-    public enum Status {
-        ACTIVE, INACTIVE
-    }
-
-    public User(String nickname, String email, String password, BinaryContent profileImage) {
+    public User(String nickname, String email, String password, UUID profileImage) {
         this.password = password;
         this.nickname = nickname;
         this.email = email;
-        this.profileImage = profileImage;
+        this.profileId = profileImage;
     }
 
 
@@ -63,11 +57,11 @@ public class User extends Entity{
         return true;
     }
 
-    public boolean updateProfileImage(BinaryContent profileImage, String password){
+    public boolean updateProfileImage(UUID profileImage, String password){
         if(!checkSamePassword(password))
             return false;
 
-        this.profileImage = profileImage;
+        this.profileId = profileImage;
         super.updateUpdatedAt();
         return true;
     }

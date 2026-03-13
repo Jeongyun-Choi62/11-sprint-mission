@@ -44,8 +44,8 @@ public class BasicMessageService implements MessageService {
     public MessageInfoDto find(UUID messageId) {
 
         Message message = messageRepository.getMessage(messageId).orElseThrow();
-
         return infoDToEntity(message);
+
     }
 
     @Override
