@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.dto.userdto.CreateUserDto;
+import com.sprint.mission.discodeit.dto.userdto.UpdateUserDto;
 import com.sprint.mission.discodeit.dto.userdto.UserInfoDto;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.User;
@@ -90,36 +91,33 @@ public class BasicUserService implements UserService {
     }
 
     @Override
-    public UserInfoDto updateUser(UUID userId, String newNickname, String newEmail,UserStatus status, String oldPassword,String newPassword) {
+    public UserInfoDto updateUser(UpdateUserDto updateUserDto) {
 
         //유저 가져오기
-        User user = userRepository.getUser(userId).orElseThrow();
+        User user = userRepository.getUser(updateUserDto.userId()).orElseThrow();
 
         //기존 닉네임과 다르면 중복 체크 후 변경
-        if(!user.getNickname().equals(newNickname)){
+        if(!user.getNickname().equals(updateUserDto.newNickname())){
 
-            if(userRepository.isExistUserByNickname(newNickname)){
+            if(userRepository.isExistUserByNickname(updateUserDto.newNickname())){
                 throw new DupNameException();
             }
-            user.updateNickname(newNickname,oldPassword);
+            user.updateNickname(updateUserDto.newNickname(),updateUserDto.oldPassword());
         }
 
-        if(!user.getEmail().equals(newEmail)){
-            if(userRepository.isExistUserByEmail(newEmail)){
+        if(!user.getEmail().equals(updateUserDto.newEmail())){
+            if(userRepository.isExistUserByEmail(updateUserDto.newEmail())){
                 throw new DupEmailException();
             }
-            user.updateEmail(newEmail,oldPassword);
+            user.updateEmail(updateUserDto.newEmail(),updateUserDto.oldPassword());
         }
 
-        if(!user.checkSamePassword(oldPassword)){
+        if(!user.checkSamePassword(updateUserDto.oldPassword())){
             throw new DiffPasswordException();
         }
-        user.updatePassword(oldPassword,newPassword);
+        user.updatePassword(updateUserDto.oldPassword(),updateUserDto.newPassword());
 
-
-        userStatusRepository.saveUserStatus(status);
         userRepository.saveUser(user);
-
         return infoDtoToUser(user);
 
     }
