@@ -2,18 +2,20 @@ package com.sprint.mission.discodeit.entity;
 
 import lombok.Getter;
 
+import java.util.UUID;
+
 @Getter
 public class Message extends Entity {
 
     private String message;
-    private final String senderId; //전송자 아이디
-    private final String channelId; //채널 아이디
+    private final UUID senderId; //전송자 아이디
+    private final UUID channelId; //채널 아이디
 
 
 
 
 
-    public Message(String senderId, String channelId, String message) {
+    public Message(UUID senderId, UUID channelId, String message) {
 
         super();
         this.senderId = senderId;
