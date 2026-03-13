@@ -52,7 +52,7 @@ public class BasicUserService implements UserService {
         //이메일 체크
         if(userRepository.isExistUserByEmail(createUserDTO.email())){
             try{
-                throwDupEmailException();Exception();
+                throwDupEmailException();
             }
             catch (Exception e){
                 throw new RuntimeException(e);

@@ -1,11 +1,5 @@
 package com.sprint.mission.discodeit;
 
-import com.sprint.mission.discodeit.repository.ChannelRepository;
-import com.sprint.mission.discodeit.repository.MessageRepository;
-import com.sprint.mission.discodeit.repository.UserRepository;
-import com.sprint.mission.discodeit.repository.file.FILEChannelRepository;
-import com.sprint.mission.discodeit.repository.file.FILEMessageRepository;
-import com.sprint.mission.discodeit.repository.file.FILEUserRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
@@ -112,7 +106,7 @@ public class DiscodeitApplication {
 		System.out.println("2-2. Read Channel");
 
 		//채널 하나 출력
-		channelService.readChannel("shrimplove0001");
+		channelService.find("shrimplove0001");
 
 		//채널 전체 출력
 		System.out.println("\n모든 채널 출력\n");
@@ -129,25 +123,25 @@ public class DiscodeitApplication {
 		channelService.addMember("shrimplove0001","csp0404");
 		channelService.addMember("shrimplove0001","joy0505");
 
-		channelService.readChannel("shrimplove0001");
+		channelService.find("shrimplove0001");
 
 		System.out.println("\n//////////////////\n");
 		//채널 멤버 삭제 & 방장 삭제시 자동 권한 이양
 		channelService.removeMember("shrimplove0001","khn0101");
-		channelService.readChannel("shrimplove0001");
+		channelService.find("shrimplove0001");
 
 		System.out.println("\n");
 
 		//채널 이름 변경
 		System.out.println("2-3-2. Update Channel Name");
 		channelService.updateChannelName("shrimplove0001","더블통새우와퍼애호가들");
-		channelService.readChannel("shrimplove0001");
+		channelService.find("shrimplove0001");
 		System.out.println("\n");
 
 		//채널장 변경
 		System.out.println("2-3-3. Update Channel Owner");
 		channelService.updateChannelOwner("shrimplove0001","joy0505");
-		channelService.readChannel("shrimplove0001");
+		channelService.find("shrimplove0001");
 		System.out.println("\n");
 
 		//채널 삭제
@@ -212,7 +206,7 @@ public class DiscodeitApplication {
 		messageService.readAllMessage();
 
 		userService.deleteUser("joy0505","oyeongjeong5555");
-		channelService.readChannel("bigmaclove0001");
+		channelService.find("bigmaclove0001");
 
 
 
