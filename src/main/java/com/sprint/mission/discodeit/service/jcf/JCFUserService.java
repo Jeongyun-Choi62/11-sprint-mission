@@ -52,7 +52,7 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public void readAllUser() {
+    public void readAll() {
 
         data.values().stream()
                 .sorted(Entity::compareTo)

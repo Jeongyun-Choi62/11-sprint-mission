@@ -46,7 +46,7 @@ public class FILEUserService extends FILEServiceSystem implements UserService {
     }
 
     @Override
-    public void readAllUser() {
+    public void readAll() {
 
         List<User> users = load(directory);
         users.stream()

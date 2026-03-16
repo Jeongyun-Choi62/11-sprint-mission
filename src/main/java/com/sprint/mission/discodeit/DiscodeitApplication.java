@@ -42,11 +42,11 @@ public class DiscodeitApplication {
 		System.out.println("1-1. Create User ");
 
 		//유저 5명 생성
-		userService.createUser("김하나", "hanakim1111", "khn0101");
-		userService.createUser("이두리", "durilee2222", "ldr0202");
-		userService.createUser("박사미", "samipark3333", "psm0303");
-		userService.createUser("최사포", "sapochoi4444", "csp0404");
-		userService.createUser("정오영", "oyeongjeong5555", "joy0505");
+		userService.create("김하나", "hanakim1111", "khn0101");
+		userService.create("이두리", "durilee2222", "ldr0202");
+		userService.create("박사미", "samipark3333", "psm0303");
+		userService.create("최사포", "sapochoi4444", "csp0404");
+		userService.create("정오영", "oyeongjeong5555", "joy0505");
 		System.out.println("\n");
 
 		System.out.println("1-2. Read User");
@@ -57,7 +57,7 @@ public class DiscodeitApplication {
 
 		//전체 출력
 		System.out.println("\n모든 유저 출력\n");
-		userService.readAllUser();
+		userService.readAll();
 		System.out.println("\n");
 
 		System.out.println("1-3. Update User");
@@ -80,8 +80,8 @@ public class DiscodeitApplication {
 
 		//2번째 유저 삭제 후 유저 목록 출력
 		System.out.println("1-4. Delete User");
-		userService.deleteUser("ldr0202","durilee2222");
-		userService.readAllUser();
+		userService.delete("ldr0202","durilee2222");
+		userService.readAll();
 
 		System.out.println("\n");
 
@@ -205,7 +205,7 @@ public class DiscodeitApplication {
 		messageService.deleteMessage(mID1);
 		messageService.readAllMessage();
 
-		userService.deleteUser("joy0505","oyeongjeong5555");
+		userService.delete("joy0505","oyeongjeong5555");
 		channelService.find("bigmaclove0001");
 
 

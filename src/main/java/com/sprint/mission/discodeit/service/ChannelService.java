@@ -1,23 +1,20 @@
 package com.sprint.mission.discodeit.service;
 
 import com.sprint.mission.discodeit.dto.channeldto.*;
-import com.sprint.mission.discodeit.entity.Channel;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface ChannelService {
 
-    boolean createPrivate(CreatePrivateChannelDto createPrivateChannelDto);
-    boolean createPublic(CreatePublicChannelDto createPublicChannelDto);
+    PrivateChannelInfoDto createPrivate(CreatePrivateChannelDto createPrivateChannelDto);
+    PublicChannelInfoDto createPublic(CreatePublicChannelDto createPublicChannelDto);
 
-    Optional<FindPublicChannelDto> findPrivate(UUID channelId, UUID memberId);
-    Optional<FindPrivateChannelDto> findPublic(UUID channelId);
+    PrivateChannelInfoDto findPrivate(UUID channelId, UUID memberId);
+    PublicChannelInfoDto findPublic(UUID channelId);
 
-
-    List<FindPrivateChannelDto> findAllPrivateById(UUID userId);
-    List<FindPublicChannelDto> findAllPublicById(UUID userId);
+    List<PrivateChannelInfoDto> findAllPrivateById(UUID userId);
+    List<PublicChannelInfoDto> findAllPublicById(UUID userId);
 
 
 
@@ -32,17 +29,6 @@ public interface ChannelService {
 
     boolean isExistChannel(UUID channelId);
     boolean isChannelsMember(ChannelMemberDto channelMemberDto);
-
-
-
-
-
-
-
-
-
-
-
 
 
 

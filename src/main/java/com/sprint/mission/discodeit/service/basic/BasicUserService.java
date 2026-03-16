@@ -30,7 +30,7 @@ public class BasicUserService implements UserService {
 
 
     @Override
-    public UserInfoDto createUser(CreateUserDto createUserDTO) {
+    public UserInfoDto create(CreateUserDto createUserDTO) {
 
         //유저 생성
         User user = new User(
@@ -70,7 +70,7 @@ public class BasicUserService implements UserService {
     }
 
     @Override
-    public UserInfoDto readUser(UUID userId) {
+    public UserInfoDto find(UUID userId) {
 
         //유저 가져오기
         User user = userRepository.getUser(userId).orElseThrow();
@@ -81,7 +81,7 @@ public class BasicUserService implements UserService {
     }
 
     @Override
-    public List<UserInfoDto> readAllUser() {
+    public List<UserInfoDto> findAll() {
 
         //유저 리스트 가져오기
         return userRepository.getAllUser().stream()
@@ -129,7 +129,7 @@ public class BasicUserService implements UserService {
 
 
     @Override
-    public boolean deleteUser(UUID userId, String password) {
+    public boolean delete(UUID userId, String password) {
 
         // 유저 가져오기
         User user = userRepository.getUser(userId).orElseThrow();

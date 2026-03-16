@@ -2,22 +2,17 @@ package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.dto.channeldto.CreatePrivateChannelDto;
 import com.sprint.mission.discodeit.dto.channeldto.CreatePublicChannelDto;
-import com.sprint.mission.discodeit.dto.channeldto.FindPrivateChannelDto;
-import com.sprint.mission.discodeit.dto.channeldto.FindPublicChannelDto;
+import com.sprint.mission.discodeit.dto.channeldto.PrivateChannelInfoDto;
+import com.sprint.mission.discodeit.dto.channeldto.PublicChannelInfoDto;
 import com.sprint.mission.discodeit.entity.Channel;
-import com.sprint.mission.discodeit.entity.Message;
-import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
-import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.ReadStatusRepository;
-import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -25,8 +20,6 @@ import java.util.UUID;
 public class BasicChannelService implements ChannelService {
 
     private final ChannelRepository channelRepository;
-    private final UserRepository userRepository;
-    private final MessageRepository messageRepository;
     private final ReadStatusRepository readStatusRepository;
 
 
@@ -66,12 +59,12 @@ public class BasicChannelService implements ChannelService {
 
 
     @Override
-    public List<FindPublicChannelDto> findAllPublicById(UUID userId) {
+    public List<PublicChannelInfoDto> findAllPublicById(UUID userId) {
 
 
         return channelRepository.getAllChannel().stream()
                 .filter(channel -> channel.getChannelType() == Channel.ChannelType.PUBLIC)
-                .map(channel-> new FindPublicChannelDto(
+                .map(channel-> new PublicChannelInfoDto(
 
                         channel.getId(),
                         channel.getOwnerId(),
@@ -84,11 +77,11 @@ public class BasicChannelService implements ChannelService {
     }
 
     @Override
-    public List<FindPrivateChannelDto> findAllPrivateById(UUID memberId) {
+    public List<PrivateChannelInfoDto> findAllPrivateById(UUID memberId) {
 
         return channelRepository.getAllChannel().stream()
                 .filter(channel -> channel.getChannelType() == Channel.ChannelType.PUBLIC)
-                .map(channel-> new FindPublicChannelDto(
+                .map(channel-> new PublicChannelInfoDto(
 
 
                         channel.getId(),
