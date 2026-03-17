@@ -1,0 +1,52 @@
+package com.sprint.mission.discodeit.repository.jcf;
+
+import com.sprint.mission.discodeit.entity.BinaryContent;
+import com.sprint.mission.discodeit.repository.BinaryContentRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.*;
+
+@Repository
+public class JCFBinaryContentRepository implements BinaryContentRepository {
+
+    private final Map<UUID, BinaryContent> data;
+
+    public JCFBinaryContentRepository (){
+
+        data = new HashMap<>();
+
+    }
+
+    @Override
+    public BinaryContent saveBinaryContent(BinaryContent binaryContent) {
+        data.put(binaryContent.getId(),binaryContent);
+        return binaryContent;
+    }
+
+    @Override
+    public Optional<BinaryContent> getBinaryContent(UUID binaryContentId) {
+        return Optional.ofNullable(data.get(binaryContentId));
+    }
+
+    @Override
+    public List<BinaryContent> getAllBinaryContent() {
+        return data.values().stream().toList();
+    }
+
+    @Override
+    public List<BinaryContent> getAllByUserId(UUID userId) {
+        return data.values().stream()
+                .filter(binaryContent -> binaryContent.getUserID().equals(userId))
+                .toList();
+    }
+
+    @Override
+    public boolean deleteBinaryContent(UUID binaryContentId) {
+        return data.remove(binaryContentId) != null;
+    }
+
+    @Override
+    public boolean isExistBinaryContent(UUID binaryContentId) {
+        return data.containsKey(binaryContentId);
+    }
+}

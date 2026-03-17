@@ -57,4 +57,9 @@ public class JCFUserRepository implements UserRepository {
     public boolean isExistUserByEmail(String Email) {
         return data.values().stream().anyMatch(user -> user.getEmail().equals(Email));
     }
+
+    @Override
+    public boolean isExistUser(UUID userId) {
+        return data.containsKey(userId);
+    }
 }

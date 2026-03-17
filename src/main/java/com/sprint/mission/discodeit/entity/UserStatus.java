@@ -13,7 +13,7 @@ public class UserStatus extends Entity{
 
     public UserStatus(UUID userUUID) {
         this.userUUID = userUUID;
-        isOnline();
+        status = isOnline();
     }
 
     public enum Status{

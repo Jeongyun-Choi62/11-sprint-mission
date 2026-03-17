@@ -40,6 +40,7 @@ public class BasicUserService implements UserService {
                 createUserDTO.profileImage().getId()
         );
 
+        // 프로필 이미지
         BinaryContent img = createUserDTO.profileImage();
 
         // 닉네임 체크
@@ -57,11 +58,17 @@ public class BasicUserService implements UserService {
             throw new IllegalArgumentException("프로필 사진 타입이 아닙니다.");
 
 
+        //유저 스테이터스 중복 체크
+        if(userStatusRepository.isExistUserStatus(user.getId())){
+            throw new ArithmeticException("이미 존재하는 유저 상태입니다.");
+        }
 
         //유저 저장
         userRepository.saveUser(user);
+
         //유저 상태 저장
         userStatusRepository.saveUserStatus(new UserStatus(user.getId()));
+
         //프로필 저장
         binaryContentRepository.saveBinaryContent(img);
 
@@ -75,8 +82,6 @@ public class BasicUserService implements UserService {
         //유저 가져오기
         User user = userRepository.getUser(userId).orElseThrow();
         return infoDtoToUser(user);
-
-
 
     }
 
@@ -135,6 +140,7 @@ public class BasicUserService implements UserService {
         User user = userRepository.getUser(userId).orElseThrow();
 
 
+        //비밀번호 체크
         if(!user.checkSamePassword(password)){
             throw new DiffPasswordException();
         }
@@ -148,7 +154,7 @@ public class BasicUserService implements UserService {
 
 
 
-
+    //유저 -> infoDto
     UserInfoDto infoDtoToUser(User user){
 
 
@@ -158,7 +164,7 @@ public class BasicUserService implements UserService {
                 user.getNickname(),
                 user.getEmail(),
                 binaryContentRepository.getBinaryContent(user.getProfileId()).orElseThrow(),
-                userStatusRepository.readUserStatus(user.getId()).orElseThrow()
+                userStatusRepository.getUserStatus(user.getId()).orElseThrow()
 
         );
     }

@@ -15,6 +15,7 @@ public interface UserRepository {
     boolean deleteUser(UUID userId);
     boolean isExistUserByNickname(String nickname);
     boolean isExistUserByEmail(String Email);
+    boolean isExistUser(UUID userId);
 
 
 

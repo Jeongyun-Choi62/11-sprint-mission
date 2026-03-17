@@ -10,8 +10,8 @@ public interface UserStatusRepository {
 
 
     UserStatus saveUserStatus(UserStatus userStatus);
-    Optional<UserStatus> readUserStatus(UUID userId);
-    List<UserStatus> readAllUserStatus();
+    Optional<UserStatus> getUserStatus(UUID userId);
+    List<UserStatus> getAllUserStatus();
     boolean deleteUserStatus(UUID userId);
     boolean isExistUserStatus(UUID userId);
 

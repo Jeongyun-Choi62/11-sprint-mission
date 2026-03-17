@@ -4,9 +4,10 @@ import com.sprint.mission.discodeit.entity.BinaryContent;
 
 import java.util.UUID;
 
-public record BinaryContentInfoDto (
-        UUID binaryContentId,
+public record CreateBinaryContentDto(
+
         UUID userId,
         UUID messageId,
-        BinaryContent.Type type)
-{}
+        BinaryContent.Type type
+) {
+}

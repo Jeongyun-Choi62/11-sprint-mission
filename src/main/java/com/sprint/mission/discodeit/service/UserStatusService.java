@@ -12,7 +12,7 @@ public interface UserStatusService {
     UserStatusInfoDto find(CreateUserStatusDto createUserStatusDto);
     List<UserStatusInfoDto> findAll();
     UserStatusInfoDto update(CreateUserStatusDto createUserStatusDto);
-    boolean delete(CreateUserStatusDto createUserStatusDto);
+    boolean delete(UUID userId);
 
 
 }
