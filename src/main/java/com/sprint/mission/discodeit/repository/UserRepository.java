@@ -12,7 +12,6 @@ public interface UserRepository {
     Optional<User> getUser(UUID userId);
     List<User> getAllUser();
     Optional<User> getUserByNickname(String nickname);
-    boolean updateUser(User user);
     boolean deleteUser(UUID userId);
     boolean isExistUserByNickname(String nickname);
     boolean isExistUserByEmail(String Email);

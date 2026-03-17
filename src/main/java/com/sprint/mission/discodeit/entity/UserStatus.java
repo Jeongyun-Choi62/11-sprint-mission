@@ -16,7 +16,7 @@ public class UserStatus extends Entity{
         isOnline();
     }
 
-    enum Status{
+    public enum Status{
         ONLINE,
         OFFLINE
     }

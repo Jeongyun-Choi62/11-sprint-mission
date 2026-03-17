@@ -13,7 +13,6 @@ public interface MessageRepository {
     List<Message> getAllMessage();
 
     List<Message> getAllByChannelId(UUID channelId);
-    boolean updateMessage(Message message);
     boolean deleteMessage(UUID messageId);
     boolean isExistMessage(UUID messageId);
     boolean channelsMessagedelete(UUID channelId);

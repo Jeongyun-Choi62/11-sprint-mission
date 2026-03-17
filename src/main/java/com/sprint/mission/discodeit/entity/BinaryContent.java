@@ -11,6 +11,7 @@ public class BinaryContent extends Entity{
     UUID userID;
     UUID MessageId;
     Type type;
+    //String url;
 
 
 
@@ -22,10 +23,11 @@ public class BinaryContent extends Entity{
         FILE
     }
 
-    public BinaryContent(UUID userID, Type type, UUID messageId) {
+    public BinaryContent(UUID userID, UUID messageId, Type type) {
         this.userID = userID;
         this.type = type;
         MessageId = messageId;
+
     }
 
     public BinaryContent(UUID userID) {
@@ -33,6 +35,8 @@ public class BinaryContent extends Entity{
         this.type = Type.PROFILEIMG;
         MessageId = null;
     }
+
+
 
     public void updateUpdatedAt(){
 
@@ -46,6 +50,7 @@ public class BinaryContent extends Entity{
                 "userID=" + userID +
                 ", MessageId=" + MessageId +
                 ", type=" + type +
+                ", url='" + url + '\'' +
                 '}';
     }
 }
