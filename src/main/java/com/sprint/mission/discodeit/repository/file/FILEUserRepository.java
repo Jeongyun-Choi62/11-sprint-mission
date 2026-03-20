@@ -7,95 +7,59 @@ import org.springframework.stereotype.Repository;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-@Repository
+//@Repository
 public class FILEUserRepository  implements UserRepository {
 
     private final Path directory;
-
-
     public FILEUserRepository() {
         directory = Path.of("src/main/resources/Users/");
     }
 
     @Override
     public boolean saveUser(User user) {
-
-        if(isExistUser(user.getId())){
-            return false;
-        }
-
-        save(pathToUserId(user.getId()),user);
-        return true;
-
+        return false;
     }
 
     @Override
-    public User getUser(UUID userId) {
-
-        Map<UUID,User> map = load(directory);
-
-        return map.getOrDefault(userId,null);
-
-
-
+    public Optional<User> getUser(UUID userId) {
+        return Optional.empty();
     }
 
     @Override
     public List<User> getAllUser() {
-
-        Map<UUID,User> map = load(directory);
-
-        return map.values().stream().toList();
-
+        return List.of();
     }
 
     @Override
-    public boolean updateUser(User user) {
-        Map<UUID,User> map = load(directory);
-
-        map.put(user.getId(),user);
-
-        save(pathToUserId(user.getId()),user);
-        return true;
+    public Optional<User> getUserByNickname(String nickname) {
+        return Optional.empty();
     }
 
     @Override
     public boolean deleteUser(UUID userId) {
+        return false;
+    }
 
+    @Override
+    public boolean isExistUserByNickname(String nickname) {
+        return false;
+    }
 
-       if(!isExistUser(userId))
-           return false;
-
-       try {
-           Files.deleteIfExists(pathToUserId(userId));
-       }
-       catch(IOException e){
-           return false;
-
-
-       }
-       return true;
-
-
-
+    @Override
+    public boolean isExistUserByEmail(String Email) {
+        return false;
     }
 
     @Override
     public boolean isExistUser(UUID userId) {
-        Map<UUID, User> map = load(directory);
-
-        return map.containsKey(userId);
-
+        return false;
     }
 
-     private Map<UUID,User> load(Path directory) {
+    private Map<UUID,User> load(Path directory) {
         if (Files.exists(directory)) {
 
 

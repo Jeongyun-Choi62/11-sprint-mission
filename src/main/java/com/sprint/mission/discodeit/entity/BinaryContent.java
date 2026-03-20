@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.entity;
 
+import com.sprint.mission.discodeit.binary.BinaryFile;
 import lombok.Getter;
 
 import java.time.Instant;
@@ -11,6 +12,7 @@ public class BinaryContent extends Entity{
     UUID userID;
     UUID MessageId;
     Type type;
+    BinaryFile binaryFile;
     //String url;
 
 
@@ -23,17 +25,19 @@ public class BinaryContent extends Entity{
         FILE
     }
 
-    public BinaryContent(UUID userID, UUID messageId, Type type) {
+    public BinaryContent(UUID userID, UUID messageId, Type type, BinaryFile binaryFile) {
         this.userID = userID;
         this.type = type;
         MessageId = messageId;
+        this.binaryFile = binaryFile;
 
     }
 
-    public BinaryContent(UUID userID) {
+    public BinaryContent(UUID userID,BinaryFile binaryFile) {
         this.userID = userID;
         this.type = Type.PROFILEIMG;
         MessageId = null;
+        this.binaryFile = binaryFile;
     }
 
 
@@ -50,7 +54,7 @@ public class BinaryContent extends Entity{
                 "userID=" + userID +
                 ", MessageId=" + MessageId +
                 ", type=" + type +
-                ", url='" + url + '\'' +
+
                 '}';
     }
 }

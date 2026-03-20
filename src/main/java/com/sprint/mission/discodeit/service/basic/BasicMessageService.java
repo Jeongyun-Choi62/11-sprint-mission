@@ -3,7 +3,9 @@ package com.sprint.mission.discodeit.service.basic;
 import com.sprint.mission.discodeit.dto.messagedto.CreateMessageDto;
 import com.sprint.mission.discodeit.dto.messagedto.MessageInfoDto;
 import com.sprint.mission.discodeit.dto.messagedto.UpdateMessageDto;
+import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.Message;
+import com.sprint.mission.discodeit.exception.service.NonExistException;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.service.MessageService;
@@ -11,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -27,24 +28,37 @@ public class BasicMessageService implements MessageService {
     @Override
     public MessageInfoDto create(CreateMessageDto createMessageDto) {
 
+
         Message message = new Message(
 
 
                 createMessageDto.userId(),
                 createMessageDto.channelId(),
-                createMessageDto.content()
+                createMessageDto.content(),
+                null
+
 
         );
+        if(createMessageDto.binaryFile() != null)
+            createMessageDto.binaryFile().forEach(binaryFile -> {
+                binaryContentRepository.saveBinaryContent(new BinaryContent(
+                    createMessageDto.userId(),
+                    message.getId(),
+                    BinaryContent.Type.IMAGE,
+                    binaryFile
+                ));
+
+            });
         messageRepository.saveMessage(message);
 
-        return infoDToEntity(message);
+        return messageToInfo(message);
     }
 
     @Override
     public MessageInfoDto find(UUID messageId) {
 
         Message message = messageRepository.getMessage(messageId).orElseThrow();
-        return infoDToEntity(message);
+        return messageToInfo(message);
 
     }
 
@@ -52,7 +66,7 @@ public class BasicMessageService implements MessageService {
     public List<MessageInfoDto> findAllById(UUID channelId) {
         return messageRepository.getAllByChannelId(channelId)
                 .stream()
-                .map(this::infoDToEntity)
+                .map(this::messageToInfo)
                 .toList();
     }
 
@@ -62,7 +76,12 @@ public class BasicMessageService implements MessageService {
         Message message = messageRepository.getMessage(updateMessageDto.messageId()).orElseThrow();
 
         message.updateMessage(updateMessageDto.content());
-        updateMessageDto.files().forEach(binaryContentRepository::saveBinaryContent);
+
+        //TODO : 바이너리 콘텐츠 업데이트 시 바이너리 콘텐츠 삭제및 생성, 업데이트,
+
+        //message.updateattachmentIds(updateMessageDto.binaryFile());
+
+        messageRepository.saveMessage(message);
 
         return true;
     }
@@ -70,17 +89,18 @@ public class BasicMessageService implements MessageService {
     @Override
     public boolean deleteMessage(UUID messageId) {
 
+
+        if(!messageRepository.isExistMessage(messageId))
+            throw new NonExistException("해당 메시지가 존재하지 않습니다.");
+
         messageRepository.deleteMessage(messageId);
-        BinaryContentRepository.deleteByMessageId();
+        binaryContentRepository.deleteBinaryContentByMessageId(messageId);
 
         return true;
-
-
-
     }
 
 
-    MessageInfoDto infoDToEntity (Message message){
+    MessageInfoDto messageToInfo(Message message){
 
         return new MessageInfoDto(
 
@@ -88,7 +108,7 @@ public class BasicMessageService implements MessageService {
                 message.getSenderId(),
                 message.getChannelId(),
                 message.getMessage(),
-                BinaryContentRepository.getContentById(message.getId())
+                binaryContentRepository.getAllByMessageId(message.getId()).stream().toList()
         );
     }
 

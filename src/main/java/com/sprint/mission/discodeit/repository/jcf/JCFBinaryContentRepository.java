@@ -29,6 +29,15 @@ public class JCFBinaryContentRepository implements BinaryContentRepository {
     }
 
     @Override
+    public Optional<BinaryContent> getProfileContentByUserId(UUID userId) {
+        return data.values().stream()
+                .filter(binaryContent -> binaryContent.getUserID().equals(userId))
+                .filter(binaryContent -> binaryContent.getType() == BinaryContent.Type.PROFILEIMG )
+                .filter(binaryContent -> binaryContent.getMessageId() == null)
+                .findFirst();
+    }
+
+    @Override
     public List<BinaryContent> getAllBinaryContent() {
         return data.values().stream().toList();
     }
@@ -41,12 +50,28 @@ public class JCFBinaryContentRepository implements BinaryContentRepository {
     }
 
     @Override
+    public List<BinaryContent> getAllByMessageId(UUID messageId) {
+        return data.values().stream()
+                .filter(binaryContent -> binaryContent.getMessageId()!=null&&binaryContent.getMessageId().equals(messageId))
+                .toList();
+    }
+
+    @Override
     public boolean deleteBinaryContent(UUID binaryContentId) {
         return data.remove(binaryContentId) != null;
+    }
+
+    @Override
+    public boolean deleteBinaryContentByMessageId(UUID messageId) {
+        return data.values().removeIf(binaryContent -> binaryContent.getMessageId()!= null&&binaryContent.getMessageId().equals(messageId));
     }
 
     @Override
     public boolean isExistBinaryContent(UUID binaryContentId) {
         return data.containsKey(binaryContentId);
     }
+
+
+    record profileInfo(UUID userId, UUID messageId){}
+
 }

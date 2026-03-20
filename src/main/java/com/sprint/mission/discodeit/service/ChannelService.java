@@ -13,12 +13,9 @@ public interface ChannelService {
     PrivateChannelInfoDto findPrivate(UUID channelId, UUID memberId);
     PublicChannelInfoDto findPublic(UUID channelId);
 
-    List<PrivateChannelInfoDto> findAllPrivateById(UUID userId);
-    List<PublicChannelInfoDto> findAllPublicById(UUID userId);
+    List<PublicChannelInfoDto> findAllById(UUID userId);
 
-
-
-    UpdateChannelDto updateChannel(UpdateChannelDto updateChannelDto);
+    PublicChannelInfoDto updateChannel(UpdateChannelDto updateChannelDto);
 
 
     void addMember(ChannelMemberDto channelMemberDto);
@@ -26,10 +23,6 @@ public interface ChannelService {
 
 
     void deleteChannel(UUID channelId);
-
-    boolean isExistChannel(UUID channelId);
-    boolean isChannelsMember(ChannelMemberDto channelMemberDto);
-
 
 
 }

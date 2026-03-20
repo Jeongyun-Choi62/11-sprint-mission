@@ -11,7 +11,6 @@ public record PrivateChannelInfoDto(
         UUID channelId,
         UUID ownerId,
         Channel.ChannelType channelType,
-        List<UUID> memberIdList,
         Instant LastMessageTime
 ) {
 }

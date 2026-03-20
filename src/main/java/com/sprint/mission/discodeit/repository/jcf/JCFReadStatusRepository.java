@@ -42,6 +42,15 @@ public class JCFReadStatusRepository implements ReadStatusRepository {
                 .toList();
     }
 
+    public List<ReadStatus> getAllByChannelId(UUID channelId) {
+
+        return data.values().stream()
+                .filter(readStatus -> readStatus.getChannelId().equals(channelId))
+                .toList();
+
+
+    }
+
     @Override
     public boolean delete(UUID userId, UUID channelId) {
         Pair pair = new Pair(userId,channelId);

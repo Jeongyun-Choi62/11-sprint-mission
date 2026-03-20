@@ -33,7 +33,8 @@ public class BasicBinaryContentService implements BinaryContentService {
 
                 createBinaryContentDto.userId(),
                 createBinaryContentDto.messageId(),
-                createBinaryContentDto.type()
+                createBinaryContentDto.type(),
+                createBinaryContentDto.binaryFile()
 
         );
 
@@ -52,7 +53,7 @@ public class BasicBinaryContentService implements BinaryContentService {
 
         //프로필이면 프로필 등록 메서드로 넘기기
         if(createBinaryContentDto.type() == BinaryContent.Type.PROFILEIMG){
-            return createProfileImg(new CreateProfileImgDto(createBinaryContentDto.userId()));
+            return createProfileImg(new CreateProfileImgDto(createBinaryContentDto.userId(), createBinaryContentDto.binaryFile()));
         }
 
         binaryContentRepository.saveBinaryContent(content);
@@ -67,7 +68,8 @@ public class BasicBinaryContentService implements BinaryContentService {
         BinaryContent content = new BinaryContent(
                 createProfileImgDto.userId(),
                 null,
-                BinaryContent.Type.PROFILEIMG
+                BinaryContent.Type.PROFILEIMG,
+                createProfileImgDto.binaryFile()
         );
 
         //존재 유저 체크
@@ -117,7 +119,7 @@ public class BasicBinaryContentService implements BinaryContentService {
 
                 content.getId(),
                 content.getUserID(),
-                content.getMessageId(),
+                content.getBinaryFile(),
                 content.getType()
         );
 

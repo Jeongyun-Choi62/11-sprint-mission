@@ -14,7 +14,6 @@ public record PublicChannelInfoDto(
         String channelName,
         Channel.ChannelType channelType,
         String channelDescription,
-        List<UUID> memberIdList,
         Instant LastMessageTime
 ) {
 }

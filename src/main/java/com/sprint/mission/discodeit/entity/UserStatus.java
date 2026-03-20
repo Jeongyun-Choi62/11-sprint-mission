@@ -8,11 +8,11 @@ import java.util.UUID;
 @Getter
 public class UserStatus extends Entity{
 
-    private final UUID userUUID;
+    private final UUID userId;
     private Status status;
 
-    public UserStatus(UUID userUUID) {
-        this.userUUID = userUUID;
+    public UserStatus(UUID userId) {
+        this.userId = userId;
         status = isOnline();
     }
 

@@ -7,14 +7,11 @@ import org.springframework.stereotype.Repository;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-@Repository
+//@Repository
 public class FILEMessageRepository implements MessageRepository {
 
     private final Path directory;
@@ -25,70 +22,42 @@ public class FILEMessageRepository implements MessageRepository {
 
     @Override
     public boolean saveMessage(Message message) {
-
-        if(isExistMessage(message.getId())){
-            return false;
-        }
-        save(pathToUserId(message.getId()), message);
-        return true;
-
-
+        return false;
     }
 
     @Override
-    public Message getMessage(UUID messageId) {
-        Map<UUID ,Message> map = load(directory);
-        return map.getOrDefault(messageId,null);
+    public Optional<Message> getMessage(UUID messageId) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Message> getLastMessagebyChannelId(UUID channelId) {
+        return Optional.empty();
     }
 
     @Override
     public List<Message> getAllMessage() {
-        Map<UUID ,Message> map = load(directory);
-        return map.values().stream().toList();
+        return List.of();
     }
 
     @Override
-    public boolean updateMessage(Message message) {
-        Map<UUID ,Message> map = load(directory);
-        map.put(message.getId(), message);
-        save(pathToUserId(message.getId()),message);
-        return true;
+    public List<Message> getAllByChannelId(UUID channelId) {
+        return List.of();
     }
 
     @Override
     public boolean deleteMessage(UUID messageId) {
-
-        if(!isExistMessage(messageId))
-            return false;
-        try {
-            Files.deleteIfExists(pathToUserId(messageId));
-        }
-        catch(IOException e){
-            return false;
-        }
-        return true;
+        return false;
     }
-
-
 
     @Override
     public boolean isExistMessage(UUID messageId) {
-        Map<UUID, Message> map = load(directory);
-
-        return map.containsKey(messageId);
-
+        return false;
     }
 
     @Override
     public boolean channelsMessagedelete(UUID channelId) {
-        Map<UUID, Message> map = load(directory);
-
-        map.values().stream()
-                .filter(msg-> msg.getChannelId().equals(channelId))
-                .forEach(msg -> deleteMessage(msg.getId()));
-
-        return true;
-
+        return false;
     }
 
     private Map<UUID ,Message> load(Path directory) {

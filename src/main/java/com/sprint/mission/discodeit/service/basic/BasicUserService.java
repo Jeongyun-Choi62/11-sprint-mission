@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.service.basic;
 
+import com.sprint.mission.discodeit.binary.BinaryFile;
 import com.sprint.mission.discodeit.dto.userdto.CreateUserDto;
 import com.sprint.mission.discodeit.dto.userdto.UpdateUserDto;
 import com.sprint.mission.discodeit.dto.userdto.UserInfoDto;
@@ -9,11 +10,13 @@ import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.exception.service.DiffPasswordException;
 import com.sprint.mission.discodeit.exception.service.DupEmailException;
 import com.sprint.mission.discodeit.exception.service.DupNameException;
+import com.sprint.mission.discodeit.exception.service.NonExistException;
 import com.sprint.mission.discodeit.repository.*;
 import com.sprint.mission.discodeit.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -32,16 +35,21 @@ public class BasicUserService implements UserService {
     @Override
     public UserInfoDto create(CreateUserDto createUserDTO) {
 
+
+
         //유저 생성
         User user = new User(
                 createUserDTO.nickname(),
                 createUserDTO.email(),
                 createUserDTO.password(),
-                createUserDTO.profileImage().getId()
+                null
         );
-
-        // 프로필 이미지
-        BinaryContent img = createUserDTO.profileImage();
+        //프로필 생성
+        BinaryContent content = null;
+        if(createUserDTO.binaryFile() != null) {
+            content = binaryContentRepository.saveBinaryContent(new BinaryContent(user.getId(), createUserDTO.binaryFile()));
+            user.updateProfileImage(content.getId(), createUserDTO.password());
+        }
 
         // 닉네임 체크
         if(userRepository.isExistUserByNickname(createUserDTO.nickname())){
@@ -52,10 +60,6 @@ public class BasicUserService implements UserService {
         if(userRepository.isExistUserByEmail(createUserDTO.email())){
            throw new DupEmailException();
         }
-
-        //프로필 사진 체크
-        if(img.getType() != BinaryContent.Type.PROFILEIMG)
-            throw new IllegalArgumentException("프로필 사진 타입이 아닙니다.");
 
 
         //유저 스테이터스 중복 체크
@@ -70,10 +74,13 @@ public class BasicUserService implements UserService {
         userStatusRepository.saveUserStatus(new UserStatus(user.getId()));
 
         //프로필 저장
-        binaryContentRepository.saveBinaryContent(img);
+        if(content != null)
+            binaryContentRepository.saveBinaryContent(content);
 
 
-        return infoDtoToUser(user);
+
+
+        return userToInfoDto(user);
     }
 
     @Override
@@ -81,7 +88,7 @@ public class BasicUserService implements UserService {
 
         //유저 가져오기
         User user = userRepository.getUser(userId).orElseThrow();
-        return infoDtoToUser(user);
+        return userToInfoDto(user);
 
     }
 
@@ -90,7 +97,7 @@ public class BasicUserService implements UserService {
 
         //유저 리스트 가져오기
         return userRepository.getAllUser().stream()
-                .map(this::infoDtoToUser)
+                .map(this::userToInfoDto)
                 .toList();
 
     }
@@ -123,7 +130,7 @@ public class BasicUserService implements UserService {
         user.updatePassword(updateUserDto.oldPassword(),updateUserDto.newPassword());
 
         userRepository.saveUser(user);
-        return infoDtoToUser(user);
+        return userToInfoDto(user);
 
     }
 
@@ -155,15 +162,17 @@ public class BasicUserService implements UserService {
 
 
     //유저 -> infoDto
-    UserInfoDto infoDtoToUser(User user){
+    UserInfoDto userToInfoDto(User user){
 
 
+        BinaryContent content = binaryContentRepository.getProfileContentByUserId(user.getId()).orElse(null);
+        BinaryFile binaryFile = content != null ? content.getBinaryFile() : null;
         return new UserInfoDto(
 
                 user.getId(),
                 user.getNickname(),
                 user.getEmail(),
-                binaryContentRepository.getBinaryContent(user.getProfileId()).orElseThrow(),
+                binaryFile,
                 userStatusRepository.getUserStatus(user.getId()).orElseThrow()
 
         );

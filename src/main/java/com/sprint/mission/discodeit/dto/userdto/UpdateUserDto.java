@@ -1,5 +1,8 @@
 package com.sprint.mission.discodeit.dto.userdto;
 
+import com.sprint.mission.discodeit.binary.BinaryFile;
+import com.sprint.mission.discodeit.dto.binarycontentdto.BinaryContentInfoDto;
+import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.UserStatus;
 
 import java.util.UUID;
@@ -14,7 +17,7 @@ public record UpdateUserDto(
         String newEmail,
         String oldPassword,
         String newPassword,
-        UUID profileId
+        BinaryFile newProfileImg
 
 
         ) {

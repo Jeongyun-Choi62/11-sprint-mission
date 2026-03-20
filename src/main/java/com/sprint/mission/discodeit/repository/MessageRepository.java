@@ -10,9 +10,12 @@ public interface MessageRepository {
 
     boolean saveMessage(Message message);
     Optional<Message> getMessage(UUID messageId);
+    Optional<Message> getLastMessagebyChannelId(UUID channelId);
+
     List<Message> getAllMessage();
 
     List<Message> getAllByChannelId(UUID channelId);
+
     boolean deleteMessage(UUID messageId);
     boolean isExistMessage(UUID messageId);
     boolean channelsMessagedelete(UUID channelId);

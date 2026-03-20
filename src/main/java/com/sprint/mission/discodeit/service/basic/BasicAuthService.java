@@ -1,7 +1,9 @@
 package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.dto.userdto.UserInfoDto;
+import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.repository.UserStatusRepository;
 import com.sprint.mission.discodeit.service.AuthService;
@@ -14,6 +16,7 @@ public class BasicAuthService implements AuthService {
 
     private final UserRepository userRepository;
     private final UserStatusRepository userStatusRepository;
+    private final BinaryContentRepository binaryContentRepository;
 
     @Override
     public UserInfoDto login(String userName, String password) {
@@ -26,7 +29,7 @@ public class BasicAuthService implements AuthService {
                     user.getId(),
                     user.getNickname(),
                     user.getEmail(),
-                    user.getProfileImage(),
+                    binaryContentRepository.getBinaryContent(user.getProfileId()).orElseThrow().getBinaryFile(),
                     userStatusRepository.getUserStatus(user.getId()).orElseThrow(IllegalArgumentException::new)
             );
         } else throw new PasswordfailException("비밀번호가 일치 하지 않습니다.");

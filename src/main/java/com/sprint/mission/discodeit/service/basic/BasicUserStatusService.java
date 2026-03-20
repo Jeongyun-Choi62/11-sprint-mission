@@ -105,7 +105,7 @@ public class BasicUserStatusService implements UserStatusService {
 
         return new UserStatusInfoDto(
 
-                userStatus.getUserUUID(),
+                userStatus.getUserId(),
                 userStatus.getStatus()
         );
 

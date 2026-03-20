@@ -8,14 +8,11 @@ import org.springframework.stereotype.Repository;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-@Repository
+//@Repository
 public class FILEChannelRepository implements ChannelRepository {
 
     private final Path directory;
@@ -27,68 +24,27 @@ public class FILEChannelRepository implements ChannelRepository {
 
     @Override
     public boolean saveChannel(Channel channel) {
-        if(isExistChannel(channel.getId())){
-            return false;
-        }
-
-        save(pathToUserId(channel.getId()),channel);
-        return true;
-
-
+        return false;
     }
 
     @Override
-    public Channel getChannel(UUID channelId) {
-        Map<UUID,Channel> map = load(directory);
-
-        return map.getOrDefault(channelId,null);
+    public Optional<Channel> getChannel(UUID channelId) {
+        return Optional.empty();
     }
 
     @Override
     public List<Channel> getAllChannel() {
-        Map<UUID,Channel> map = load(directory);
-
-        return map.values().stream().toList();
-    }
-
-    @Override
-    public boolean updateChannel(Channel channel) {
-
-        Map<UUID,Channel> map = load(directory);
-
-        map.put(channel.getId(), channel);
-
-        save(pathToUserId(channel.getId()),channel);
-
-
-        return true;
-
+        return List.of();
     }
 
     @Override
     public boolean deleteChannel(UUID channelId) {
-
-        if(!isExistChannel(channelId))
-            return false;
-
-        try {
-            Files.deleteIfExists(pathToUserId(channelId));
-        }
-        catch(IOException e){
-            return false;
-
-
-        }
-        return true;
+        return false;
     }
-
 
     @Override
     public boolean isExistChannel(UUID channelId) {
-        Map<UUID, Channel> map = load(directory);
-
-        return map.containsKey(channelId);
-
+        return false;
     }
 
     private Map<UUID,Channel> load(Path directory) {

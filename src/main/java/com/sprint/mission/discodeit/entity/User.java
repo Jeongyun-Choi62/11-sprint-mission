@@ -13,7 +13,7 @@ public class User extends Entity{
     @Getter(AccessLevel.NONE)
     private String password; //비밀번호
     private UUID profileId;
-    private UUID userStatusId;
+
 
 
     public User(String nickname, String email, String password, UUID profileImage) {
@@ -21,7 +21,7 @@ public class User extends Entity{
         this.nickname = nickname;
         this.email = email;
         this.profileId = profileImage;
-        this.userStatusId = UUID.randomUUID();
+
     }
 
 
