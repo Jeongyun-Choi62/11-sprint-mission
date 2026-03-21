@@ -365,7 +365,41 @@ public class DiscodeitApplication {
 			throw new RuntimeException("삭제 중 오류 발생", e);
 
 		}
+		try (var stream = Files.list(Path.of("src/main/resources/ReadStatuses/"))) {
+			stream.sorted(Comparator.reverseOrder())
+					.map(Path::toFile)
+					.forEach(File::delete);
+
+
+
+		} catch (IOException e) {
+			throw new RuntimeException("삭제 중 오류 발생", e);
+
+		}
+		try (var stream = Files.list(Path.of("src/main/resources/UserStatuses/"))) {
+			stream.sorted(Comparator.reverseOrder())
+					.map(Path::toFile)
+					.forEach(File::delete);
+
+
+
+		} catch (IOException e) {
+			throw new RuntimeException("삭제 중 오류 발생", e);
+
+		}
+		try (var stream = Files.list(Path.of("src/main/resources/BinaryContents/"))) {
+			stream.sorted(Comparator.reverseOrder())
+					.map(Path::toFile)
+					.forEach(File::delete);
+
+
+
+		} catch (IOException e) {
+			throw new RuntimeException("삭제 중 오류 발생", e);
+
+		}
 
 	}
+
 
 }

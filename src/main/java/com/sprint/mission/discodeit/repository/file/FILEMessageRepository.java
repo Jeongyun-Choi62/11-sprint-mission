@@ -8,106 +8,102 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-//@Repository
+
+@Repository
 public class FILEMessageRepository implements MessageRepository {
 
+    private final FileSaveLoad<Message> saveLoad;
     private final Path directory;
 
     public FILEMessageRepository() {
+
+        saveLoad = new FileSaveLoad<>();
         this.directory = Path.of("src/main/resources/Messages/");
     }
 
     @Override
     public boolean saveMessage(Message message) {
-        return false;
+        if(message == null)
+            return false;
+        save(idToPath(message.getId()),message);
+        return true;
     }
 
     @Override
     public Optional<Message> getMessage(UUID messageId) {
-        return Optional.empty();
+
+        Map<UUID,Message> messages = load(directory);
+        return Optional.ofNullable(messages.get(messageId));
+
     }
 
     @Override
     public Optional<Message> getLastMessagebyChannelId(UUID channelId) {
-        return Optional.empty();
+        Map<UUID,Message> messages = load(directory);
+        return messages.values().stream()
+                .filter(message -> message.getChannelId().equals(channelId))
+                .max(Comparator.comparing(Message::getCreatedAt));
+
     }
 
     @Override
     public List<Message> getAllMessage() {
-        return List.of();
+        Map<UUID,Message> messages = load(directory);
+        return messages.values().stream().toList();
     }
 
     @Override
     public List<Message> getAllByChannelId(UUID channelId) {
-        return List.of();
+
+        Map<UUID,Message> messages = load(directory);
+        return messages.values().stream()
+                .filter(message -> message.getChannelId().equals(channelId))
+                .toList();
     }
 
     @Override
     public boolean deleteMessage(UUID messageId) {
-        return false;
+        if(!isExistMessage(messageId)){
+            return false;
+        }
+
+        try {
+            Files.deleteIfExists(idToPath(messageId));
+        }
+        catch(IOException e){
+            return false;
+
+        }
+        return true;
+
+
     }
 
     @Override
     public boolean isExistMessage(UUID messageId) {
-        return false;
+        Map<UUID,Message> messages = load(directory);
+        return messages.containsKey(messageId);
+
     }
 
     @Override
     public boolean channelsMessagedelete(UUID channelId) {
-        return false;
+        Map<UUID,Message> messages = load(directory);
+        messages.values().stream().filter(message -> message.getChannelId().equals(channelId)).
+                forEach(message -> deleteMessage(message.getId()));
+        return true;
+
     }
 
     private Map<UUID ,Message> load(Path directory) {
-        if (Files.exists(directory)) {
-
-
-            try (Stream<Path> stream =  Files.list(directory))
-
-            {
-                Map<UUID ,Message> map;
-
-
-                map = stream.map(path -> {
-                            try (
-                                    FileInputStream fis = new FileInputStream(path.toFile());
-                                    ObjectInputStream ois = new ObjectInputStream(fis)
-                            ) {
-                                Object data = ois.readObject();
-                                return  (Message)data;
-                            } catch (IOException | ClassNotFoundException e) {
-                                throw new RuntimeException(e);
-                            }
-                        })
-                        .collect(Collectors.toMap(
-                                Message::getId,
-                                Function.identity()
-
-
-                        ));
-                return map;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            return new HashMap<>();
-        }
+       return saveLoad.load(directory);
     }
 
     private void save(Path filePath, Message message) {
-        try(
-                FileOutputStream fos = new FileOutputStream(filePath.toFile());
-                ObjectOutputStream oos = new ObjectOutputStream(fos)
-        ) {
-            oos.writeObject(message);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        saveLoad.save(filePath, message);
 
     }
-    private Path pathToUserId(UUID messageId){
+    private Path idToPath(UUID messageId){
 
         return directory.resolve(messageId + ".dat");
 

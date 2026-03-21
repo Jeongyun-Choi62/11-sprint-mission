@@ -11,14 +11,14 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 
 
-@Repository
+//@Repository("JCF")
 public class JCFUserRepository implements UserRepository {
 
 
     private final Map<UUID, User> data;
 
     public JCFUserRepository() {
-        data = new HashMap<UUID, User>();
+        data = new HashMap<>();
     }
 
     @Override

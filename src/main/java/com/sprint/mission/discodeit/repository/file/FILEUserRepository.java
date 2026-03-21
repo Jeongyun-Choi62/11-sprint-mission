@@ -8,104 +8,95 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-//@Repository
+
+@Repository
 public class FILEUserRepository  implements UserRepository {
 
+    private final FileSaveLoad<User> saveLoad;
     private final Path directory;
+
     public FILEUserRepository() {
-        directory = Path.of("src/main/resources/Users/");
+        this.saveLoad = new FileSaveLoad<>();
+        this.directory = Path.of("src/main/resources/Users/");
     }
+
 
     @Override
     public boolean saveUser(User user) {
-        return false;
+
+        if(user == null)
+            return false;
+        save(idToPath(user.getId()),user);
+        return true;
     }
 
     @Override
     public Optional<User> getUser(UUID userId) {
-        return Optional.empty();
+
+        Map<UUID,User> users = load(directory);
+        return Optional.ofNullable(users.get(userId));
     }
 
     @Override
     public List<User> getAllUser() {
-        return List.of();
+
+        Map<UUID,User> users = load(directory);
+        return users.values().stream().toList();
+
     }
 
     @Override
     public Optional<User> getUserByNickname(String nickname) {
-        return Optional.empty();
+
+        Map<UUID,User> users = load(directory);
+        return users.values().stream().filter(user -> user.getNickname().equals(nickname)).findFirst();
     }
 
     @Override
     public boolean deleteUser(UUID userId) {
-        return false;
+        if(!isExistUser(userId)){
+            return false;
+        }
+        try {
+            Files.deleteIfExists(idToPath(userId));
+        }
+        catch(IOException e){
+            return false;
+
+        }
+        return true;
+
     }
 
     @Override
     public boolean isExistUserByNickname(String nickname) {
-        return false;
+        Map<UUID,User> users = load(directory);
+        return users.values().stream().anyMatch(user -> user.getNickname().equals(nickname));
     }
 
     @Override
     public boolean isExistUserByEmail(String Email) {
-        return false;
+
+        Map<UUID,User> users = load(directory);
+        return users.values().stream().anyMatch(user -> user.getEmail().equals(Email));
     }
 
     @Override
     public boolean isExistUser(UUID userId) {
-        return false;
+        Map<UUID,User> users = load(directory);
+        return users.containsKey(userId);
     }
 
+
     private Map<UUID,User> load(Path directory) {
-        if (Files.exists(directory)) {
-
-
-            try (Stream<Path> stream =  Files.list(directory))
-
-            {
-                Map<UUID,User> map;
-
-
-                map = stream.map(path -> {
-                        try (
-                                    FileInputStream fis = new FileInputStream(path.toFile());
-                                    ObjectInputStream ois = new ObjectInputStream(fis)
-                            ) {
-                                Object data = ois.readObject();
-                                return  (User)data;
-                            } catch (IOException | ClassNotFoundException e) {
-                                throw new RuntimeException(e);
-                            }
-                        })
-                        .collect(Collectors.toMap(
-                                User::getId,
-                                Function.identity()
-
-                        ));
-                return map;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            return new HashMap<>();
-        }
+        return saveLoad.load(directory);
     }
 
      private void save(Path filePath, User user) {
-        try(
-                FileOutputStream fos = new FileOutputStream(filePath.toFile());
-                ObjectOutputStream oos = new ObjectOutputStream(fos)
-        ) {
-            oos.writeObject(user);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        saveLoad.save(filePath, user);
 
     }
-    private Path pathToUserId(UUID userId){
+    private Path idToPath(UUID userId){
 
         return directory.resolve(userId + ".dat");
 

@@ -9,7 +9,7 @@ import java.util.UUID;
 public interface UserStatusRepository {
 
 
-    UserStatus saveUserStatus(UserStatus userStatus);
+    boolean saveUserStatus(UserStatus userStatus);
     Optional<UserStatus> getUserStatus(UUID userId);
     List<UserStatus> getAllUserStatus();
     boolean deleteUserStatus(UUID userId);

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
-@Repository
+//@Repository
 public class JCFBinaryContentRepository implements BinaryContentRepository {
 
     private final Map<UUID, BinaryContent> data;
@@ -19,6 +19,8 @@ public class JCFBinaryContentRepository implements BinaryContentRepository {
 
     @Override
     public BinaryContent saveBinaryContent(BinaryContent binaryContent) {
+        if(binaryContent == null)
+            return null;
         data.put(binaryContent.getId(),binaryContent);
         return binaryContent;
     }

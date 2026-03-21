@@ -5,7 +5,7 @@ import com.sprint.mission.discodeit.repository.UserStatusRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
-@Repository
+//@Repository("JCF")
 public class JCFUserStatusRepository implements UserStatusRepository {
 
     private final Map<UUID, UserStatus> data;
@@ -14,10 +14,10 @@ public class JCFUserStatusRepository implements UserStatusRepository {
     }
 
     @Override
-    public UserStatus saveUserStatus(UserStatus userStatus) {
+    public boolean saveUserStatus(UserStatus userStatus) {
 
         data.put(userStatus.getUserId(), userStatus);
-        return userStatus;
+        return true;
 
     }
 

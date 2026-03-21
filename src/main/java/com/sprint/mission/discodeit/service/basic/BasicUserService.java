@@ -48,6 +48,7 @@ public class BasicUserService implements UserService {
         BinaryContent content = null;
         if(createUserDTO.binaryFile() != null) {
             content = binaryContentRepository.saveBinaryContent(new BinaryContent(user.getId(), createUserDTO.binaryFile()));
+
             user.updateProfileImage(content.getId(), createUserDTO.password());
         }
 
