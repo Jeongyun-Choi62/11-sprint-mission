@@ -15,6 +15,7 @@ import com.sprint.mission.discodeit.service.*;
 import com.sprint.mission.discodeit.service.basic.BasicChannelService;
 import com.sprint.mission.discodeit.service.basic.BasicMessageService;
 import com.sprint.mission.discodeit.service.basic.BasicUserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -30,6 +31,9 @@ import java.util.UUID;
 
 @SpringBootApplication
 public class DiscodeitApplication {
+
+
+
 
 	public static void main(String[] args) {
 		ApplicationContext context = SpringApplication.run(DiscodeitApplication.class, args);
@@ -49,6 +53,9 @@ public class DiscodeitApplication {
 		readStatusService = context.getBean(ReadStatusService.class);
 		binaryContentService = context.getBean(BinaryContentService.class);
 		authService = context.getBean(AuthService.class);
+
+
+
 
 
 
@@ -330,74 +337,8 @@ public class DiscodeitApplication {
 
 
 
-		//파일 정리
-		try (var stream = Files.list(Path.of("src/main/resources/users/"))) {
-			stream.sorted(Comparator.reverseOrder())
-					.map(Path::toFile)
-					.forEach(File::delete);
 
 
-
-		} catch (IOException e) {
-			throw new RuntimeException("삭제 중 오류 발생", e);
-
-		}
-
-		try (var stream = Files.list(Path.of("src/main/resources/Channels/"))) {
-			stream.sorted(Comparator.reverseOrder())
-					.map(Path::toFile)
-					.forEach(File::delete);
-
-
-
-		} catch (IOException e) {
-			throw new RuntimeException("삭제 중 오류 발생", e);
-
-		}
-		try (var stream = Files.list(Path.of("src/main/resources/Messages/"))) {
-			stream.sorted(Comparator.reverseOrder())
-					.map(Path::toFile)
-					.forEach(File::delete);
-
-
-
-		} catch (IOException e) {
-			throw new RuntimeException("삭제 중 오류 발생", e);
-
-		}
-		try (var stream = Files.list(Path.of("src/main/resources/ReadStatuses/"))) {
-			stream.sorted(Comparator.reverseOrder())
-					.map(Path::toFile)
-					.forEach(File::delete);
-
-
-
-		} catch (IOException e) {
-			throw new RuntimeException("삭제 중 오류 발생", e);
-
-		}
-		try (var stream = Files.list(Path.of("src/main/resources/UserStatuses/"))) {
-			stream.sorted(Comparator.reverseOrder())
-					.map(Path::toFile)
-					.forEach(File::delete);
-
-
-
-		} catch (IOException e) {
-			throw new RuntimeException("삭제 중 오류 발생", e);
-
-		}
-		try (var stream = Files.list(Path.of("src/main/resources/BinaryContents/"))) {
-			stream.sorted(Comparator.reverseOrder())
-					.map(Path::toFile)
-					.forEach(File::delete);
-
-
-
-		} catch (IOException e) {
-			throw new RuntimeException("삭제 중 오류 발생", e);
-
-		}
 
 	}
 

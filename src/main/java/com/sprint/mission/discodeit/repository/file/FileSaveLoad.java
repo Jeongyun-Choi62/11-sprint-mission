@@ -52,10 +52,21 @@ public class FileSaveLoad<T extends Entity> {
     }
 
     public void save(Path filePath, T typeParam) {
+
+        try{
+            Files.createDirectories(filePath.getParent());
+        }
+        catch(IOException e){
+            throw new RuntimeException(e);
+        }
+
         try(
+
+
                 FileOutputStream fos = new FileOutputStream(filePath.toFile());
                 ObjectOutputStream oos = new ObjectOutputStream(fos)
         ) {
+
             oos.writeObject(typeParam);
         } catch (IOException e) {
             throw new RuntimeException(e);

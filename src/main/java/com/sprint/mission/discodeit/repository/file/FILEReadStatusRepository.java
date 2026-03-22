@@ -2,6 +2,8 @@ package com.sprint.mission.discodeit.repository.file;
 
 import com.sprint.mission.discodeit.entity.ReadStatus;
 import com.sprint.mission.discodeit.repository.ReadStatusRepository;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
@@ -13,13 +15,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
+@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "file")
 public class FILEReadStatusRepository implements ReadStatusRepository {
     private final FileSaveLoad<ReadStatus> saveLoad;
     private final Path directory;
 
-    public FILEReadStatusRepository() {
+    public FILEReadStatusRepository(@Value("${discodeit.repository.file-dir}") String path) {
         this.saveLoad = new FileSaveLoad<>();
-        this.directory = Path.of("src/main/resources/ReadStatuses/");
+        this.directory = Path.of( path + "/ReadStatuses/");
     }
 
     @Override

@@ -3,6 +3,9 @@ package com.sprint.mission.discodeit.repository.file;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.repository.UserStatusRepository;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import java.io.*;
@@ -13,15 +16,17 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+
 @Repository
+@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "file")
 public class FILEUserStatusRepository implements UserStatusRepository {
 
     //UserStatus는 저장시 UserId를 키로 하므로 saveLoad를 안쓰고 새로 만듬
     private final Path directory;
 
 
-    public FILEUserStatusRepository() {
-        this.directory = Path.of("src/main/resources/UserStatuses/");
+    public FILEUserStatusRepository(@Value("${discodeit.repository.file-dir}") String path) {
+        this.directory = Path.of(  path + "/UserStatuses/");
     }
 
     @Override
@@ -105,6 +110,13 @@ public class FILEUserStatusRepository implements UserStatusRepository {
     }
 
     private void save(Path filePath, UserStatus userStatus){
+
+        try{
+            Files.createDirectories(filePath.getParent());
+        }
+        catch(IOException e){
+            throw new RuntimeException(e);
+        }
 
         try(
                 FileOutputStream fos = new FileOutputStream(filePath.toFile());

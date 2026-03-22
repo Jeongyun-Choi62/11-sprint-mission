@@ -2,6 +2,8 @@ package com.sprint.mission.discodeit.repository.file;
 
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.MessageRepository;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import java.io.*;
@@ -10,15 +12,16 @@ import java.nio.file.Path;
 import java.util.*;
 
 @Repository
+@ConditionalOnProperty(name = "discodeit.repository.type", havingValue = "file")
 public class FILEMessageRepository implements MessageRepository {
 
     private final FileSaveLoad<Message> saveLoad;
     private final Path directory;
 
-    public FILEMessageRepository() {
+    public FILEMessageRepository(@Value("${discodeit.repository.file-dir}") String path) {
 
         saveLoad = new FileSaveLoad<>();
-        this.directory = Path.of("src/main/resources/Messages/");
+        this.directory = Path.of(path+ "/Messages/");
     }
 
     @Override
