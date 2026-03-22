@@ -4,4 +4,5 @@ import com.sprint.mission.discodeit.entity.Entity;
 
 public class BinaryFile extends Entity {
 
+
 }

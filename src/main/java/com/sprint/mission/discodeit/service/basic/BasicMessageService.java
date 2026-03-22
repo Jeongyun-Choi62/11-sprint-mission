@@ -49,7 +49,15 @@ public class BasicMessageService implements MessageService {
                 ));
 
             });
+
+        //binaryContent id 리스트 뽑아서
+        List<UUID> attachmentIds = binaryContentRepository.getAllByMessageId(message.getId()).stream()
+                .map(BinaryContent::getId)
+                .toList();
+        //콘텐츠 리스트 수정
+        message.updateAttachmentIds(attachmentIds);
         messageRepository.saveMessage(message);
+
 
         return messageToInfo(message);
     }
@@ -77,9 +85,29 @@ public class BasicMessageService implements MessageService {
 
         message.updateMessage(updateMessageDto.content());
 
-        //TODO : 바이너리 콘텐츠 업데이트 시 바이너리 콘텐츠 삭제및 생성, 업데이트,
+        //이전 삭제
+        binaryContentRepository.getAllByMessageId(updateMessageDto.messageId()).forEach(binaryContent -> {
+            binaryContentRepository.deleteBinaryContent(binaryContent.getId());
+        });
 
-        //message.updateattachmentIds(updateMessageDto.binaryFile());
+        //새로 생성
+        if(updateMessageDto.binaryFile() != null)
+            updateMessageDto.binaryFile().forEach(binaryFile -> {
+                binaryContentRepository.saveBinaryContent(new BinaryContent(
+                        message.getSenderId(),
+                        message.getId(),
+                        BinaryContent.Type.IMAGE,
+                        binaryFile
+                ));
+
+            });
+
+        //binaryContent id 리스트 뽑아서
+         List<UUID> attachmentIds = binaryContentRepository.getAllByMessageId(updateMessageDto.messageId()).stream()
+                .map(BinaryContent::getId)
+                 .toList();
+         //콘텐츠 리스트 수정
+        message.updateAttachmentIds(attachmentIds);
 
         messageRepository.saveMessage(message);
 

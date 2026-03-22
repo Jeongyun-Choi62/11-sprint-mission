@@ -324,22 +324,6 @@ public class DiscodeitApplication {
 		System.out.println(authService.login("뉴하나","hanakim1111"));
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	}
 
 
