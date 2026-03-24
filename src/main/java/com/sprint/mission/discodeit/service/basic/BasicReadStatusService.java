@@ -53,9 +53,9 @@ public class BasicReadStatusService implements ReadStatusService {
     }
 
     @Override
-    public ReadStatusInfoDto find(UUID userId, UUID channelId) {
+    public ReadStatusInfoDto find(CreateReadStatusDto createReadStatusDto) {
 
-        return statusToInfoDto(readStatusRepository.get(userId,channelId).orElseThrow());
+        return statusToInfoDto(readStatusRepository.get(createReadStatusDto.userId(),createReadStatusDto.channelId()).orElseThrow());
 
     }
 

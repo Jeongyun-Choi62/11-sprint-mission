@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.service.basic;
 
+import com.sprint.mission.discodeit.dto.authDto.AuthDto;
 import com.sprint.mission.discodeit.dto.userdto.UserInfoDto;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.User;
@@ -19,11 +20,11 @@ public class BasicAuthService implements AuthService {
     private final BinaryContentRepository binaryContentRepository;
 
     @Override
-    public UserInfoDto login(String userName, String password) {
+    public UserInfoDto login(AuthDto authDto) throws PasswordfailException {
 
-        User user = userRepository.getUserByNickname(userName).orElseThrow(IllegalArgumentException::new);
+        User user = userRepository.getUserByNickname(authDto.nickName()).orElseThrow(IllegalArgumentException::new);
         UserInfoDto userInfo;
-        if (user.checkSamePassword(password)) {
+        if (user.checkSamePassword(authDto.password())) {
 
             userInfo = new UserInfoDto(
                     user.getId(),

@@ -195,13 +195,13 @@ public class BasicChannelService implements ChannelService {
     }
 
     @Override
-    public void deleteChannel(UUID channelId) {
+    public void deleteChannel(DeleteChannelDto deleteChannelDto) {
 
-        if(!channelRepository.isExistChannel(channelId))
+        if(!channelRepository.isExistChannel(deleteChannelDto.channelId()))
             throw new NonExistException("존재하는 채널이 아닙니다.");
 
-        readStatusRepository.getAllByChannelId(channelId)
-                .forEach(readStatus -> readStatusRepository.delete(readStatus.getUserId(),channelId));
+        readStatusRepository.getAllByChannelId(deleteChannelDto.channelId())
+                .forEach(readStatus -> readStatusRepository.delete(readStatus.getUserId(),deleteChannelDto.channelId()));
 
 
 

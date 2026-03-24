@@ -9,7 +9,7 @@ import java.util.UUID;
 public interface ReadStatusService {
 
     ReadStatusInfoDto create(CreateReadStatusDto createReadStatusDto);
-    ReadStatusInfoDto find(UUID userId, UUID channelId);
+    ReadStatusInfoDto find(CreateReadStatusDto createReadStatusDto);
     List<ReadStatusInfoDto> findAllById(UUID userId);
 
     boolean update(CreateReadStatusDto createReadStatusDto);

@@ -22,7 +22,7 @@ public interface ChannelService {
     void removeMember(ChannelMemberDto channelMemberDto);
 
 
-    void deleteChannel(UUID channelId);
+    void deleteChannel(DeleteChannelDto deleteChannelDto);
 
 
 }

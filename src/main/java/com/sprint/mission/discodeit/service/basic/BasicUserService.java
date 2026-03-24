@@ -1,22 +1,18 @@
 package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.binary.BinaryFile;
-import com.sprint.mission.discodeit.dto.userdto.CreateUserDto;
-import com.sprint.mission.discodeit.dto.userdto.UpdateUserDto;
-import com.sprint.mission.discodeit.dto.userdto.UserInfoDto;
+import com.sprint.mission.discodeit.dto.userdto.*;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.exception.service.DiffPasswordException;
 import com.sprint.mission.discodeit.exception.service.DupEmailException;
 import com.sprint.mission.discodeit.exception.service.DupNameException;
-import com.sprint.mission.discodeit.exception.service.NonExistException;
 import com.sprint.mission.discodeit.repository.*;
 import com.sprint.mission.discodeit.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 
@@ -78,9 +74,6 @@ public class BasicUserService implements UserService {
         if(content != null)
             binaryContentRepository.saveBinaryContent(content);
 
-
-
-
         return userToInfoDto(user);
     }
 
@@ -94,11 +87,11 @@ public class BasicUserService implements UserService {
     }
 
     @Override
-    public List<UserInfoDto> findAll() {
+    public List<UserDto> findAll() {
 
         //유저 리스트 가져오기
         return userRepository.getAllUser().stream()
-                .map(this::userToInfoDto)
+                .map(this::userToDto)
                 .toList();
 
     }
@@ -142,22 +135,44 @@ public class BasicUserService implements UserService {
 
 
     @Override
-    public boolean delete(UUID userId, String password) {
+    public boolean delete(DeleteUserDto deleteUserDto) {
 
         // 유저 가져오기
-        User user = userRepository.getUser(userId).orElseThrow();
+        User user = userRepository.getUser(deleteUserDto.userId()).orElseThrow();
 
 
         //비밀번호 체크
-        if(!user.checkSamePassword(password)){
+        if(!user.checkSamePassword(deleteUserDto.password())){
             throw new DiffPasswordException();
         }
 
         //삭제
-        userRepository.deleteUser(userId);
-        userStatusRepository.deleteUserStatus(userId);
+        userRepository.deleteUser(deleteUserDto.userId());
+        userStatusRepository.deleteUserStatus(deleteUserDto.userId());
 
         return true;
+    }
+
+
+    UserDto userToDto(User user){
+
+        BinaryContent content = binaryContentRepository.getProfileContentByUserId(user.getId()).orElse(null);
+
+        UUID profileId = content != null ? content.getId() : null;
+
+        return new UserDto(
+
+                user.getId(),
+                user.getCreatedAt(),
+                user.getUpdatedAt(),
+                user.getNickname(),
+                user.getEmail(),
+                profileId,
+                userStatusRepository.getUserStatus(user.getId()).orElseThrow().isOnline() == UserStatus.Status.ONLINE
+
+        );
+
+
     }
 
 

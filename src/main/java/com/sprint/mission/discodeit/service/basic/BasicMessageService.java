@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.dto.messagedto.CreateMessageDto;
+import com.sprint.mission.discodeit.dto.messagedto.DeleteMessageDto;
 import com.sprint.mission.discodeit.dto.messagedto.MessageInfoDto;
 import com.sprint.mission.discodeit.dto.messagedto.UpdateMessageDto;
 import com.sprint.mission.discodeit.entity.BinaryContent;
@@ -115,14 +116,14 @@ public class BasicMessageService implements MessageService {
     }
 
     @Override
-    public boolean deleteMessage(UUID messageId) {
+    public boolean deleteMessage(DeleteMessageDto deleteMessageDto) {
 
 
-        if(!messageRepository.isExistMessage(messageId))
+        if(!messageRepository.isExistMessage(deleteMessageDto.messageId()))
             throw new NonExistException("해당 메시지가 존재하지 않습니다.");
 
-        messageRepository.deleteMessage(messageId);
-        binaryContentRepository.deleteBinaryContentByMessageId(messageId);
+        messageRepository.deleteMessage(deleteMessageDto.messageId());
+        binaryContentRepository.deleteBinaryContentByMessageId(deleteMessageDto.messageId());
 
         return true;
     }

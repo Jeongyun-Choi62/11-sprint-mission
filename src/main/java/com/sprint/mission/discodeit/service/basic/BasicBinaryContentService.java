@@ -3,6 +3,7 @@ package com.sprint.mission.discodeit.service.basic;
 import com.sprint.mission.discodeit.dto.binarycontentdto.BinaryContentInfoDto;
 import com.sprint.mission.discodeit.dto.binarycontentdto.CreateBinaryContentDto;
 import com.sprint.mission.discodeit.dto.binarycontentdto.CreateProfileImgDto;
+import com.sprint.mission.discodeit.dto.binarycontentdto.FindBinaryContetnInfo;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.exception.service.NonExistException;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
@@ -82,8 +83,8 @@ public class BasicBinaryContentService implements BinaryContentService {
     }
 
     @Override
-    public BinaryContentInfoDto find(UUID binaryContentId) {
-        BinaryContent content = binaryContentRepository.getBinaryContent(binaryContentId).orElseThrow();
+    public BinaryContentInfoDto find(FindBinaryContetnInfo findBinaryContetnInfo) {
+        BinaryContent content = binaryContentRepository.getBinaryContent(findBinaryContetnInfo.binaryContentId()).orElseThrow();
         return contentToInfoDto(content);
     }
 
