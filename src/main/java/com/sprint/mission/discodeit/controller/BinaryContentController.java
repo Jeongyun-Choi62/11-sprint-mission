@@ -6,24 +6,21 @@ import com.sprint.mission.discodeit.dto.binarycontentdto.FindBinaryContetnInfo;
 import com.sprint.mission.discodeit.service.BinaryContentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
 
 @RestController
-@RequestMapping("/api/binary")
+@RequestMapping("/api/binaryContent")
 @RequiredArgsConstructor
 public class BinaryContentController {
 
     private final BinaryContentService binaryContentService;
 
     @RequestMapping(value = "/find", method = RequestMethod.GET)
-    public ResponseEntity<BinaryContentInfoDto> findBinaryContent(@RequestBody UUID binaryContentId){
+    public ResponseEntity<BinaryContentInfoDto> findBinaryContent(@RequestParam("binaryContentId") UUID binaryContentId){
 
         return ResponseEntity.status(200).body(binaryContentService.find(new FindBinaryContetnInfo(binaryContentId)));
 

@@ -19,8 +19,8 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping
-    public ResponseEntity<UserInfoDto> createUser(@RequestBody CreateUserDto createUserDto){
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<UserInfoDto> createUser(@ModelAttribute CreateUserDto createUserDto){
 
 
         UserInfoDto userInfo = userService.create(createUserDto);
@@ -39,7 +39,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userService.findAll());
     }
 
-    @PutMapping
+    @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<UserInfoDto> updateUser(@RequestBody UpdateUserDto updateUserDto){
         System.out.println(updateUserDto);
         UserInfoDto userInfo = userService.updateUser(updateUserDto);
@@ -48,7 +48,7 @@ public class UserController {
 
 
 
-    @DeleteMapping
+    @RequestMapping(method = RequestMethod.DELETE)
     public ResponseEntity<Void> deleteUser(@RequestBody DeleteUserDto deleteUserDto){
 
         userService.delete(deleteUserDto);

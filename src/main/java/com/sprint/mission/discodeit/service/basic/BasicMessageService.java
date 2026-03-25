@@ -42,13 +42,18 @@ public class BasicMessageService implements MessageService {
         );
         if(createMessageDto.binaryFile() != null)
             createMessageDto.binaryFile().forEach(binaryFile -> {
-                binaryContentRepository.saveBinaryContent(new BinaryContent(
-                    createMessageDto.userId(),
-                    message.getId(),
-                    BinaryContent.Type.IMAGE,
-                    binaryFile
-                ));
-
+                try {
+                    binaryContentRepository.saveBinaryContent(new BinaryContent(
+                            createMessageDto.userId(),
+                            message.getId(),
+                            binaryFile.getOriginalFilename(),
+                            binaryFile.getContentType(),
+                            binaryFile.getBytes()
+                    ));
+                }
+                catch (Exception e){
+                    throw new RuntimeException(e);
+                }
             });
 
         //binaryContent id 리스트 뽑아서
@@ -94,13 +99,17 @@ public class BasicMessageService implements MessageService {
         //새로 생성
         if(updateMessageDto.binaryFile() != null)
             updateMessageDto.binaryFile().forEach(binaryFile -> {
-                binaryContentRepository.saveBinaryContent(new BinaryContent(
-                        message.getSenderId(),
-                        message.getId(),
-                        BinaryContent.Type.IMAGE,
-                        binaryFile
-                ));
-
+                try {
+                    binaryContentRepository.saveBinaryContent(new BinaryContent(
+                            message.getSenderId(),
+                            message.getId(),
+                            binaryFile.getOriginalFilename(),
+                            binaryFile.getContentType(),
+                            binaryFile.getBytes()
+                    ));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             });
 
         //binaryContent id 리스트 뽑아서

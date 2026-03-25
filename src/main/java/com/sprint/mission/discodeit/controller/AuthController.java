@@ -6,7 +6,7 @@ import com.sprint.mission.discodeit.dto.userdto.UserInfoDto;
 import com.sprint.mission.discodeit.service.AuthService;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.HttpMethod;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    AuthService authService;
+    private final AuthService authService;
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<UserInfoDto> login (@RequestBody AuthDto authDto){

@@ -30,7 +30,7 @@ public class BasicAuthService implements AuthService {
                     user.getId(),
                     user.getNickname(),
                     user.getEmail(),
-                    binaryContentRepository.getBinaryContent(user.getProfileId()).orElseThrow().getBinaryFile(),
+                    binaryContentRepository.getBinaryContent(user.getProfileId()).orElseThrow().getId(),
                     userStatusRepository.getUserStatus(user.getId()).orElseThrow(IllegalArgumentException::new)
             );
         } else throw new PasswordfailException("비밀번호가 일치 하지 않습니다.");
