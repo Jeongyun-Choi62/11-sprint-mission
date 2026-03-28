@@ -9,11 +9,12 @@ import java.util.UUID;
 
 public record CreateMessageDto(
 
+
         String content,
         UUID userId,
         UUID channelId,
-        List<MultipartFile> binaryFile,
-        List<UUID> attachmentIds
+        List<MultipartFile> binaryFile
+
 
 ) {
 }
