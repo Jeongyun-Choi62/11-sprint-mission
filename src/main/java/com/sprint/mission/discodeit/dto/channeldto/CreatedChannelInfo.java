@@ -3,14 +3,16 @@ package com.sprint.mission.discodeit.dto.channeldto;
 import com.sprint.mission.discodeit.entity.Channel;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 
-public record PrivateChannelInfoDto(
+public record CreatedChannelInfo(
 
-    UUID channelId,
-    Channel.ChannelType channelType,
-    Instant LastMessageTime
+    UUID id,
+    Instant createdAt,
+    Instant updatedAt,
+    Channel.ChannelType type,
+    String name,
+    String description
 ) {
 
 }
