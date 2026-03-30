@@ -19,7 +19,7 @@ public class Channel extends Entity {
     PRIVATE
   }
 
-  public Channel(String channelName, UUID ownerId, ChannelType channelType,
+  public Channel(String channelName, ChannelType channelType,
       String channelDescription) {
     this.channelName = channelName;
     this.channelDescription = channelDescription;
