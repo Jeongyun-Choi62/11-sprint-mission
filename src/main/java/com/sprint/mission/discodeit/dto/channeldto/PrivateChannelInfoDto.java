@@ -8,9 +8,9 @@ import java.util.UUID;
 
 public record PrivateChannelInfoDto(
 
-        UUID channelId,
-        UUID ownerId,
-        Channel.ChannelType channelType,
-        Instant LastMessageTime
+    UUID channelId,
+    Channel.ChannelType channelType,
+    Instant LastMessageTime
 ) {
+
 }

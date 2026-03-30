@@ -7,8 +7,8 @@ import java.util.UUID;
 
 public record CreatePrivateChannelDto(
 
-       UUID ownerId,
-       List<UUID> membersId
+    List<UUID> membersId
 
 ) {
+
 }

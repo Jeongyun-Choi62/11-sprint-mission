@@ -36,9 +36,9 @@ public class FILEUserStatusRepository implements UserStatusRepository {
   @Override
   public boolean saveUserStatus(UserStatus userStatus) {
 
-      if (userStatus == null) {
-          return false;
-      }
+    if (userStatus == null) {
+      return false;
+    }
 
     save(idToPath(userStatus.getUserId()), userStatus);
     return true;

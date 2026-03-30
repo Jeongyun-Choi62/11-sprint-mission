@@ -8,12 +8,11 @@ import java.util.UUID;
 
 public record PublicChannelInfoDto(
 
-
-        UUID channelId,
-        UUID ownerId,
-        String channelName,
-        Channel.ChannelType channelType,
-        String channelDescription,
-        Instant LastMessageTime
+    UUID channelId,
+    String channelName,
+    Channel.ChannelType channelType,
+    String channelDescription,
+    Instant LastMessageTime
 ) {
+
 }

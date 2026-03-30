@@ -4,9 +4,9 @@ import java.util.UUID;
 
 public record UpdateChannelDto(
 
-        UUID channelId,
-        String channelName,
-        UUID ownerId,
-        String channelDescription
+    UUID channelId,
+    String channelName,
+    String channelDescription
 ) {
+
 }
