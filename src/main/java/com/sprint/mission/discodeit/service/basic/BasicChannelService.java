@@ -147,26 +147,6 @@ public class BasicChannelService implements ChannelService {
 
   }
 
-  @Override
-  public void addMember(ChannelMemberDto channelMemberDto) {
-    if (readStatusRepository.isExist(channelMemberDto.memberId(), channelMemberDto.channelId())) {
-      throw new AlreadyExistException("이미 존재하는 멤버입니다");
-    }
-
-    readStatusRepository.save(
-        new ReadStatus(channelMemberDto.memberId(), channelMemberDto.channelId()));
-
-  }
-
-  @Override
-  public void removeMember(ChannelMemberDto channelMemberDto) {
-    if (!readStatusRepository.isExist(channelMemberDto.memberId(), channelMemberDto.channelId())) {
-      throw new NonExistException("존재하지 않는 유저입니다.");
-    }
-
-    readStatusRepository.delete(channelMemberDto.memberId(), channelMemberDto.channelId());
-
-  }
 
   @Override
   public void deleteChannel(UUID channelId) {

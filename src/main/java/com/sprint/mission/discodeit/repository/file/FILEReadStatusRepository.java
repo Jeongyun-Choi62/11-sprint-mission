@@ -28,9 +28,9 @@ public class FILEReadStatusRepository implements ReadStatusRepository {
 
   @Override
   public boolean save(ReadStatus readStatus) {
-      if (readStatus == null) {
-          return false;
-      }
+    if (readStatus == null) {
+      return false;
+    }
     save(idToPath(readStatus.getId()), readStatus);
     return true;
 
@@ -43,6 +43,14 @@ public class FILEReadStatusRepository implements ReadStatusRepository {
         readStatus -> readStatus.getUserId().equals(userId) && readStatus.getChannelId()
             .equals(channelId)).findFirst();
 
+  }
+
+
+  @Override
+  public Optional<ReadStatus> get(UUID readStatusId) {
+
+    Map<UUID, ReadStatus> readStatuses = load(directory);
+    return Optional.ofNullable(readStatuses.get(readStatusId));
   }
 
   @Override
@@ -67,9 +75,9 @@ public class FILEReadStatusRepository implements ReadStatusRepository {
 
   @Override
   public boolean delete(UUID userId, UUID channelId) {
-      if (!isExist(userId, channelId)) {
-          return false;
-      }
+    if (!isExist(userId, channelId)) {
+      return false;
+    }
 
     Map<UUID, ReadStatus> readStatuses = load(directory);
     UUID readStatusId = readStatuses.values().stream().filter(

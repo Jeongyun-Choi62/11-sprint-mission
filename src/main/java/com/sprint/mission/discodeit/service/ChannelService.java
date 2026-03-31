@@ -20,11 +20,6 @@ public interface ChannelService {
   CreatedChannelInfo updateChannel(UUID channelId, UpdateChannel updateChannel);
 
 
-  void addMember(ChannelMemberDto channelMemberDto);
-
-  void removeMember(ChannelMemberDto channelMemberDto);
-
-
   void deleteChannel(UUID channelId);
 
 
