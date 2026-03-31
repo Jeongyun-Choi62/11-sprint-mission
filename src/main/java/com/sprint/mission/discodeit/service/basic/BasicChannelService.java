@@ -34,17 +34,10 @@ public class BasicChannelService implements ChannelService {
 
     Channel channel = new Channel(
 
-        createPublicChannel.channelName(),
+        createPublicChannel.name(),
         Channel.ChannelType.PUBLIC,
-        createPublicChannel.channelDescription()
+        createPublicChannel.description()
     );
-
-    //ReadStatus 생성(addMember 호출)
-    createPublicChannel.membersId().stream()
-        .filter(userRepository::isExistUser)
-        .forEach(userId ->
-            addMember(new ChannelMemberDto(userId, channel.getId()))
-        );
 
     //default Message
     messageRepository.saveMessage(new Message(
@@ -56,13 +49,13 @@ public class BasicChannelService implements ChannelService {
     ));
 
     channelRepository.saveChannel(channel);
-    return channelToPublicInfoDto(channel);
+    return channelToCreatedInfo(channel);
 
 
   }
 
   @Override
-  public PrivateChannelInfoDto createPrivate(CreatePrivateChannel createPrivateChannel) {
+  public CreatedChannelInfo createPrivate(CreatePrivateChannel createPrivateChannel) {
 
     Channel channel = new Channel(
         null,
@@ -71,7 +64,7 @@ public class BasicChannelService implements ChannelService {
     );
 
     //ReadStatus 생성
-    createPrivateChannel.membersId().stream()
+    createPrivateChannel.participantIds().stream()
         .filter(userRepository::isExistUser)
         .forEach(userId ->
             addMember(new ChannelMemberDto(userId, channel.getId()))
@@ -90,27 +83,36 @@ public class BasicChannelService implements ChannelService {
 
     channelRepository.saveChannel(channel);
 
-    return channelToPrivateInfoDto(channel);
+    return channelToCreatedInfo(channel);
 
 
   }
 
 
   @Override
-  public PrivateChannelInfoDto findPrivate(UUID channelId, UUID memberId) {
+  public ChannelInfo findPublic(UUID channelId) {
 
-    return channelToPrivateInfoDto(channelRepository.getChannel(channelId).orElseThrow());
+    return channelToDto(channelRepository.getChannel(channelId).orElseThrow());
 
-  }
-
-  @Override
-  public CreatedChannelInfo findPublic(UUID channelId) {
-    return channelToPublicInfoDto(channelRepository.getChannel(channelId).orElseThrow());
   }
 
 
   @Override
-  public List<CreatedChannelInfo> findAllById(UUID userId) {
+  public ChannelInfo findPrivate(UUID channelId, UUID memberId) {
+
+    channelRepository.getChannel(channelId).orElseThrow();
+
+    if (!readStatusRepository.isExist(memberId, channelId)) {
+      throw new NonExistException("채널에 해당 유저가 존재하지 않습니다.");
+    }
+
+    return channelToDto(channelRepository.getChannel(channelId).orElseThrow());
+
+  }
+
+
+  @Override
+  public List<ChannelInfo> findAllById(UUID userId) {
 
     return channelRepository.getAllChannel().stream()
         .filter(channel -> {
@@ -121,32 +123,26 @@ public class BasicChannelService implements ChannelService {
               || channel.getChannelType() == Channel.ChannelType.PUBLIC);
 
         })
-        .map(channel -> {
-          if (channel.getChannelType() == Channel.ChannelType.PUBLIC) {
-            return channelToPublicInfoDto(channel);
-          } else {
-            return privateChannelToPublicInfoDto(channel);
-          }
-        })
+        .map(this::channelToDto)
         .toList();
 
   }
 
   @Override
-  public CreatedChannelInfo updateChannel(UpdateChannel updateChannel) {
+  public CreatedChannelInfo updateChannel(UUID channelId, UpdateChannel updateChannel) {
 
-    Channel channel = channelRepository.getChannel(updateChannel.channelId()).orElseThrow();
+    Channel channel = channelRepository.getChannel(channelId).orElseThrow();
 
     //public check
     if (channel.getChannelType() == Channel.ChannelType.PRIVATE) {
       throw new WrongChannelTypeException("Private 타입 채널은 변경할 수 없습니다.");
     }
-    channel.updateChannelName(updateChannel.channelName());
-    channel.updateChannelDescription(updateChannel.channelDescription());
+    channel.updateChannelName(updateChannel.name());
+    channel.updateChannelDescription(updateChannel.description());
 
     channelRepository.saveChannel(channel);
 
-    return channelToPublicInfoDto(channel);
+    return channelToCreatedInfo(channel);
 
 
   }
@@ -173,31 +169,31 @@ public class BasicChannelService implements ChannelService {
   }
 
   @Override
-  public void deleteChannel(DeleteChannelDto deleteChannelDto) {
+  public void deleteChannel(UUID channelId) {
 
-    if (!channelRepository.isExistChannel(deleteChannelDto.channelId())) {
+    if (!channelRepository.isExistChannel(channelId)) {
       throw new NonExistException("존재하는 채널이 아닙니다.");
     }
 
-    readStatusRepository.getAllByChannelId(deleteChannelDto.channelId())
+    readStatusRepository.getAllByChannelId(channelId)
         .forEach(readStatus -> readStatusRepository.delete(readStatus.getUserId(),
-            deleteChannelDto.channelId()));
+            channelId));
 
-    channelRepository.deleteChannel(deleteChannelDto.channelId());
+    channelRepository.deleteChannel(channelId);
 
 
   }
 
-  public PrivateChannelInfoDto channelToPrivateInfoDto(Channel channel) {
+  public ChannelInfo channelToDto(Channel channel) {
 
-    if (channel.getChannelType() != Channel.ChannelType.PRIVATE) {
-      throw new WrongChannelTypeException("잘못된 채널 타입입니다");
-    }
-
-    return new PrivateChannelInfoDto(
+    return new ChannelInfo(
 
         channel.getId(),
-        Channel.ChannelType.PRIVATE,
+        channel.getChannelType(),
+        channel.getChannelName(),
+        channel.getChannelDescription(),
+        readStatusRepository.getAllByChannelId(channel.getId()).stream()
+            .map(ReadStatus::getUserId).toList(),
         messageRepository.getLastMessagebyChannelId(channel.getId())
             .map(Message::getCreatedAt).orElseThrow()
 
@@ -205,7 +201,7 @@ public class BasicChannelService implements ChannelService {
 
   }
 
-  public CreatedChannelInfo channelToPublicInfoDto(Channel channel) {
+  public CreatedChannelInfo channelToCreatedInfo(Channel channel) {
 
     if (channel.getChannelType() != Channel.ChannelType.PUBLIC) {
       throw new WrongChannelTypeException("잘못된 채널 타입입니다");
@@ -214,32 +210,15 @@ public class BasicChannelService implements ChannelService {
     return new CreatedChannelInfo(
 
         channel.getId(),
+        channel.getCreatedAt(),
+        channel.getUpdatedAt(),
+        channel.getChannelType(),
         channel.getChannelName(),
-        Channel.ChannelType.PUBLIC,
-        channel.getChannelDescription(),
-        messageRepository.getLastMessagebyChannelId(channel.getId())
-            .map(Message::getCreatedAt).orElseThrow()
-
+        channel.getChannelDescription()
     );
 
 
   }
 
-  public CreatedChannelInfo privateChannelToPublicInfoDto(Channel channel) {
-
-    if (channel.getChannelType() != Channel.ChannelType.PRIVATE) {
-      throw new WrongChannelTypeException("잘못된 채널 타입입니다.");
-    }
-
-    return new CreatedChannelInfo(
-
-        channel.getId(),
-        channel.getChannelName(),
-        Channel.ChannelType.PRIVATE,
-        channel.getChannelDescription(),
-        messageRepository.getLastMessagebyChannelId(channel.getId())
-            .map(Message::getCreatedAt).orElseThrow()
-    );
-  }
 
 }

@@ -7,17 +7,17 @@ import java.util.UUID;
 
 public interface ChannelService {
 
-  PrivateChannelInfoDto createPrivate(CreatePrivateChannel createPrivateChannel);
+  CreatedChannelInfo createPrivate(CreatePrivateChannel createPrivateChannel);
 
   CreatedChannelInfo createPublic(CreatePublicChannel createPublicChannel);
 
-  PrivateChannelInfoDto findPrivate(UUID channelId, UUID memberId);
+  ChannelInfo findPrivate(UUID channelId, UUID memberId);
 
-  CreatedChannelInfo findPublic(UUID channelId);
+  ChannelInfo findPublic(UUID channelId);
 
-  List<CreatedChannelInfo> findAllById(UUID userId);
+  List<ChannelInfo> findAllById(UUID userId);
 
-  CreatedChannelInfo updateChannel(UpdateChannel updateChannel);
+  CreatedChannelInfo updateChannel(UUID channelId, UpdateChannel updateChannel);
 
 
   void addMember(ChannelMemberDto channelMemberDto);
@@ -25,7 +25,7 @@ public interface ChannelService {
   void removeMember(ChannelMemberDto channelMemberDto);
 
 
-  void deleteChannel(DeleteChannelDto deleteChannelDto);
+  void deleteChannel(UUID channelId);
 
 
 }

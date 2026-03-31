@@ -6,6 +6,7 @@ import com.sprint.mission.discodeit.service.ReadStatusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,20 +19,28 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ReadStatusController {
 
-    private final ReadStatusService readStatusService;
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<ReadStatusInfoDto> getReadStatus(@RequestBody CreateReadStatusDto readStatusDto){
+  private final ReadStatusService readStatusService;
 
-        return ResponseEntity.status(200).body(readStatusService.find(readStatusDto));
+  @PostMapping
 
-    }
+  public ResponseEntity<ReadStatusInfoDto> createReadStatus(
+      @RequestBody CreateReadStatusDto readStatusDto
+  )
 
+  @RequestMapping(method = RequestMethod.GET)
+  public ResponseEntity<ReadStatusInfoDto> getReadStatus(
+      @RequestBody CreateReadStatusDto readStatusDto) {
+
+    return ResponseEntity.status(200).body(readStatusService.find(readStatusDto));
+
+  }
 
 
   @RequestMapping(method = RequestMethod.PUT)
-    ResponseEntity<ReadStatusInfoDto> updateReadStatus(@RequestBody CreateReadStatusDto readStatusDto){
-      readStatusService.update(readStatusDto);
-      return ResponseEntity.status(200).body(readStatusService.find(readStatusDto));
+  ResponseEntity<ReadStatusInfoDto> updateReadStatus(
+      @RequestBody CreateReadStatusDto readStatusDto) {
+    readStatusService.update(readStatusDto);
+    return ResponseEntity.status(200).body(readStatusService.find(readStatusDto));
 
-    }
+  }
 }
