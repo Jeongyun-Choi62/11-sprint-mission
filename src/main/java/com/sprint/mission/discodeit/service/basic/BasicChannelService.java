@@ -12,6 +12,7 @@ import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.ReadStatusRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
+import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -63,15 +64,16 @@ public class BasicChannelService implements ChannelService {
         null
     );
 
-    //ReadStatus 생성
-    createPrivateChannel.participantIds().stream()
-        .filter(userRepository::isExistUser)
-        .forEach(userId ->
-            addMember(new ChannelMemberDto(userId, channel.getId()))
-        );
+    //readStatus 생성
+    createPrivateChannel.participantIds().forEach(userId -> {
+
+      userRepository.getUser(userId).orElseThrow(() -> new NonExistException("존재하지 않는 유저입니다."));
+      readStatusRepository.save(
+          new ReadStatus(userId, channel.getId(), Instant.now().minusSeconds(100)));
+
+    });
 
     //default Message
-
     messageRepository.saveMessage(new Message(
 
         null,
@@ -182,10 +184,6 @@ public class BasicChannelService implements ChannelService {
   }
 
   public CreatedChannelInfo channelToCreatedInfo(Channel channel) {
-
-    if (channel.getChannelType() != Channel.ChannelType.PUBLIC) {
-      throw new WrongChannelTypeException("잘못된 채널 타입입니다");
-    }
 
     return new CreatedChannelInfo(
 

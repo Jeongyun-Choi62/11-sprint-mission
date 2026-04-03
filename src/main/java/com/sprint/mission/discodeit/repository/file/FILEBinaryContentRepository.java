@@ -22,9 +22,10 @@ public class FILEBinaryContentRepository implements BinaryContentRepository {
   private final Path directory;
 
 
-  public FILEBinaryContentRepository(@Value("${discodeit.repository.file-dir}") String path) {
+  public FILEBinaryContentRepository(@Value("${discodeit.repository.file-dir}") String path,
+      FileSaveLoadFactory factory) {
 
-    this.saveLoad = new FileSaveLoadFactory().createSaveLoad();
+    this.saveLoad = factory.createSaveLoad();
     this.directory = Path.of(path + "/BinaryContents/");
   }
 

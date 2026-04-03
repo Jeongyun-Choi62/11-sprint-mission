@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/channel")
+@RequestMapping("/api/channels")
 @RequiredArgsConstructor
 public class ChannelController {
 
@@ -50,9 +50,9 @@ public class ChannelController {
 
 
   @GetMapping(value = "/{userId}")
-  public ResponseEntity<List<CreatedChannelInfo>> readAllChannelById(@PathVariable UUID userId) {
+  public ResponseEntity<List<ChannelInfo>> readAllChannelById(@PathVariable UUID userId) {
 
-    List<CreatedChannelInfo> channels = channelService.findAllById(userId);
+    List<ChannelInfo> channels = channelService.findAllById(userId);
 
     return ResponseEntity.status(HttpStatus.OK).body(channels);
 

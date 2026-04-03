@@ -18,8 +18,9 @@ public class FILEUserRepository implements UserRepository {
   private final FileSaveLoad<User> saveLoad;
   private final Path directory;
 
-  public FILEUserRepository(@Value("${discodeit.repository.file-dir}") String path) {
-    this.saveLoad = new FileSaveLoadFactory().createSaveLoad();
+  public FILEUserRepository(@Value("${discodeit.repository.file-dir}") String path,
+      FileSaveLoadFactory factory) {
+    this.saveLoad = factory.createSaveLoad();
     this.directory = Path.of(path + "/Users/");
   }
 
@@ -27,9 +28,9 @@ public class FILEUserRepository implements UserRepository {
   @Override
   public boolean saveUser(User user) {
 
-      if (user == null) {
-          return false;
-      }
+    if (user == null) {
+      return false;
+    }
     save(idToPath(user.getId()), user);
     return true;
   }

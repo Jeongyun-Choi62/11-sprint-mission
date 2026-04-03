@@ -20,9 +20,10 @@ public class FILEChannelRepository implements ChannelRepository {
   private final Path directory;
 
 
-  public FILEChannelRepository(@Value("${discodeit.repository.file-dir}") String path) {
+  public FILEChannelRepository(@Value("${discodeit.repository.file-dir}") String path,
+      FileSaveLoadFactory factory) {
 
-    saveLoad = new FileSaveLoadFactory().createSaveLoad();
+    saveLoad = factory.createSaveLoad();
     directory = Path.of(path + "/Channels/");
   }
 

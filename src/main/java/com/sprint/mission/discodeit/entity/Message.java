@@ -41,7 +41,7 @@ public class Message extends Entity {
   public String toString() {
     return "Message{" +
         "message='" + message + '\'' +
-        ", senderId='" + senderId + '\'' +
+        ", authorId='" + senderId + '\'' +
         ", id='" + channelId + '\'' +
         '}';
   }

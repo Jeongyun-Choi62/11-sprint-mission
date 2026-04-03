@@ -20,9 +20,10 @@ public class FILEMessageRepository implements MessageRepository {
   private final Path directory;
 
 
-  public FILEMessageRepository(@Value("${discodeit.repository.file-dir}") String path) {
+  public FILEMessageRepository(@Value("${discodeit.repository.file-dir}") String path,
+      FileSaveLoadFactory factory) {
 
-    saveLoad = new FileSaveLoadFactory().createSaveLoad();
+    saveLoad = factory.createSaveLoad();
     this.directory = Path.of(path + "/Messages/");
 
   }

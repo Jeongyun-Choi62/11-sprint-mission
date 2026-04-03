@@ -9,14 +9,8 @@ import java.util.UUID;
 
 public record UpdateMessageDto(
 
-
-        UUID messageId,
-        String content,
-        List<MultipartFile> binaryFile
-
+    String content
 ) {
-
-
 
 
 }

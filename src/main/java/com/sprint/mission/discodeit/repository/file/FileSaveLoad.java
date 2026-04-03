@@ -14,8 +14,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
+
 public class FileSaveLoad<T extends Entity> {
 
 
@@ -40,8 +42,6 @@ public class FileSaveLoad<T extends Entity> {
                 return (T) data;
               } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
-              } finally {
-                lock.unlock();
               }
             })
             .collect(Collectors.toMap(
@@ -67,19 +67,14 @@ public class FileSaveLoad<T extends Entity> {
 
     try {
       Files.createDirectories(filePath.getParent());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    } finally {
-      lock.unlock();
-    }
 
-    try (
+      try (
+          FileOutputStream fos = new FileOutputStream(filePath.toFile());
+          ObjectOutputStream oos = new ObjectOutputStream(fos)
+      ) {
 
-        FileOutputStream fos = new FileOutputStream(filePath.toFile());
-        ObjectOutputStream oos = new ObjectOutputStream(fos)
-    ) {
-
-      oos.writeObject(typeParam);
+        oos.writeObject(typeParam);
+      }
     } catch (IOException e) {
       throw new RuntimeException(e);
     } finally {

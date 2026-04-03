@@ -21,8 +21,9 @@ public class FILEReadStatusRepository implements ReadStatusRepository {
   private final FileSaveLoad<ReadStatus> saveLoad;
   private final Path directory;
 
-  public FILEReadStatusRepository(@Value("${discodeit.repository.file-dir}") String path) {
-    this.saveLoad = new FileSaveLoadFactory().createSaveLoad();
+  public FILEReadStatusRepository(@Value("${discodeit.repository.file-dir}") String path,
+      FileSaveLoadFactory factory) {
+    this.saveLoad = factory.createSaveLoad();
     this.directory = Path.of(path + "/ReadStatuses/");
   }
 

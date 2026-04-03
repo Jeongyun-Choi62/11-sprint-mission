@@ -10,25 +10,20 @@ public class User extends Entity {
 
   private String nickname; //닉네임
   private String email;
-  @Getter(AccessLevel.NONE)
   private String password; //비밀번호
   private UUID profileId;
 
 
-  public User(String nickname, String email, String password, UUID profileImage) {
+  public User(String nickname, String email, String password, UUID profileId) {
     this.password = password;
     this.nickname = nickname;
     this.email = email;
-    this.profileId = profileImage;
+    this.profileId = profileId;
 
   }
 
 
-  public boolean updatePassword(String oldPassword, String newPassword) {
-
-      if (!checkSamePassword(oldPassword)) {
-          return false;
-      }
+  public boolean updatePassword(String newPassword) {
 
     this.password = newPassword;
     super.updateUpdatedAt();
@@ -37,32 +32,21 @@ public class User extends Entity {
   }
 
 
-  public boolean updateNickname(String nickname, String password) {
-
-      if (!checkSamePassword(password)) {
-          return false;
-      }
+  public boolean updateNickname(String nickname) {
 
     this.nickname = nickname;
     super.updateUpdatedAt();
     return true;
   }
 
-  public boolean updateEmail(String email, String password) {
-
-      if (!checkSamePassword(password)) {
-          return false;
-      }
+  public boolean updateEmail(String email) {
 
     this.email = email;
     super.updateUpdatedAt();
     return true;
   }
 
-  public boolean updateProfileImage(UUID profileImage, String password) {
-      if (!checkSamePassword(password)) {
-          return false;
-      }
+  public boolean updateProfileImage(UUID profileImage) {
 
     this.profileId = profileImage;
     super.updateUpdatedAt();
@@ -77,7 +61,7 @@ public class User extends Entity {
   @Override
   public String toString() {
     return "User{" +
-        "nickname='" + nickname + '\'' +
+        "username='" + nickname + '\'' +
         ", email='" + email + '\'' +
         '}';
   }
