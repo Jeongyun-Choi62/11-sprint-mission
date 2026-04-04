@@ -66,6 +66,10 @@ public class BasicReadStatusService implements ReadStatusService {
 
   @Override
   public List<ReadStatusInfoDto> findAllById(UUID userId) {
+    if (!userRepository.isExistUser(userId)) {
+      throw new NonExistException("존재하는 유저 아이디가 아닙니다.");
+    }
+
     return readStatusRepository.getAllByUserId(userId).stream()
         .map(this::statusToInfoDto)
         .toList();
@@ -74,7 +78,8 @@ public class BasicReadStatusService implements ReadStatusService {
   @Override
   public ReadStatusInfoDto update(UUID readStatusId, UpdateReadStatus updateReadStatusDto) {
 
-    ReadStatus readStatus = readStatusRepository.get(readStatusId).orElseThrow();
+    ReadStatus readStatus = readStatusRepository.get(readStatusId)
+        .orElseThrow(() -> new NonExistException("존재하는 읽기 상태가 아닙니다."));
 
     readStatus.updateLastReadAt(updateReadStatusDto.newLastReadAt());
 

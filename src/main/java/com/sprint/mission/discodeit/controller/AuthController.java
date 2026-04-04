@@ -34,12 +34,12 @@ public class AuthController {
       HttpServletRequest request) {
 
     ExceptionDto exceptionDto = ExceptionDto.of(
-        HttpStatus.UNAUTHORIZED,
+        HttpStatus.BAD_REQUEST,
         "존재하지 않는 이름 또는 비밀번호 입니다",
         request.getRequestURI()
     );
 
-    return ResponseEntity.status(401).body(exceptionDto);
+    return ResponseEntity.status(400).body(exceptionDto);
 
   }
 
