@@ -79,10 +79,10 @@ public class FILEUserRepository implements UserRepository {
   }
 
   @Override
-  public boolean isExistUserByEmail(String Email) {
+  public boolean isExistUserByEmail(String email) {
 
     Map<UUID, User> users = load(directory);
-    return users.values().stream().anyMatch(user -> user.getEmail().equals(Email));
+    return users.values().stream().anyMatch(user -> user.getEmail().equals(email));
   }
 
   @Override

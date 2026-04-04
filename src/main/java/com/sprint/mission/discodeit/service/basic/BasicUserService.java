@@ -4,6 +4,7 @@ import com.sprint.mission.discodeit.dto.userdto.*;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
+import com.sprint.mission.discodeit.exception.service.AlreadyExistException;
 import com.sprint.mission.discodeit.exception.service.DiffPasswordException;
 import com.sprint.mission.discodeit.exception.service.DupEmailException;
 import com.sprint.mission.discodeit.exception.service.DupNameException;
@@ -73,7 +74,7 @@ public class BasicUserService implements UserService {
 
     //유저 스테이터스 중복 체크
     if (userStatusRepository.isExistUserStatus(user.getId())) {
-      throw new ArithmeticException("이미 존재하는 유저 상태입니다.");
+      throw new AlreadyExistException("이미 존재하는 유저 상태입니다.");
     }
 
     //유저 저장
@@ -116,8 +117,9 @@ public class BasicUserService implements UserService {
     User user = userRepository.getUser(userId)
         .orElseThrow(() -> new NonExistException("존재 하지 않는 유저 아이디 입니다."));
 
-    //기존 닉네임과 다르면 중복 체크 후 변경
-    if (!user.getNickname().equals(updateUserDto.newUsername())) {
+    //null이면 무시, 있으면 기존 닉네임과 다르면 중복 체크 후 변경
+    if (updateUserDto.newUsername() != null && !user.getNickname()
+        .equals(updateUserDto.newUsername())) {
 
       if (userRepository.isExistUserByNickname(updateUserDto.newUsername())) {
         throw new DupNameException();
@@ -125,14 +127,16 @@ public class BasicUserService implements UserService {
       user.updateNickname(updateUserDto.newUsername());
     }
 
-    if (!user.getEmail().equals(updateUserDto.newEmail())) {
+    if (updateUserDto.newEmail() != null && !user.getEmail().equals(updateUserDto.newEmail())) {
       if (userRepository.isExistUserByEmail(updateUserDto.newEmail())) {
         throw new DupEmailException();
       }
       user.updateEmail(updateUserDto.newEmail());
     }
 
-    user.updatePassword(updateUserDto.newPassword());
+    if (updateUserDto.newPassword() != null) {
+      user.updatePassword(updateUserDto.newPassword());
+    }
 
     //file 처리
     //file이 존재할 경우에만
