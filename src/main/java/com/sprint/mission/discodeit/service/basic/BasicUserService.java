@@ -2,6 +2,8 @@ package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.dto.userdto.*;
 import com.sprint.mission.discodeit.entity.BinaryContent;
+import com.sprint.mission.discodeit.entity.Channel.ChannelType;
+import com.sprint.mission.discodeit.entity.ReadStatus;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.exception.service.AlreadyExistException;
@@ -10,9 +12,11 @@ import com.sprint.mission.discodeit.exception.service.DupEmailException;
 import com.sprint.mission.discodeit.exception.service.DupNameException;
 import com.sprint.mission.discodeit.exception.service.NonExistException;
 import com.sprint.mission.discodeit.repository.*;
+import com.sprint.mission.discodeit.service.ReadStatusService;
 import com.sprint.mission.discodeit.service.UserService;
 import jakarta.websocket.Decoder.Binary;
 import java.io.IOException;
+import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -27,6 +31,8 @@ public class BasicUserService implements UserService {
   private final UserRepository userRepository;
   private final UserStatusRepository userStatusRepository;
   private final BinaryContentRepository binaryContentRepository;
+  private final ReadStatusRepository readStatusRepository;
+  private final ChannelRepository channelRepository;
 
 
   @Override
@@ -87,6 +93,16 @@ public class BasicUserService implements UserService {
     if (content != null) {
       binaryContentRepository.saveBinaryContent(content);
     }
+
+    //공개 채널에 대한 ReadStatus 생성
+    channelRepository.getAllChannel().forEach(channel -> {
+
+      if (channel.getChannelType() == ChannelType.PUBLIC) {
+        readStatusRepository.save(
+            new ReadStatus(user.getId(), channel.getId(), Instant.now().minusSeconds(1)));
+      }
+
+    });
 
     return userToInfoDto(user);
   }
