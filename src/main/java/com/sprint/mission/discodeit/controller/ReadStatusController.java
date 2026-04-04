@@ -4,6 +4,7 @@ import com.sprint.mission.discodeit.dto.readstatusdto.CreateReadStatusDto;
 import com.sprint.mission.discodeit.dto.readstatusdto.ReadStatusInfoDto;
 import com.sprint.mission.discodeit.dto.readstatusdto.UpdateReadStatus;
 import com.sprint.mission.discodeit.service.ReadStatusService;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -21,15 +22,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-@RequestMapping("/api/readStatus")
+@RequestMapping("/api/readStatuses")
 @RestController
 @RequiredArgsConstructor
 public class ReadStatusController {
 
   private final ReadStatusService readStatusService;
 
-  @PostMapping
 
+  @PostMapping
+  @ApiResponse(responseCode = "201")
   public ResponseEntity<ReadStatusInfoDto> createReadStatus(
       @RequestBody CreateReadStatusDto readStatusDto
   ) {
@@ -39,6 +41,7 @@ public class ReadStatusController {
 
 
   }
+
 
   @GetMapping
   public ResponseEntity<List<ReadStatusInfoDto>> getReadStatusById(

@@ -76,7 +76,7 @@ public class BasicReadStatusService implements ReadStatusService {
 
     ReadStatus readStatus = readStatusRepository.get(readStatusId).orElseThrow();
 
-    readStatus.updateLastReadAt(updateReadStatusDto.lastReadAt());
+    readStatus.updateLastReadAt(updateReadStatusDto.newLastReadAt());
 
     readStatusRepository.save(readStatus);
 
@@ -112,9 +112,12 @@ public class BasicReadStatusService implements ReadStatusService {
   ReadStatusInfoDto statusToInfoDto(ReadStatus readStatus) {
     return new ReadStatusInfoDto(
 
+        readStatus.getId(),
+        readStatus.getCreatedAt(),
+        readStatus.getLastReadAt(),
         readStatus.getUserId(),
         readStatus.getChannelId(),
-        readStatus.getUpdatedAt()
+        readStatus.getLastReadAt()
     );
 
 
