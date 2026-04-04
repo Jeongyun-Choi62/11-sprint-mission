@@ -27,10 +27,14 @@ public class FILEUserStatusRepository implements UserStatusRepository {
 
   //UserStatus는 저장시 UserId를 키로 하므로 saveLoad를 안쓰고 새로 만듬
   private final Path directory;
+  private final FileSaveLoad<UserStatus> saveLoad;
 
 
-  public FILEUserStatusRepository(@Value("${discodeit.repository.file-dir}") String path) {
+  public FILEUserStatusRepository(@Value("${discodeit.repository.file-dir}") String path,
+      FileSaveLoadFactory factory) {
     this.directory = Path.of(path + "/UserStatuses/");
+    this.saveLoad = factory.createSaveLoad();
+
   }
 
   @Override
@@ -79,56 +83,13 @@ public class FILEUserStatusRepository implements UserStatusRepository {
 
   private Map<UUID, UserStatus> load(Path directory) {
 
-    if (Files.exists(directory)) {
+    return saveLoad.load(directory);
 
-      try (Stream<Path> stream = Files.list(directory)) {
-
-        Map<UUID, UserStatus> map;
-
-        map = stream.map(path -> {
-              try (
-                  FileInputStream fis = new FileInputStream(path.toFile());
-                  ObjectInputStream ois = new ObjectInputStream(fis)
-              ) {
-                Object data = ois.readObject();
-                return (UserStatus) data;
-              } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-              }
-            })
-            .collect(Collectors.toMap(
-                UserStatus::getUserId,
-                Function.identity()
-
-            ));
-        return map;
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-
-    } else {
-      return new HashMap<>();
-    }
   }
 
   private void save(Path filePath, UserStatus userStatus) {
 
-    try {
-      Files.createDirectories(filePath.getParent());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-
-    try (
-        FileOutputStream fos = new FileOutputStream(filePath.toFile());
-        ObjectOutputStream oos = new ObjectOutputStream(fos)
-    ) {
-      oos.writeObject(userStatus);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-
-
+    saveLoad.save(filePath, userStatus);
   }
 
 

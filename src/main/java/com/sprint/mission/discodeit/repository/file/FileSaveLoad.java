@@ -3,6 +3,8 @@ package com.sprint.mission.discodeit.repository.file;
 import com.sprint.mission.discodeit.entity.Entity;
 
 
+import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.entity.UserStatus;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -45,9 +47,8 @@ public class FileSaveLoad<T extends Entity> {
               }
             })
             .collect(Collectors.toMap(
-                T::getId,
+                T -> (T instanceof UserStatus) ? ((UserStatus) T).getUserId() : T.getId(),
                 Function.identity()
-
             ));
         return map;
       } catch (IOException e) {
