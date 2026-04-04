@@ -7,8 +7,12 @@ import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.exception.service.NonExistException;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
+import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
+import com.sprint.mission.discodeit.repository.UserRepository;
+import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
+import com.sprint.mission.discodeit.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +28,8 @@ public class BasicMessageService implements MessageService {
 
   private final MessageRepository messageRepository;
   private final BinaryContentRepository binaryContentRepository;
+  private final ChannelRepository channelRepository;
+  private final UserRepository userRepository;
 
 
   @Override
@@ -36,6 +42,14 @@ public class BasicMessageService implements MessageService {
         createMessageDto.content(),
         null
     );
+
+    if (!userRepository.isExistUser(createMessageDto.authorId())) {
+      throw new NonExistException("존재하는 유저 아이디가 아닙니다.");
+    }
+    if (!channelRepository.isExistChannel(createMessageDto.channelId())) {
+      throw new NonExistException("존재하는 채널이 아닙니다.");
+    }
+
     if (attachments != null) {
       attachments.forEach(binaryFile -> {
         try {
