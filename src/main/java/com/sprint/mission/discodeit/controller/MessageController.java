@@ -5,6 +5,7 @@ import com.sprint.mission.discodeit.dto.messagedto.CreateMessageDto;
 import com.sprint.mission.discodeit.dto.messagedto.MessageInfoDto;
 import com.sprint.mission.discodeit.dto.messagedto.UpdateMessageDto;
 import com.sprint.mission.discodeit.service.MessageService;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +24,11 @@ public class MessageController {
 
   private final MessageService messageService;
 
-
-  @PostMapping
+  @ApiResponse(responseCode = "201", description = "메시지 전송")
+  @PostMapping(consumes = "multipart/form-data")
   public ResponseEntity<MessageInfoDto> sendMessage(
       @RequestPart("messageCreateRequest") CreateMessageDto messageCreateRequest,
-      @RequestPart List<MultipartFile> attachments) {
+      @RequestPart(required = false) List<MultipartFile> attachments) {
 
     MessageInfoDto messageInfoDto = messageService.create(messageCreateRequest, attachments);
 
@@ -47,17 +48,18 @@ public class MessageController {
     return ResponseEntity.status(HttpStatus.OK).body(messageService.findAllById(channelId));
   }
 
+  @ApiResponse(responseCode = "200", description = "메시지 수정")
   @PatchMapping(value = "/{messageId}")
   public ResponseEntity<MessageInfoDto> updateMessage(
-      UUID messageId,
+      @PathVariable UUID messageId,
       @RequestBody UpdateMessageDto updateMessageDto
   ) {
     messageService.updateMessage(messageId, updateMessageDto);
     return ResponseEntity.status(HttpStatus.OK)
         .body(messageService.find(messageId));
-
   }
 
+  @ApiResponse(responseCode = "204", description = "메시지 삭제")
   @DeleteMapping(value = "/{messageId}")
   public ResponseEntity<Void> deleteMessage(@PathVariable UUID messageId) {
 

@@ -4,7 +4,6 @@ import com.sprint.mission.discodeit.dto.channeldto.*;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.ReadStatus;
-import com.sprint.mission.discodeit.exception.service.AlreadyExistException;
 import com.sprint.mission.discodeit.exception.service.NonExistException;
 import com.sprint.mission.discodeit.exception.service.WrongChannelTypeException;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
@@ -139,8 +138,8 @@ public class BasicChannelService implements ChannelService {
     if (channel.getChannelType() == Channel.ChannelType.PRIVATE) {
       throw new WrongChannelTypeException("Private 타입 채널은 변경할 수 없습니다.");
     }
-    channel.updateChannelName(updateChannel.name());
-    channel.updateChannelDescription(updateChannel.description());
+    channel.updateChannelName(updateChannel.newName());
+    channel.updateChannelDescription(updateChannel.newDescription());
 
     channelRepository.saveChannel(channel);
 

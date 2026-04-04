@@ -86,7 +86,7 @@ public class BasicMessageService implements MessageService {
 
     Message message = messageRepository.getMessage(messageId).orElseThrow();
 
-    message.updateMessage(updateMessageDto.content());
+    message.updateMessage(updateMessageDto.newContent());
 
     messageRepository.saveMessage(message);
 

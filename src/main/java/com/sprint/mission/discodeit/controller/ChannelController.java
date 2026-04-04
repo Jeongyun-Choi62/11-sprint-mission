@@ -5,6 +5,7 @@ import com.sprint.mission.discodeit.dto.channeldto.*;
 import com.sprint.mission.discodeit.dto.error.ExceptionDto;
 import com.sprint.mission.discodeit.exception.service.WrongChannelTypeException;
 import com.sprint.mission.discodeit.service.ChannelService;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class ChannelController {
 
   private final ChannelService channelService;
 
-
+  @ApiResponse(responseCode = "201", description = "공개 채널 생성")
   @PostMapping(value = "public")
   public ResponseEntity<CreatedChannelInfo> createPublicChannel(
       @RequestBody CreatePublicChannel createPublicChannel) {
@@ -39,6 +40,8 @@ public class ChannelController {
 
   }
 
+
+  @ApiResponse(responseCode = "201", description = "비공개 채널 생성")
   @PostMapping(value = "private")
   public ResponseEntity<CreatedChannelInfo> createPrivateChannel(
       @RequestBody CreatePrivateChannel createPrivateChannel) {
@@ -49,8 +52,8 @@ public class ChannelController {
   }
 
 
-  @GetMapping(value = "/{userId}")
-  public ResponseEntity<List<ChannelInfo>> readAllChannelById(@PathVariable UUID userId) {
+  @GetMapping
+  public ResponseEntity<List<ChannelInfo>> readAllChannelById(@RequestParam UUID userId) {
 
     List<ChannelInfo> channels = channelService.findAllById(userId);
 
@@ -58,8 +61,8 @@ public class ChannelController {
 
   }
 
-  @PatchMapping()
-  public ResponseEntity<CreatedChannelInfo> updatePublicChannel(@RequestParam UUID channelId,
+  @PatchMapping(value = "/{channelId}")
+  public ResponseEntity<CreatedChannelInfo> updatePublicChannel(@PathVariable UUID channelId,
       @RequestBody UpdateChannel updateChannel) {
 
     CreatedChannelInfo channelInfoDto = channelService.updateChannel(channelId, updateChannel);
@@ -68,6 +71,8 @@ public class ChannelController {
 
   }
 
+
+  @ApiResponse(responseCode = "204", description = "채널 삭제")
   @DeleteMapping(value = "/{channelId}")
   public ResponseEntity<Void> deleteChannel(@PathVariable UUID channelId) {
 
