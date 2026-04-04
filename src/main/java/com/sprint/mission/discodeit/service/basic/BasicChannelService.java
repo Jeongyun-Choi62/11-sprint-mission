@@ -39,6 +39,14 @@ public class BasicChannelService implements ChannelService {
         createPublicChannel.description()
     );
 
+    userRepository.getAllUser().forEach(user -> {
+
+      readStatusRepository.save(
+          new ReadStatus(user.getId(), channel.getId(), Instant.now().minusSeconds(1)));
+
+
+    });
+
     //default Message
     messageRepository.saveMessage(new Message(
         null,
