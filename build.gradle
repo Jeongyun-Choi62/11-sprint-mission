@@ -37,3 +37,11 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+jar {
+    enabled = false // 쓸모없는 일반 jar 생성을 막습니다.
+}
+
+bootJar {
+    archiveFileName = 'app.jar' // 실행 파일 이름을 'app.jar'로 고정합니다.
+}
