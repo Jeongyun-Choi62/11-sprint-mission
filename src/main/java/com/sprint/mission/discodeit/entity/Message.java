@@ -1,18 +1,35 @@
 package com.sprint.mission.discodeit.entity;
 
 import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import java.util.ArrayList;
 import lombok.Getter;
 
 import java.util.List;
 import java.util.UUID;
+import lombok.NoArgsConstructor;
 
 @Getter
+@Table(name = "messages")
+@Entity
+@NoArgsConstructor
 public class Message extends BaseUpdatableEntity {
 
+
   private String content;
-  private final User author; //전송자 아이디
-  private final Channel channel; //채널 아이디
+  @ManyToOne
+  @JoinColumn(nullable = false, updatable = false)
+  private User author;
+  @ManyToOne
+  @JoinColumn(nullable = false, updatable = false)
+  private Channel channel; //채널 아이디
+  @JoinTable
   private List<BinaryContent> attachments = new ArrayList<>();
 
 
