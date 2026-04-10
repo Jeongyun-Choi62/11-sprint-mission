@@ -1,9 +1,8 @@
 package com.sprint.mission.discodeit.repository.file;
 
-import com.sprint.mission.discodeit.entity.Entity;
+import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
 
 
-import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
 import java.io.*;
 import java.nio.file.Files;
@@ -16,11 +15,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 
-public class FileSaveLoad<T extends Entity> {
+public class FileSaveLoad<T extends BaseUpdatableEntity> {
 
 
   private final FileLockProvider fileLockProvider;

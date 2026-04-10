@@ -1,68 +1,44 @@
 package com.sprint.mission.discodeit.entity;
 
 
-import lombok.AccessLevel;
+import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
 import lombok.Getter;
 import java.util.UUID;
 
 @Getter
-public class User extends Entity {
+public class User extends BaseUpdatableEntity {
 
-  private String nickname; //닉네임
+
+  private String username;
+  private String password;
   private String email;
-  private String password; //비밀번호
-  private UUID profileId;
+  private BinaryContent profile;
+  private final UserStatus status;
 
-
-  public User(String nickname, String email, String password, UUID profileId) {
+  public User(UserStatus status, BinaryContent profile, String email, String password,
+      String username) {
+    this.status = status;
+    this.profile = profile;
+    this.email = email;
     this.password = password;
-    this.nickname = nickname;
+    this.username = username;
+  }
+
+  public void updateUsername(String username) {
+    this.username = username;
+  }
+
+  public void updatePassword(String password) {
+    this.password = password;
+  }
+
+  public void updateEmail(String email) {
     this.email = email;
-    this.profileId = profileId;
+  }
 
+  public void updateProfile(BinaryContent profile) {
+    this.profile = profile;
   }
 
 
-  public boolean updatePassword(String newPassword) {
-
-    this.password = newPassword;
-    super.updateUpdatedAt();
-    return true;
-
-  }
-
-
-  public boolean updateNickname(String nickname) {
-
-    this.nickname = nickname;
-    super.updateUpdatedAt();
-    return true;
-  }
-
-  public boolean updateEmail(String email) {
-
-    this.email = email;
-    super.updateUpdatedAt();
-    return true;
-  }
-
-  public boolean updateProfileImage(UUID profileImage) {
-
-    this.profileId = profileImage;
-    super.updateUpdatedAt();
-    return true;
-  }
-
-  public boolean checkSamePassword(String password) {
-    return this.password.equals(password);
-  }
-
-
-  @Override
-  public String toString() {
-    return "User{" +
-        "username='" + nickname + '\'' +
-        ", email='" + email + '\'' +
-        '}';
-  }
 }

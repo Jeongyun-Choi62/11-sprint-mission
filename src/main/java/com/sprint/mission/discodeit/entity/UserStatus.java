@@ -1,25 +1,24 @@
 package com.sprint.mission.discodeit.entity;
 
+import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
 import lombok.Getter;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Getter
-public class UserStatus extends Entity {
+public class UserStatus extends BaseUpdatableEntity {
 
-  private final UUID userId;
+  private final User user;
   private Instant lastActiveAt;
 
-  public UserStatus(UUID userId) {
-    this.userId = userId;
-    lastActiveAt = Instant.now();
+  public UserStatus(User user, Instant lastActiveAt) {
+    this.user = user;
+    this.lastActiveAt = lastActiveAt;
   }
-
 
   public void updateLastActiveAt(Instant lastActiveAt) {
     this.lastActiveAt = lastActiveAt;
-    super.updateUpdatedAt();
   }
 
   public boolean isOnline() {

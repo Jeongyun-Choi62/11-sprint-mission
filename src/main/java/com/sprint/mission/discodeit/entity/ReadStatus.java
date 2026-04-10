@@ -1,27 +1,27 @@
 package com.sprint.mission.discodeit.entity;
 
 
+import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
 import java.time.Instant;
 import lombok.Getter;
 
 import java.util.UUID;
 
 @Getter
-public class ReadStatus extends Entity {
+public class ReadStatus extends BaseUpdatableEntity {
 
-  private final UUID channelId;
-  private final UUID userId;
+  private final Channel channel;
+  private final User user;
   private Instant lastReadAt;
 
-  public ReadStatus(UUID userId, UUID channelId, Instant lastReadAt) {
-    this.userId = userId;
-    this.channelId = channelId;
+  public ReadStatus(Channel channel, User user, Instant lastReadAt) {
+    this.channel = channel;
+    this.user = user;
     this.lastReadAt = lastReadAt;
   }
 
   public Instant updateLastReadAt(Instant lastReadAt) {
     this.lastReadAt = lastReadAt;
-    updateUpdatedAt();
     return lastReadAt;
   }
 
