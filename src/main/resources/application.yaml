@@ -18,3 +18,17 @@ spring:
           format_sql: true
           use_sql_comments: true
 
+
+discodeit:
+  storage:
+
+    type: local
+    local:
+      root-path: /tmp/discodeit
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+

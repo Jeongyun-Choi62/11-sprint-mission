@@ -1,11 +1,13 @@
 package com.sprint.mission.discodeit.entity;
 
 import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
@@ -29,7 +31,13 @@ public class Message extends BaseUpdatableEntity {
   @ManyToOne
   @JoinColumn(nullable = false, updatable = false)
   private Channel channel; //채널 아이디
-  @JoinTable
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinTable(
+      name = "message_attachments",
+      joinColumns = @JoinColumn(name = "message_id"),
+      inverseJoinColumns = @JoinColumn(name = "binary_content_id")
+
+  )
   private List<BinaryContent> attachments = new ArrayList<>();
 
 

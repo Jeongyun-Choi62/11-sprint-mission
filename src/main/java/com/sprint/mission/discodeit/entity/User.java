@@ -29,14 +29,15 @@ public class User extends BaseUpdatableEntity {
   private String email;
 
   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "binary_contents_id")
   private BinaryContent profile;
 
   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(nullable = false, updatable = false)
   private UserStatus status;
 
-  public User(UserStatus status, BinaryContent profile, String email, String password,
-      String username) {
+  public User(String username, String email, String password, UserStatus status,
+      BinaryContent profile) {
     this.status = status;
     this.profile = profile;
     this.email = email;
@@ -58,6 +59,14 @@ public class User extends BaseUpdatableEntity {
 
   public void updateProfile(BinaryContent profile) {
     this.profile = profile;
+  }
+
+  public void updateStatus(UserStatus status) {
+    this.status = status;
+  }
+
+  public boolean checkSamePassword(String password) {
+    return this.password.equals(password);
   }
 
 

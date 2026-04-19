@@ -18,9 +18,11 @@ public class Channel extends BaseUpdatableEntity {
 
   @Column(length = 100)
   private String name; //채널 이름
+
   @Column(nullable = false, length = 10)
   @Enumerated(EnumType.STRING)
   private ChannelType type;
+
   @Column(length = 500)
   private String description;
 
