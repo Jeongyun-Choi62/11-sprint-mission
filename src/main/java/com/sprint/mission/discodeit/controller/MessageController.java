@@ -7,6 +7,8 @@ import com.sprint.mission.discodeit.dto.messagedto.request.MessageUpdateRequest;
 import com.sprint.mission.discodeit.dto.response.PageResponse;
 import com.sprint.mission.discodeit.service.MessageService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import java.awt.Insets;
+import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -46,10 +48,12 @@ public class MessageController {
   @GetMapping
   public ResponseEntity<PageResponse<MessageDto>> getMessage(
       @RequestParam UUID channelId,
-      Pageable pageable) {
+      @RequestParam(required = false) Instant cursor,
+      Pageable pageable
+  ) {
 
     return ResponseEntity.status(HttpStatus.OK)
-        .body(messageService.findAllByChannelId(channelId, pageable));
+        .body(messageService.findAllByChannelId(channelId, pageable, cursor));
   }
 
   @ApiResponse(responseCode = "200", description = "메시지 수정")

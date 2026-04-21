@@ -16,11 +16,13 @@ import com.sprint.mission.discodeit.repository.JPAMessageRepository;
 import com.sprint.mission.discodeit.repository.JPAUserRepository;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.storage.BinaryContentStorage;
+import java.time.Instant;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
@@ -112,20 +114,32 @@ public class BasicMessageService implements MessageService {
 
   @Override
   @Transactional(readOnly = true)
-  public PageResponse<MessageDto> findAllByChannelId(UUID channelId, Pageable pageable) {
+  public PageResponse<MessageDto> findAllByChannelId(UUID channelId, Pageable pageable,
+      Instant cursor) {
 
     //채널 존재 여부 체크
     if (!channelRepository.existsById(channelId)) {
       throw new NonExistException("존재하지 않는 채널 아이디입니다.");
     }
 
-    //Pageable pageable1 = PageRequest.of(0, 10, Sort.by(Direction.DESC, "createdAt"));
+    Slice<Message> list;
+    if (cursor != null) {
+      list = messageRepository.findAllByChannel_Id(channelId, pageable, cursor);
+    } else {
+      list = messageRepository.findAllByChannel_Id(channelId, pageable);
+    }
 
-    Page<Message> list = messageRepository.findAllByChannel_Id(channelId, pageable);
+    Instant nextCursor;
 
-    Page<MessageDto> listDto = list.map(messageMapper::toDto);
+    if (list.hasNext()) {
+      nextCursor = list.getContent().get(list.getContent().size() - 1).getCreatedAt();
+    } else {
+      nextCursor = null;
+    }
 
-    return pageResponseMapper.fromPage(listDto);
+    Slice<MessageDto> listDto = list.map(messageMapper::toDto);
+
+    return pageResponseMapper.fromSlice(listDto, nextCursor);
 
   }
 
