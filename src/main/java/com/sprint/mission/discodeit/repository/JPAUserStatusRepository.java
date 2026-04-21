@@ -7,9 +7,13 @@ import java.util.Optional;
 import java.util.UUID;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface JPAUserStatusRepository extends JpaRepository<UserStatus, UUID> {
 
+  @Query("SELECT u FROM UserStatus u JOIN FETCH u.user")
+  @NonNull
+  List<UserStatus> findAll();
 
   Optional<UserStatus> findByUserId(UUID userId);
 

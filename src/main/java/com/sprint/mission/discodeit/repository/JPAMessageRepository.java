@@ -9,11 +9,15 @@ import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface JPAMessageRepository extends JpaRepository<Message, UUID> {
 
 
+  @EntityGraph(attributePaths = {"author", "channel", "author.status", "author.profile"})
   Page<Message> findAllByChannel_Id(UUID channelId, Pageable pageable);
 
   List<Message> findAllByAuthor(User author);

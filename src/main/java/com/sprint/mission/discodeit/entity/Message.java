@@ -16,6 +16,7 @@ import lombok.Getter;
 import java.util.List;
 import java.util.UUID;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 @Getter
 @Table(name = "messages")
@@ -32,6 +33,7 @@ public class Message extends BaseUpdatableEntity {
   @JoinColumn(nullable = false, updatable = false)
   private Channel channel; //채널 아이디
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  @BatchSize(size = 100)
   @JoinTable(
       name = "message_attachments",
       joinColumns = @JoinColumn(name = "message_id"),
