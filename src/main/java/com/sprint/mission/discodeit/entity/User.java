@@ -9,11 +9,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import java.util.UUID;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Table(name = "users")
+@Table(name = "\"user\"")
 @Entity
 @NoArgsConstructor
 public class User extends BaseUpdatableEntity {
@@ -29,7 +28,7 @@ public class User extends BaseUpdatableEntity {
   private String email;
 
   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-  @JoinColumn(name = "binary_contents_id")
+  @JoinColumn(name = "profile_id")
   private BinaryContent profile;
 
   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
