@@ -96,7 +96,7 @@ public class BasicMessageService implements MessageService {
     }
 
     //메시지 저장 + 영속성 전이로 메타데이터도 저장
-    messageRepository.save(message);
+    message = messageRepository.saveAndFlush(message);
 
     return messageMapper.toDto(message);
 
@@ -143,7 +143,7 @@ public class BasicMessageService implements MessageService {
     } else {
       nextCursor = null;
     }
-    
+
     Slice<MessageDto> listDto = list.map(messageMapper::toDto);
 
     return pageResponseMapper.fromSlice(listDto, nextCursor);
