@@ -35,12 +35,12 @@ public class BasicUserStatusService implements UserStatusService {
     );
 
     //유저 존재 체크
-    if (!userRepository.existsById(userStatus.getId())) {
+    if (!userRepository.existsById(createUserStatusDto.user().getId())) {
       throw new NonExistException("존재하지 않는 유저 아이디 입니다.");
     }
 
     // 유저 스테이터스 존재 체크
-    if (userStatusRepository.existsById(userStatus.getId())) {
+    if (userStatusRepository.existsByUserId(userStatus.getId())) {
       throw new AlreadyExistException("이미 존재하는 유저 스테이터스 입니다");
     }
 

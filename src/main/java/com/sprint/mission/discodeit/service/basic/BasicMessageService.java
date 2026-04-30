@@ -43,7 +43,7 @@ public class BasicMessageService implements MessageService {
   private final JPAUserRepository userRepository;
 
   private final MessageMapper messageMapper;
-  private final PageResponseMapper<MessageDto> pageResponseMapper;
+  private final PageResponseMapper pageResponseMapper;
 
   private final BinaryContentStorage binaryContentStorage;
 
@@ -123,6 +123,13 @@ public class BasicMessageService implements MessageService {
     }
 
     Slice<Message> list;
+
+    //정렬 기본값 생성 시간에 대해 내림차순
+    if (pageable.getSort().isUnsorted()) {
+      pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+          Sort.by(Direction.DESC, "createdAt"));
+    }
+
     if (cursor != null) {
       list = messageRepository.findAllByChannel_Id(channelId, pageable, cursor);
     } else {
@@ -136,7 +143,7 @@ public class BasicMessageService implements MessageService {
     } else {
       nextCursor = null;
     }
-
+    
     Slice<MessageDto> listDto = list.map(messageMapper::toDto);
 
     return pageResponseMapper.fromSlice(listDto, nextCursor);
