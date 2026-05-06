@@ -1,7 +1,10 @@
 package com.sprint.mission.discodeit.exception.service;
 
-public class DiffPasswordException extends RuntimeException {
-    public DiffPasswordException() {
-        super("비밀번호가 일치하지 않습니다.");
-    }
+import com.sprint.mission.discodeit.exception.AuthException;
+
+public class DiffPasswordException extends AuthException {
+
+  public DiffPasswordException() {
+    super("비밀번호가 일치하지 않습니다.");
+  }
 }
