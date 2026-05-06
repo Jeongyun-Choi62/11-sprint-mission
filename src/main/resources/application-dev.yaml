@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: "jdbc:h2:mem:testdb;MODE=PostgreSQL;INIT=CREATE DOMAIN IF NOT EXISTS TIMESTAMPTZ AS TIMESTAMP WITH TIME ZONE"
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -12,8 +12,8 @@ spring:
     console:
       enabled: true
 
-  logging:
-    level:
-      root: DEBUG
-      com.sprint.misson.discodeit: DEBUG
-      org.hibernate: WARN
+logging:
+  level:
+    root: DEBUG
+    com.sprint.misson.discodeit: DEBUG
+    org.hibernate: WARN
