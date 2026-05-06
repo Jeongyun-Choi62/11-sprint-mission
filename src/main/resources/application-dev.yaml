@@ -17,5 +17,3 @@ spring:
       root: DEBUG
       com.sprint.misson.discodeit: DEBUG
       org.hibernate: WARN
-    pattern:
-      console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} -

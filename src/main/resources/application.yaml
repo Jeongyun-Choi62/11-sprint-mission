@@ -9,7 +9,7 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: create
-      show-sql: false
+      show-sql: true
       properties:
         hibernate:
           format_sql: true
@@ -19,8 +19,9 @@ spring:
 
   logging:
     level:
-      org.hibernate.SQL: INFO
-      org.hibernate.orm.jdbc.bind: INFO
+      root: INFO
+      org.hibernate.SQL: DEBUG
+      org.hibernate.orm.jdbc.bind: TRACE
 
 
 discodeit:
