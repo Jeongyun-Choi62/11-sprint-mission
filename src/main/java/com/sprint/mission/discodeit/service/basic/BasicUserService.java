@@ -8,9 +8,9 @@ import com.sprint.mission.discodeit.entity.ReadStatus;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
 
-import com.sprint.mission.discodeit.exception.service.DupEmailException;
-import com.sprint.mission.discodeit.exception.service.DupNameException;
-import com.sprint.mission.discodeit.exception.service.NonExistException;
+import com.sprint.mission.discodeit.exception.service.user.DupEmailException;
+import com.sprint.mission.discodeit.exception.service.user.DupNameException;
+import com.sprint.mission.discodeit.exception.service.user.NonExistUserException;
 import com.sprint.mission.discodeit.mapper.UserMapper;
 import com.sprint.mission.discodeit.repository.*;
 import com.sprint.mission.discodeit.service.UserService;
@@ -19,6 +19,7 @@ import com.sprint.mission.discodeit.service.UserService;
 import com.sprint.mission.discodeit.storage.BinaryContentStorage;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class BasicUserService implements UserService {
 
@@ -43,14 +45,16 @@ public class BasicUserService implements UserService {
   @Transactional
   public UserDto create(UserCreateRequest userCreateRequest, MultipartFile file) {
 
+    log.info("유저 생성 요청 : {}", userCreateRequest);
+
     // 닉네임 중복 체크
     if (userRepository.existsByUsername(userCreateRequest.username())) {
-      throw new DupNameException();
+      throw new DupNameException(userCreateRequest.username());
     }
 
     //이메일 중복 체크
     if (userRepository.existsByEmail(userCreateRequest.email())) {
-      throw new DupEmailException();
+      throw new DupEmailException(userCreateRequest.email());
     }
 
     //유저 생성
@@ -65,8 +69,9 @@ public class BasicUserService implements UserService {
     //프로필 생성
 
     BinaryContent content;
-    if (file != null && !file.isEmpty()) {
 
+    if (file != null && !file.isEmpty()) {
+      log.info("프로필 생성 시작");
       try {
         content = new BinaryContent(
 
@@ -80,6 +85,7 @@ public class BasicUserService implements UserService {
       }
 
       user.updateProfile(content);
+      log.info("프로필 생성 완료, content : {}", content);
     } else {
       user.updateProfile(null);
     }
@@ -102,6 +108,7 @@ public class BasicUserService implements UserService {
 
     });
 
+    log.info("유저 생성 완료 - user : {}", user);
     return userMapper.toDto(user);
   }
 
@@ -132,24 +139,25 @@ public class BasicUserService implements UserService {
   @Override
   @Transactional
   public UserDto updateUser(UUID userId, UpdateUserDto updateUserDto, MultipartFile file) {
+    log.info("유저 업데이트 요청, userId : {}, updateUserDto : {}", userId, updateUserDto);
 
     //유저 가져오기
     User user = userRepository.findById(userId)
-        .orElseThrow(() -> new NonExistException("존재 하지 않는 유저 아이디 입니다."));
+        .orElseThrow(() -> new NonExistUserException(userId));
 
     //null이면 무시, 있으면 기존 닉네임과 다르면 중복 체크 후 변경
     if (updateUserDto.newUsername() != null && !user.getUsername()
         .equals(updateUserDto.newUsername())) {
 
       if (userRepository.existsByUsername(updateUserDto.newUsername())) {
-        throw new DupNameException();
+        throw new DupEmailException(updateUserDto.newEmail());
       }
       user.updateUsername(updateUserDto.newUsername());
     }
 
     if (updateUserDto.newEmail() != null && !user.getEmail().equals(updateUserDto.newEmail())) {
       if (userRepository.existsByEmail(updateUserDto.newEmail())) {
-        throw new DupEmailException();
+        throw new DupEmailException(updateUserDto.newEmail());
       }
       user.updateEmail(updateUserDto.newEmail());
     }
@@ -162,6 +170,7 @@ public class BasicUserService implements UserService {
     //file이 존재할 경우에만
     if (file != null && !file.isEmpty()) {
       //이전의
+      log.info("새 프로필 생성 시작");
       BinaryContent oldFile = user.getProfile();
       BinaryContent newContent;
 
@@ -174,6 +183,7 @@ public class BasicUserService implements UserService {
             file.getSize()
         );
         binaryContentStorage.put(newContent.getId(), file.getBytes());
+        log.info("프로필 생성 완료, newContent : {}", newContent);
 
       } catch (Exception e) {
         throw new RuntimeException(e);
@@ -186,6 +196,7 @@ public class BasicUserService implements UserService {
       }
     }
 
+    log.info("유저 업데이트 완료, user : {}", user);
     return userMapper.toDto(user);
   }
 
@@ -194,13 +205,17 @@ public class BasicUserService implements UserService {
   @Transactional
   public boolean delete(UUID userId) {
 
+    log.info("유저 삭제 요청, userId : {}", userId);
+
     // 유저 존재 체크
     if (!userRepository.existsById(userId)) {
-      throw new NonExistException("존재하지 않는 유저 아이디 입니다.");
+      throw new NonExistUserException(userId);
     }
 
     //삭제
     userRepository.deleteById(userId);
+
+    log.info("유저 삭제 완료, userId : {}", userId);
     return true;
   }
 

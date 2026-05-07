@@ -1,8 +1,10 @@
 package com.sprint.mission.discodeit.exception;
 
-public class AuthException extends RuntimeException {
+import java.util.Map;
 
-  public AuthException(String message) {
-    super(message);
+public class AuthException extends DiscodeitException {
+
+  public AuthException(ErrorCode errorCode, Map<String, Object> details) {
+    super(errorCode, details);
   }
 }

@@ -1,8 +1,10 @@
 package com.sprint.mission.discodeit.exception;
 
-public class ChannelException extends RuntimeException {
+import java.util.Map;
 
-  public ChannelException(String message) {
-    super(message);
+public class ChannelException extends DiscodeitException {
+
+  public ChannelException(ErrorCode errorCode, Map<String, Object> details) {
+    super(errorCode, details);
   }
 }

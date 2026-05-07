@@ -10,8 +10,8 @@ import com.sprint.mission.discodeit.entity.Channel.ChannelType;
 import com.sprint.mission.discodeit.entity.ReadStatus;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.base.BaseEntity;
-import com.sprint.mission.discodeit.exception.service.NonExistException;
-import com.sprint.mission.discodeit.exception.service.WrongChannelTypeException;
+import com.sprint.mission.discodeit.exception.service.channel.NonExistChannelException;
+import com.sprint.mission.discodeit.exception.service.channel.WrongChannelTypeException;
 import com.sprint.mission.discodeit.mapper.ChannelMapper;
 import com.sprint.mission.discodeit.repository.JPAChannelRepository;
 import com.sprint.mission.discodeit.repository.JPAMessageRepository;
@@ -22,6 +22,7 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.UUID;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class BasicChannelService implements ChannelService {
 
@@ -43,6 +45,8 @@ public class BasicChannelService implements ChannelService {
   @Override
   @Transactional
   public ChannelDto createPublic(PublicChannelCreateRequest publicChannelCreateRequest) {
+
+    log.info("공개 채널 생성 요청: {}", publicChannelCreateRequest);
 
     // 새 채널 생성
     Channel channel = new Channel(
@@ -77,6 +81,8 @@ public class BasicChannelService implements ChannelService {
     Instant lastMessageAt = messageRepository.findTopByChannel_IdOrderByCreatedAtDesc(
         channel.getId()).map(BaseEntity::getCreatedAt).orElse(Instant.now());
 
+    log.info("공개 채널 생성 완료! channel : {}", channel);
+
     return channelMapper.toDto(channel, participants, lastMessageAt);
 
   }
@@ -84,6 +90,8 @@ public class BasicChannelService implements ChannelService {
   @Override
   @Transactional
   public ChannelDto createPrivate(PrivateChannelCreateRequest privateChannelCreateRequest) {
+
+    log.info("개인 채널 생성 : {}", privateChannelCreateRequest);
 
     //Channel 생성
     Channel channel = new Channel(
@@ -114,6 +122,8 @@ public class BasicChannelService implements ChannelService {
     //채널의 가장 마지막 메시지 전송 시간
     Instant lastMessageAt = messageRepository.findTopByChannel_IdOrderByCreatedAtDesc(
         channel.getId()).map(BaseEntity::getCreatedAt).orElse(Instant.now());
+
+    log.info("개인 채널 생성 완료. channel : {}", channel);
 
     return channelMapper.toDto(channel, participants, lastMessageAt);
 
@@ -164,11 +174,14 @@ public class BasicChannelService implements ChannelService {
   public ChannelDto updateChannel(UUID channelId,
       PublicChanelUpdateRequest publicChanelUpdateRequest) {
 
+    log.info("공개 채널 수정, channelId : {}, publicChanelUpdateRequest : {}", channelId,
+        publicChanelUpdateRequest);
+
     Channel channel = channelRepository.findById(channelId).orElseThrow();
 
     //public check
     if (channel.getType() == Channel.ChannelType.PRIVATE) {
-      throw new WrongChannelTypeException("Private 타입 채널은 변경할 수 없습니다.");
+      throw new WrongChannelTypeException(channelId);
     }
     channel.updateName(publicChanelUpdateRequest.newName());
     channel.updateDescription(publicChanelUpdateRequest.newDescription());
@@ -182,6 +195,7 @@ public class BasicChannelService implements ChannelService {
     Instant lastMessageAt = messageRepository.findTopByChannel_IdOrderByCreatedAtDesc(
         channel.getId()).map(BaseEntity::getCreatedAt).orElse(null);
 
+    log.info("공개 채널 수정 완료, channel : {}", channel);
     return channelMapper.toDto(channel, participants, lastMessageAt);
 
 
@@ -192,14 +206,17 @@ public class BasicChannelService implements ChannelService {
   @Transactional
   public void deleteChannel(UUID channelId) {
 
+    log.info("채널 삭제 시작, channelId : {}", channelId);
+
     if (!channelRepository.existsById(channelId)) {
-      throw new NonExistException("존재하는 채널이 아닙니다.");
+      throw new NonExistChannelException(channelId);
     }
 
     readStatusRepository.findAllByChannel_Id(channelId)
         .forEach(readStatus -> readStatusRepository.deleteById(readStatus.getId()));
 
     channelRepository.deleteById(channelId);
+    log.info("채널 삭제 완료, channelId : {}", channelId);
 
 
   }

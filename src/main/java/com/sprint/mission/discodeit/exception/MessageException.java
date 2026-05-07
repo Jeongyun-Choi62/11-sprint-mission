@@ -1,8 +1,10 @@
 package com.sprint.mission.discodeit.exception;
 
-public class MessageException extends RuntimeException {
+import java.util.Map;
 
-  public MessageException(String message) {
-    super(message);
+public class MessageException extends DiscodeitException {
+
+  public MessageException(ErrorCode errorCode, Map<String, Object> details) {
+    super(errorCode, details);
   }
 }
