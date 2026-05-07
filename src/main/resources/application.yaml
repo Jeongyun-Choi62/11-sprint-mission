@@ -40,5 +40,16 @@ management:
   endpoints:
     web:
       exposure:
-        include: '*'
-        exclude: ''
+        include: health,info,metrics,loggers
+  info:
+    env:
+      enabled: true # info 블록의 모든 값을 보기 위한 설정
+
+info:
+  app:
+    name: Discodeit
+    version: 1.7.0
+  java:
+    version: 17
+  spring-boot:
+    version: 3.4.0
