@@ -63,7 +63,7 @@ public class UserController {
   @ApiResponse(responseCode = "200")
   @PatchMapping(value = "/{userId}", consumes = "multipart/form-data")
   public ResponseEntity<UserDto> updateUser(@PathVariable UUID userId,
-      @Valid @RequestPart UpdateUserDto userUpdateRequest,
+      @Valid @RequestPart UserUpdateRequest userUpdateRequest,
       @RequestPart(required = false) MultipartFile profile) {
 
     UserDto userInfo = userService.updateUser(userId, userUpdateRequest, profile);

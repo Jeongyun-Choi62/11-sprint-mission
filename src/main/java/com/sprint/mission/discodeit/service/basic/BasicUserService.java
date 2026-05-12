@@ -138,32 +138,33 @@ public class BasicUserService implements UserService {
 
   @Override
   @Transactional
-  public UserDto updateUser(UUID userId, UpdateUserDto updateUserDto, MultipartFile file) {
-    log.info("유저 업데이트 요청, userId : {}, updateUserDto : {}", userId, updateUserDto);
+  public UserDto updateUser(UUID userId, UserUpdateRequest userUpdateRequest, MultipartFile file) {
+    log.info("유저 업데이트 요청, userId : {}, updateUserDto : {}", userId, userUpdateRequest);
 
     //유저 가져오기
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new NonExistUserException(userId));
 
     //null이면 무시, 있으면 기존 닉네임과 다르면 중복 체크 후 변경
-    if (updateUserDto.newUsername() != null && !user.getUsername()
-        .equals(updateUserDto.newUsername())) {
+    if (userUpdateRequest.newUsername() != null && !user.getUsername()
+        .equals(userUpdateRequest.newUsername())) {
 
-      if (userRepository.existsByUsername(updateUserDto.newUsername())) {
-        throw new DupEmailException(updateUserDto.newEmail());
+      if (userRepository.existsByUsername(userUpdateRequest.newUsername())) {
+        throw new DupEmailException(userUpdateRequest.newEmail());
       }
-      user.updateUsername(updateUserDto.newUsername());
+      user.updateUsername(userUpdateRequest.newUsername());
     }
 
-    if (updateUserDto.newEmail() != null && !user.getEmail().equals(updateUserDto.newEmail())) {
-      if (userRepository.existsByEmail(updateUserDto.newEmail())) {
-        throw new DupEmailException(updateUserDto.newEmail());
+    if (userUpdateRequest.newEmail() != null && !user.getEmail()
+        .equals(userUpdateRequest.newEmail())) {
+      if (userRepository.existsByEmail(userUpdateRequest.newEmail())) {
+        throw new DupEmailException(userUpdateRequest.newEmail());
       }
-      user.updateEmail(updateUserDto.newEmail());
+      user.updateEmail(userUpdateRequest.newEmail());
     }
 
-    if (updateUserDto.newPassword() != null) {
-      user.updatePassword(updateUserDto.newPassword());
+    if (userUpdateRequest.newPassword() != null) {
+      user.updatePassword(userUpdateRequest.newPassword());
     }
 
     //file 처리

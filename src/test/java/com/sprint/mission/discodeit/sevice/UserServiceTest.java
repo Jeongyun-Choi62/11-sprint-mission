@@ -7,7 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-import com.sprint.mission.discodeit.dto.userdto.UpdateUserDto;
+import com.sprint.mission.discodeit.dto.userdto.UserUpdateRequest;
 import com.sprint.mission.discodeit.dto.userdto.UserDto;
 import com.sprint.mission.discodeit.dto.userdto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.entity.User;
@@ -18,13 +18,10 @@ import com.sprint.mission.discodeit.repository.JPABinaryContentRepository;
 import com.sprint.mission.discodeit.repository.JPAChannelRepository;
 import com.sprint.mission.discodeit.repository.JPAReadStatusRepository;
 import com.sprint.mission.discodeit.repository.JPAUserRepository;
-import com.sprint.mission.discodeit.service.ReadStatusService;
-import com.sprint.mission.discodeit.service.UserService;
 import com.sprint.mission.discodeit.service.basic.BasicUserService;
 import com.sprint.mission.discodeit.storage.BinaryContentStorage;
 import java.util.Optional;
 import java.util.UUID;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -113,7 +110,7 @@ class UserServiceTest {
   @Test
   void updateUser() {
 
-    UpdateUserDto updateUserDto = new UpdateUserDto(
+    UserUpdateRequest userUpdateRequest = new UserUpdateRequest(
 
         "업데이트테스트",
         "updatetest@test.com",
@@ -129,30 +126,30 @@ class UserServiceTest {
         null
 
     )));
-    given(userRepository.existsByEmail(updateUserDto.newEmail())).willReturn(false);
-    given(userRepository.existsByUsername(updateUserDto.newUsername())).willReturn(false);
+    given(userRepository.existsByEmail(userUpdateRequest.newEmail())).willReturn(false);
+    given(userRepository.existsByUsername(userUpdateRequest.newUsername())).willReturn(false);
 
     given(userMapper.toDto(any(User.class)))
         .willReturn(new UserDto(
             UUID.randomUUID(),
-            updateUserDto.newUsername(),
-            updateUserDto.newEmail(),
+            userUpdateRequest.newUsername(),
+            userUpdateRequest.newEmail(),
             null,
             true
         ));
 
     //when
-    UserDto userDto = userService.updateUser(UUID.randomUUID(), updateUserDto, null);
+    UserDto userDto = userService.updateUser(UUID.randomUUID(), userUpdateRequest, null);
 
     //then
     assertThat(userDto).isNotNull();
-    assertThat(userDto.username()).isEqualTo(updateUserDto.newUsername());
-    assertThat(userDto.email()).isEqualTo(updateUserDto.newEmail());
+    assertThat(userDto.username()).isEqualTo(userUpdateRequest.newUsername());
+    assertThat(userDto.email()).isEqualTo(userUpdateRequest.newEmail());
   }
 
   @Test
   void updateUserFailByNoneUserId() {
-    UpdateUserDto updateUserDto = new UpdateUserDto(
+    UserUpdateRequest userUpdateRequest = new UserUpdateRequest(
 
         "업데이트테스트",
         "updatetest@test.com",
@@ -164,7 +161,7 @@ class UserServiceTest {
 
     //when & then
     assertThatThrownBy(
-        () -> userService.updateUser(UUID.randomUUID(), updateUserDto, null)).isInstanceOf(
+        () -> userService.updateUser(UUID.randomUUID(), userUpdateRequest, null)).isInstanceOf(
         NonExistUserException.class);
 
 

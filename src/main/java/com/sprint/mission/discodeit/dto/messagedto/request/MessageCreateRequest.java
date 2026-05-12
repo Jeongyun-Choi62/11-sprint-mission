@@ -8,9 +8,9 @@ import java.util.UUID;
 public record MessageCreateRequest(
     @NotNull(message = "메시지 내용은 null이 될 수 없습니다.")
     String content,
-    @NotBlank(message = "채널 아이디는 필수 입력값입니다.")
+    @NotNull(message = "채널 아이디는 필수 입력값입니다.")
     UUID channelId,
-    @NotBlank(message = "작성자 아이디는 필수 입력값입니다.")
+    @NotNull(message = "작성자 아이디는 필수 입력값입니다.")
     UUID authorId
 
 ) {
