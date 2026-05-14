@@ -7,21 +7,21 @@ spring:
 
   jpa:
     open-in-view: false
+    show-sql: false
     hibernate:
       ddl-auto: create
-      show-sql: true
-      properties:
-        hibernate:
-          format_sql: true
-          use_sql_comments: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
 
 
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
 
-  logging:
-    level:
-      root: INFO
-      org.hibernate.SQL: DEBUG
-      org.hibernate.orm.jdbc.bind: TRACE
 
 
 discodeit:
@@ -47,9 +47,9 @@ management:
 
 info:
   app:
-    name: Discodeit
-    version: 1.7.0
+    name: discodeit
+    version: 1.8.0
   java:
     version: 17
   spring-boot:
-    version: 3.4.0
+    version: 3.5.11
