@@ -3,7 +3,7 @@ spring:
     name: discodeit
 
   profiles:
-    active: dev
+    active: ${SPRING_PROFILE:dev}
 
   jpa:
     open-in-view: false
@@ -16,19 +16,27 @@ spring:
         use_sql_comments: true
 
 
+
+
 logging:
   level:
     root: INFO
-    org.hibernate.SQL: DEBUG
-    org.hibernate.orm.jdbc.bind: TRACE
-
-
 
 discodeit:
   storage:
-    type: local
+    type: ${STORAGE_TYPE:local}
     local:
-      root-path: /tmp/discodeit
+      root-path: ${STORAGE_PATH:.discodeit/storage}
+    s3:
+      # TODO: S3 관련 설정을 환경변수로 주입받도록 작성하세요.
+      # access-key, secret-key, region, bucket은 기본값 없이 필수로 처리하세요.
+      # presigned-url-expiration은 기본값을 600(초)으로 설정하세요.
+      access-key: ${AWS_S3_ACCESS_KEY}
+      secret-key: ${AWS_S3_SECRET_KEY}
+      region: ${AWS_S3_REGION}
+      bucket: ${AWS_S3_BUCKET}
+      presigned-url-expiration: ${AWS_S3_PRESIGNED_URL_EXPIRATION:600}
+
 
 springdoc:
   api-docs:

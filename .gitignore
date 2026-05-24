@@ -39,3 +39,7 @@ out/
 
 /grafana-data
 .logs/
+
+.discodeit
+.env
+
