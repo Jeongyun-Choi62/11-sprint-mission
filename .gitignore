@@ -41,5 +41,7 @@ out/
 .logs/
 
 .discodeit
+discodeit.env
 .env
+*.env
 

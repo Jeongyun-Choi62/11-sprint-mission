@@ -4,7 +4,7 @@ services:
     image: postgres:17
     environment:
       # TODO: DB 이름, 유저, 비밀번호 환경변수를 설정하세요.
-      #       비밀번호는 .env 파일에서 주입받도록 구성하세요. (${변수명} 문법)
+      #       비밀번호는 discodeit.env 파일에서 주입받도록 구성하세요. (${변수명} 문법)
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DATASOURCE_USERNAME}
       POSTGRES_PASSWORD: ${DATASOURCE_PASSWORD}
@@ -26,8 +26,8 @@ services:
       context: .
       dockerfile: Dockerfile
     env_file:
-      # TODO: .env 파일의 변수들을 환경변수로 주입하세요.
-      - .env
+      # TODO: discodeit.env 파일의 변수들을 환경변수로 주입하세요.
+      - discodeit.env
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE}
       # TODO: DB 연결 URL을 설정하세요.

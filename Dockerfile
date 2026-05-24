@@ -1,4 +1,3 @@
-c
 # 자바 이미지
 FROM amazoncorretto:17
 

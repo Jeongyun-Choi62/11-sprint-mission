@@ -3,7 +3,7 @@ build/
 bin/
 out/
 
-.env
+discodeit.env
 *.local
 
 .idea/
@@ -31,3 +31,5 @@ Thumbs.db
 .gitignore
 .gitattributes
 
+.discodeit/
+*.env
