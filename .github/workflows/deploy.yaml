@@ -53,7 +53,7 @@ jobs:
           --query taskDefinition > task-definition.json
       - name: 새이미지로 교체
         id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v2
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition.json
           container-name: discodeit-app
