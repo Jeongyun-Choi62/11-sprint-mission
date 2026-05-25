@@ -46,13 +46,14 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
 }
 
 jar {
     enabled = false // 쓸모없는 일반 jar 생성을 막습니다.
 }
 
-test { finalizedBy jacocoTestReport }
+
 jacocoTestReport {
     dependsOn test // 무조건 test가 먼저 실행되어야 함
 
