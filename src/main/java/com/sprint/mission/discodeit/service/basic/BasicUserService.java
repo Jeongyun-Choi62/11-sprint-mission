@@ -1,28 +1,30 @@
 package com.sprint.mission.discodeit.service.basic;
 
-import com.sprint.mission.discodeit.dto.userdto.*;
+import com.sprint.mission.discodeit.dto.userdto.UserDto;
+import com.sprint.mission.discodeit.dto.userdto.UserUpdateRequest;
 import com.sprint.mission.discodeit.dto.userdto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.Channel.ChannelType;
 import com.sprint.mission.discodeit.entity.ReadStatus;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
-
 import com.sprint.mission.discodeit.exception.service.user.DupEmailException;
 import com.sprint.mission.discodeit.exception.service.user.DupNameException;
 import com.sprint.mission.discodeit.exception.service.user.NonExistUserException;
 import com.sprint.mission.discodeit.mapper.UserMapper;
-import com.sprint.mission.discodeit.repository.*;
+import com.sprint.mission.discodeit.repository.JPABinaryContentRepository;
+import com.sprint.mission.discodeit.repository.JPAChannelRepository;
+import com.sprint.mission.discodeit.repository.JPAReadStatusRepository;
+import com.sprint.mission.discodeit.repository.JPAUserRepository;
 import com.sprint.mission.discodeit.service.UserService;
-
-
 import com.sprint.mission.discodeit.storage.BinaryContentStorage;
 import java.time.Instant;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,6 +43,8 @@ public class BasicUserService implements UserService {
 
   private final UserMapper userMapper;
 
+  private final PasswordEncoder passwordEncoder;
+
   @Override
   @Transactional
   public UserDto create(UserCreateRequest userCreateRequest, MultipartFile file) {
@@ -57,11 +61,14 @@ public class BasicUserService implements UserService {
       throw new DupEmailException(userCreateRequest.email());
     }
 
+    //비밀번호 인코딩
+    String encodedPassword = passwordEncoder.encode(userCreateRequest.password());
+
     //유저 생성
     User user = new User(
         userCreateRequest.username(),
         userCreateRequest.email(),
-        userCreateRequest.password(),
+        encodedPassword,
         null,
         null
     );
