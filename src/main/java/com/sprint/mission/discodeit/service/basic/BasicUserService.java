@@ -7,6 +7,7 @@ import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.Channel.ChannelType;
 import com.sprint.mission.discodeit.entity.ReadStatus;
 import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.entity.User.Role;
 import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.exception.service.user.DupEmailException;
 import com.sprint.mission.discodeit.exception.service.user.DupNameException;
@@ -209,6 +210,18 @@ public class BasicUserService implements UserService {
     return userMapper.toDto(user);
   }
 
+  @Override
+  @Transactional
+  public UserDto updateUserRole(UUID userId, Role role) {
+
+    log.info("유저 역할 변경 시작. userId : {}", userId);
+    ;
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new NonExistUserException(userId));
+
+    user.updateRole(role);
+    return userMapper.toDto(user);
+  }
 
   @Override
   @Transactional
