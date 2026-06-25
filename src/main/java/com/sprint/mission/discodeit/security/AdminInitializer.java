@@ -1,12 +1,16 @@
 package com.sprint.mission.discodeit.security;
 
+import com.sprint.mission.discodeit.dto.userdto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.entity.User.Role;
+import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.repository.JPAUserRepository;
+import com.sprint.mission.discodeit.service.UserService;
+import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,7 +18,8 @@ import org.springframework.stereotype.Component;
 public class AdminInitializer implements ApplicationRunner {
 
   private final JPAUserRepository userRepository;
-  private final PasswordEncoder passwordEncoder;
+  private final UserService userService;
+
 
   @Value("${admin.username:admin}")
   private String adminUsername;
@@ -29,14 +34,21 @@ public class AdminInitializer implements ApplicationRunner {
       return;
     }
 
-    User admin = new User(
-        adminUsername,
-        "discodeit@discodeit.com",
-        adminPassword,
-        null,
+    userService.create(
+        new UserCreateRequest(
+            adminUsername,
+            "discodeit@discodeit.com",
+            adminPassword
+        ),
         null
     );
-
+    User admin = userRepository.findByUsername(adminUsername).get();
+    admin.updateRole(Role.ADMIN);
     userRepository.save(admin);
+
+    UserStatus adminStatus = new UserStatus(admin, Instant.now());
+    admin.updateStatus(adminStatus);
+
+
   }
 }

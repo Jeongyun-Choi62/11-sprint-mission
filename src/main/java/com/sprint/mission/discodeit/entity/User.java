@@ -5,6 +5,8 @@ import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -27,6 +29,7 @@ public class User extends BaseUpdatableEntity {
   @Column(nullable = false, length = 100, unique = true)
   private String email;
 
+  @Enumerated(EnumType.STRING)
   @Column(length = 20, nullable = false)
   private Role role;
 
