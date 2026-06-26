@@ -16,6 +16,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -55,20 +56,25 @@ public class SecurityConfig {
             .requestMatchers(
                 "/api/auth/csrf-token",      // csrf
                 "/api/auth/login",           // 로그인
-                "/api/auth/logout"           // 로그아웃
+                "/api/auth/logout"// 로그아웃
             ).permitAll()
             .requestMatchers(HttpMethod.POST, "/api/users").permitAll() //회원가입
             .requestMatchers(
                 "/swagger-ui/**",            // 스웨거
                 "/v3/api-docs/**",           // OpenAPI 문서
-                "/actuator/**"               // Actuator
+                "/actuator/**",               // Actuator
+                "/h2-console/**"              //h2
             ).permitAll()
             .requestMatchers(HttpMethod.PUT, "/api/auth/role").hasRole("ADMIN") //롤 변경(관리자만)
             .anyRequest().authenticated() // 외 모두 인증 필요
         )
         .csrf(csrf -> csrf
+            .ignoringRequestMatchers("/h2-console/**")
             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
             .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
+        )
+        .headers(headers -> headers
+            .frameOptions(FrameOptionsConfig::sameOrigin)
         )
         .formLogin(login -> login
             .loginProcessingUrl("/api/auth/login")

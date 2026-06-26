@@ -145,6 +145,7 @@ public class BasicUserService implements UserService {
 
   @Override
   @Transactional
+  @PreAuthorize("#userId == principal.userDto.id")
   public UserDto updateUser(UUID userId, UserUpdateRequest userUpdateRequest, MultipartFile file) {
     log.info("유저 업데이트 요청, userId : {}, updateUserDto : {}", userId, userUpdateRequest);
 
@@ -214,7 +215,6 @@ public class BasicUserService implements UserService {
   public UserDto updateUserRole(UUID userId, Role role) {
 
     log.info("유저 역할 변경 시작. userId : {}", userId);
-    ;
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new NonExistUserException(userId));
 
@@ -234,6 +234,7 @@ public class BasicUserService implements UserService {
 
   @Override
   @Transactional
+  @PreAuthorize("#userId == principal.userDto.id")
   public boolean delete(UUID userId) {
 
     log.info("유저 삭제 요청, userId : {}", userId);
