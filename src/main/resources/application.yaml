@@ -38,6 +38,10 @@ discodeit:
       presigned-url-expiration: ${AWS_S3_PRESIGNED_URL_EXPIRATION:600}
 
 
+  remember-me:
+    key: ${REMEMBER_ME_KEY:nightmare}
+
+
 
 
 admin:

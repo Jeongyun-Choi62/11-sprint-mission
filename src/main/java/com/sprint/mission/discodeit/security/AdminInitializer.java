@@ -3,10 +3,9 @@ package com.sprint.mission.discodeit.security;
 import com.sprint.mission.discodeit.dto.userdto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.User.Role;
-import com.sprint.mission.discodeit.entity.UserStatus;
+import com.sprint.mission.discodeit.exception.service.user.NonExistUserException;
 import com.sprint.mission.discodeit.repository.JPAUserRepository;
 import com.sprint.mission.discodeit.service.UserService;
-import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -42,13 +41,10 @@ public class AdminInitializer implements ApplicationRunner {
         ),
         null
     );
-    User admin = userRepository.findByUsername(adminUsername).get();
+    User admin = userRepository.findByUsername(adminUsername)
+        .orElseThrow(() -> new NonExistUserException("name", adminUsername));
     admin.updateRole(Role.ADMIN);
     userRepository.save(admin);
-
-    UserStatus adminStatus = new UserStatus(admin, Instant.now());
-    admin.updateStatus(adminStatus);
-
 
   }
 }

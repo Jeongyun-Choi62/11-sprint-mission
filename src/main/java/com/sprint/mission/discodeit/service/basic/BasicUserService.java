@@ -8,7 +8,6 @@ import com.sprint.mission.discodeit.entity.Channel.ChannelType;
 import com.sprint.mission.discodeit.entity.ReadStatus;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.User.Role;
-import com.sprint.mission.discodeit.entity.UserStatus;
 import com.sprint.mission.discodeit.exception.service.user.DupEmailException;
 import com.sprint.mission.discodeit.exception.service.user.DupNameException;
 import com.sprint.mission.discodeit.exception.service.user.NonExistUserException;
@@ -17,6 +16,7 @@ import com.sprint.mission.discodeit.repository.JPABinaryContentRepository;
 import com.sprint.mission.discodeit.repository.JPAChannelRepository;
 import com.sprint.mission.discodeit.repository.JPAReadStatusRepository;
 import com.sprint.mission.discodeit.repository.JPAUserRepository;
+import com.sprint.mission.discodeit.security.DiscodeitUserDetails;
 import com.sprint.mission.discodeit.service.UserService;
 import com.sprint.mission.discodeit.storage.BinaryContentStorage;
 import java.time.Instant;
@@ -25,6 +25,8 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +42,7 @@ public class BasicUserService implements UserService {
   private final JPABinaryContentRepository binaryContentRepository;
   private final JPAReadStatusRepository readStatusRepository;
   private final JPAChannelRepository channelRepository;
+  private final SessionRegistry sessionRegistry;
 
   private final BinaryContentStorage binaryContentStorage;
 
@@ -71,7 +74,6 @@ public class BasicUserService implements UserService {
         userCreateRequest.username(),
         userCreateRequest.email(),
         encodedPassword,
-        null,
         null
     );
 
@@ -98,11 +100,6 @@ public class BasicUserService implements UserService {
     } else {
       user.updateProfile(null);
     }
-
-    //유저 스테이터스 생성
-
-    UserStatus userStatus = new UserStatus(user, Instant.now());
-    user.updateStatus(userStatus);
 
     //유저 저장
     userRepository.save(user);
@@ -222,6 +219,16 @@ public class BasicUserService implements UserService {
         .orElseThrow(() -> new NonExistUserException(userId));
 
     user.updateRole(role);
+
+    sessionRegistry.getAllPrincipals().stream()
+        .filter(p -> p instanceof DiscodeitUserDetails)
+        .map(p -> (DiscodeitUserDetails) p)
+        .filter(details -> details.getUserDto().id().equals(userId))
+        .forEach(details ->
+            sessionRegistry.getAllSessions(details, false)
+                .forEach(SessionInformation::expireNow)
+        );
+
     return userMapper.toDto(user);
   }
 

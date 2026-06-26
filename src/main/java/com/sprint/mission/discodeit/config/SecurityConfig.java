@@ -1,9 +1,9 @@
 package com.sprint.mission.discodeit.config;
 
 
-import com.sprint.mission.discodeit.handler.SpaCsrfTokenRequestHandler;
 import com.sprint.mission.discodeit.security.LoginFailureHandler;
 import com.sprint.mission.discodeit.security.LoginSuccessHandler;
+import com.sprint.mission.discodeit.security.SpaCsrfTokenRequestHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +16,8 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -32,6 +34,8 @@ public class SecurityConfig {
 
   private final LoginSuccessHandler loginSuccessHandler;
   private final LoginFailureHandler loginFailureHandler;
+  private final UserDetailsService userDetailsService;
+  private final SessionRegistry sessionRegistry;
 
   @Bean
   static MethodSecurityExpressionHandler methodSecurityExpressionHandler(
@@ -70,6 +74,18 @@ public class SecurityConfig {
             .loginProcessingUrl("/api/auth/login")
             .successHandler(loginSuccessHandler)
             .failureHandler(loginFailureHandler)
+        )
+        .sessionManagement(session -> session
+            .maximumSessions(1)
+            .maxSessionsPreventsLogin(false) //기존 만료
+            .sessionRegistry(sessionRegistry)
+        )
+        .rememberMe(remember -> remember
+            .rememberMeParameter("remember-me")
+            .key("${discodeit.remember-me.key}")
+            .tokenValiditySeconds(3600 * 24 * 14)
+            .alwaysRemember(false)
+            .userDetailsService(userDetailsService)
         )
         .logout(logout -> logout
             .logoutUrl("/api/auth/logout")

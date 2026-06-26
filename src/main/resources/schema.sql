@@ -36,20 +36,6 @@ CREATE TABLE channel
 );
 
 
-
-CREATE TABLE user_status
-(
-
-    id             UUID PRIMARY KEY,
-    created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at     TIMESTAMPTZ,
-    user_id        UUID        NOT NULL UNIQUE,
-    last_active_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-
-    FOREIGN KEY (user_id) REFERENCES "user" (id) ON DELETE CASCADE
-);
-
-
 CREATE TABLE read_status
 (
 
