@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,9 +37,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     if (jwtTokenProvider.validateToken(token)) {
       String subject = jwtTokenProvider.getSubject(token);
 
+      UUID userId = UUID.fromString(subject);
+
       // 가져와서
       DiscodeitUserDetails userDetails =
-          (DiscodeitUserDetails) userDetailsService.loadUserByUsername(subject);
+          (DiscodeitUserDetails) userDetailsService.loadUserById(userId);
 
       // 인증 토큰 생성
       UsernamePasswordAuthenticationToken authentication =

@@ -61,7 +61,8 @@ public class SecurityConfig {
             .requestMatchers(
                 "/api/auth/csrf-token",      // csrf
                 "/api/auth/login",           // 로그인
-                "/api/auth/logout"// 로그아웃
+                "/api/auth/logout",// 로그아웃
+                "/api/auth/refresh" //토큰 재발급
             ).permitAll()
             .requestMatchers(HttpMethod.POST, "/api/users").permitAll() //회원가입
             .requestMatchers(
