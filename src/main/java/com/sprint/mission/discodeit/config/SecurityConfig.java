@@ -1,9 +1,12 @@
 package com.sprint.mission.discodeit.config;
 
 
+import com.sprint.mission.discodeit.security.DiscodeitUserDetailsService;
 import com.sprint.mission.discodeit.security.LoginFailureHandler;
 import com.sprint.mission.discodeit.security.SpaCsrfTokenRequestHandler;
+import com.sprint.mission.discodeit.security.jwt.JwtAuthenticationFilter;
 import com.sprint.mission.discodeit.security.jwt.JwtLoginSuccessHandler;
+import com.sprint.mission.discodeit.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +25,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -36,6 +40,7 @@ public class SecurityConfig {
   private final JwtLoginSuccessHandler jwtloginSuccessHandler;
   private final LoginFailureHandler loginFailureHandler;
   private final UserDetailsService userDetailsService;
+  private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
 
   @Bean
@@ -95,7 +100,9 @@ public class SecurityConfig {
                 response.sendError(401))
             .accessDeniedHandler((request, response, accessDeniedException) ->
                 response.sendError(403))
-        );
+        )
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    ;
     return http.build();
   }
 
@@ -117,5 +124,12 @@ public class SecurityConfig {
     return new HttpStatusReturningLogoutSuccessHandler(HttpStatus.NO_CONTENT);
   }
 
+  @Bean
+  public JwtAuthenticationFilter jwtAuthenticationFilter(
+      JwtTokenProvider jwtTokenProvider,
+      DiscodeitUserDetailsService userDetailsService
+  ) {
+    return new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService);
+  }
 
 }
