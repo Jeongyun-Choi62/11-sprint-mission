@@ -44,7 +44,7 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
     ResponseCookie refreshCookie = ResponseCookie.from(
             JwtTokenProvider.REFRESH_TOKEN_COOKIE_NAME, refreshToken)
         .httpOnly(true)          // JS 접근 불가
-        .secure(true)            // HTTPS
+        .secure(false)            // HTTPS
         .path("/")
         .maxAge(Duration.ofDays(14))  //2주
         .sameSite("Strict")      // CSRF 완화

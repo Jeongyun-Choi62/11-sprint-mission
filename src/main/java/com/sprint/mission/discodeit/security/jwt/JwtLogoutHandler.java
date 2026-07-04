@@ -44,7 +44,7 @@ public class JwtLogoutHandler implements LogoutHandler {
           ResponseCookie deleteCookie = ResponseCookie.from(
                   JwtTokenProvider.REFRESH_TOKEN_COOKIE_NAME, "")
               .httpOnly(true)
-              .secure(true)        // 로컬 http면 false
+              .secure(false)        // 로컬 http면 false
               .path("/")
               .maxAge(0)           // 즉시 삭제
               .sameSite("Strict")
