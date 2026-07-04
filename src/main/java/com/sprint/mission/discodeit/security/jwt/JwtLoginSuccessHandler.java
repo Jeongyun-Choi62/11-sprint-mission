@@ -3,6 +3,7 @@ package com.sprint.mission.discodeit.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sprint.mission.discodeit.dto.jwt.JwtDto;
+import com.sprint.mission.discodeit.dto.jwt.JwtInformation;
 import com.sprint.mission.discodeit.security.DiscodeitUserDetails;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +24,7 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
 
   private final JwtTokenProvider jwtTokenProvider;
   private final ObjectMapper objectMapper;
-  //private final JwtRegistry jwtRegistry;
+  private final JwtRegistry jwtRegistry;
 
 
   @Override
@@ -34,6 +35,11 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
 
     String accessToken = jwtTokenProvider.generateAccessToken(details);
     String refreshToken = jwtTokenProvider.generateRefreshToken(details);
+
+    //registry 등록
+    JwtInformation jwtInformation = new JwtInformation(
+        details.getUserDto(), accessToken, refreshToken);
+    jwtRegistry.registerJwtInformation(jwtInformation);
 
     ResponseCookie refreshCookie = ResponseCookie.from(
             JwtTokenProvider.REFRESH_TOKEN_COOKIE_NAME, refreshToken)

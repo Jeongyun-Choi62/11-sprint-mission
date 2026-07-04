@@ -3,6 +3,7 @@ package com.sprint.mission.discodeit.security.jwt;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -14,7 +15,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class JwtLogoutHandler implements LogoutHandler {
 
-  //private final JwtRegistry jwtRegistry;
+  private final JwtTokenProvider jwtTokenProvider;
+  private final JwtRegistry jwtRegistry;
 
   @Override
   public void logout(HttpServletRequest request, HttpServletResponse response,
@@ -29,11 +31,15 @@ public class JwtLogoutHandler implements LogoutHandler {
         .findFirst()
         .ifPresent(cookie -> {
 
-          // jwtRegistry.invalidate(refreshToken);
+          String refreshToken = cookie.getValue();
 
-          //TODO 3: 응답에 만료된(또는 빈 값의) 쿠키를 다시 설정해서
-          //         브라우저에서도 쿠키가 삭제되도록 하세요.
-          //         힌트: 같은 이름의 쿠키를 maxAge=0으로 설정하면 브라우저가 즉시 삭제합니다.
+          try {
+            String subject = jwtTokenProvider.getSubject(refreshToken);
+            UUID userId = UUID.fromString(subject);
+            jwtRegistry.invalidateJwtInformationByUserId(userId);
+          } catch (Exception e) {
+            //예외 나도 삼키고 쿠키 삭제 진행
+          }
 
           ResponseCookie deleteCookie = ResponseCookie.from(
                   JwtTokenProvider.REFRESH_TOKEN_COOKIE_NAME, "")
@@ -47,6 +53,5 @@ public class JwtLogoutHandler implements LogoutHandler {
           response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
         });
 
-    // ???
   }
 }
