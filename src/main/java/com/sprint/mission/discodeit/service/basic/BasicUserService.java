@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.service.basic;
 
+import com.sprint.mission.discodeit.dto.binarycontentdto.event.BinaryContentCreatedEvent;
 import com.sprint.mission.discodeit.dto.userdto.UserDto;
 import com.sprint.mission.discodeit.dto.userdto.UserUpdateRequest;
 import com.sprint.mission.discodeit.dto.userdto.request.UserCreateRequest;
@@ -18,12 +19,12 @@ import com.sprint.mission.discodeit.repository.JPAReadStatusRepository;
 import com.sprint.mission.discodeit.repository.JPAUserRepository;
 import com.sprint.mission.discodeit.security.jwt.JwtRegistry;
 import com.sprint.mission.discodeit.service.UserService;
-import com.sprint.mission.discodeit.storage.BinaryContentStorage;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class BasicUserService implements UserService {
   private final JPAChannelRepository channelRepository;
   private final JwtRegistry jwtRegistry;
 
-  private final BinaryContentStorage binaryContentStorage;
+  private final ApplicationEventPublisher eventPublisher;
 
   private final UserMapper userMapper;
 
@@ -88,7 +89,9 @@ public class BasicUserService implements UserService {
             file.getContentType(),
             file.getSize()
         );
-        binaryContentStorage.put(content.getId(), file.getBytes());
+        eventPublisher.publishEvent(
+            new BinaryContentCreatedEvent(content.getId(), content, file.getBytes())
+        );
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
@@ -189,7 +192,10 @@ public class BasicUserService implements UserService {
             file.getContentType(),
             file.getSize()
         );
-        binaryContentStorage.put(newContent.getId(), file.getBytes());
+
+        eventPublisher.publishEvent(
+            new BinaryContentCreatedEvent(newContent.getId(), newContent, file.getBytes()));
+
         log.info("프로필 생성 완료, newContent : {}", newContent);
 
       } catch (Exception e) {
