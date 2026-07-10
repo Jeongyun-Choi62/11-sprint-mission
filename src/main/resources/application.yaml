@@ -73,6 +73,10 @@ management:
     env:
       enabled: true # info 블록의 모든 값을 보기 위한 설정
 
+  observations:
+    annotations:
+      enabled: true
+
 info:
   app:
     name: discodeit

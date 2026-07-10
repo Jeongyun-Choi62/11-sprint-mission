@@ -19,6 +19,7 @@ import com.sprint.mission.discodeit.repository.JPAChannelRepository;
 import com.sprint.mission.discodeit.repository.JPAMessageRepository;
 import com.sprint.mission.discodeit.repository.JPAUserRepository;
 import com.sprint.mission.discodeit.service.MessageService;
+import io.micrometer.core.annotation.Timed;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,7 @@ public class BasicMessageService implements MessageService {
 
   @Override
   @Transactional
+  @Timed("message.create.async")
   public MessageDto create(MessageCreateRequest messageCreateRequest,
       List<MultipartFile> attachments) {
 
@@ -106,18 +108,19 @@ public class BasicMessageService implements MessageService {
       //첨부파일 목록 업데이트
       message.updateAttachments(binaryContents);
 
-      //알림 발생
-      eventPublisher.publishEvent(
-          new MessageCreatedEvent(
-              message.getId(),
-              channel.getId(),
-              channel.getName(),
-              message.getAuthor().getId(),
-              message.getAuthor().getUsername(),
-              message.getContent()
-          )
-      );
     }
+
+    //알림 발생
+    eventPublisher.publishEvent(
+        new MessageCreatedEvent(
+            message.getId(),
+            channel.getId(),
+            channel.getName(),
+            message.getAuthor().getId(),
+            message.getAuthor().getUsername(),
+            message.getContent()
+        )
+    );
 
     //메시지 저장 + 영속성 전이로 메타데이터도 저장
     message = messageRepository.saveAndFlush(message);

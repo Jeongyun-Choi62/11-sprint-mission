@@ -40,7 +40,7 @@ public class BasicNotificationService implements NotificationService {
     Notification notification = notificationRepository.findById(notificationId)
         .orElseThrow(() -> new NonExistNotificationException(notificationId));
 
-    if (notification.getReceiveId().equals(userId)) {
+    if (!notification.getReceiveId().equals(userId)) {
       throw new AccessDeniedException("userId", userId);
     }
 

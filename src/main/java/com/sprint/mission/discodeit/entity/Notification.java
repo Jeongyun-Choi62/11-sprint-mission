@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Notification extends BaseEntity {
 
-  @Column(nullable = false)
+  @Column(name = "receiver_id", nullable = false)
   UUID receiveId;
 
   @Column(nullable = false, length = 255)

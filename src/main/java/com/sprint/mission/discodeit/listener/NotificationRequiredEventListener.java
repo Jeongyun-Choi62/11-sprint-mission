@@ -8,6 +8,7 @@ import com.sprint.mission.discodeit.repository.JPAReadStatusRepository;
 import com.sprint.mission.discodeit.service.NotificationService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
 
@@ -18,7 +19,7 @@ public class NotificationRequiredEventListener {
   private final JPAReadStatusRepository readStatusRepository;
   private final NotificationService notificationService;
 
-
+  @Async("eventTaskExecutor")
   @TransactionalEventListener
   public void on(MessageCreatedEvent event) {
 
@@ -35,6 +36,7 @@ public class NotificationRequiredEventListener {
 
   }
 
+  @Async("eventTaskExecutor")
   @TransactionalEventListener
   public void on(RoleUpdatedEvent event) {
     notificationService.create(
