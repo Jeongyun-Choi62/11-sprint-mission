@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.dto.binarycontentdto.event.BinaryContentCreatedEvent;
 import com.sprint.mission.discodeit.dto.messagedto.MessageDto;
+import com.sprint.mission.discodeit.dto.messagedto.event.MessageCreatedEvent;
 import com.sprint.mission.discodeit.dto.messagedto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.messagedto.request.MessageUpdateRequest;
 import com.sprint.mission.discodeit.dto.response.PageResponse;
@@ -104,6 +105,18 @@ public class BasicMessageService implements MessageService {
       });
       //첨부파일 목록 업데이트
       message.updateAttachments(binaryContents);
+
+      //알림 발생
+      eventPublisher.publishEvent(
+          new MessageCreatedEvent(
+              message.getId(),
+              channel.getId(),
+              channel.getName(),
+              message.getAuthor().getId(),
+              message.getAuthor().getUsername(),
+              message.getContent()
+          )
+      );
     }
 
     //메시지 저장 + 영속성 전이로 메타데이터도 저장

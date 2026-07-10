@@ -3,6 +3,7 @@ package com.sprint.mission.discodeit.service.basic;
 import com.sprint.mission.discodeit.dto.binarycontentdto.event.BinaryContentCreatedEvent;
 import com.sprint.mission.discodeit.dto.userdto.UserDto;
 import com.sprint.mission.discodeit.dto.userdto.UserUpdateRequest;
+import com.sprint.mission.discodeit.dto.userdto.event.RoleUpdatedEvent;
 import com.sprint.mission.discodeit.dto.userdto.request.UserCreateRequest;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.Channel.ChannelType;
@@ -110,7 +111,7 @@ public class BasicUserService implements UserService {
 
       if (channel.getType() == ChannelType.PUBLIC) {
         readStatusRepository.save(
-            new ReadStatus(user, channel, Instant.now().minusSeconds(1)));
+            new ReadStatus(user, channel, Instant.now().minusSeconds(1), false));
       }
 
     });
@@ -222,9 +223,19 @@ public class BasicUserService implements UserService {
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new NonExistUserException(userId));
 
+    Role oldRole = user.getRole();
+
     user.updateRole(role);
 
     jwtRegistry.invalidateJwtInformationByUserId(userId);
+
+    //알림 발생 이벤트
+    eventPublisher.publishEvent(new RoleUpdatedEvent(
+
+        userId,
+        oldRole,
+        role
+    ));
 
     return userMapper.toDto(user);
   }

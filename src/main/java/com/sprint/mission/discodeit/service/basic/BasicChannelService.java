@@ -72,7 +72,8 @@ public class BasicChannelService implements ChannelService {
       ReadStatus readStatus = new ReadStatus(
           user,
           channel,
-          Instant.now()
+          Instant.now(),
+          false
 
       );
       readStatusRepository.save(readStatus);
@@ -115,7 +116,8 @@ public class BasicChannelService implements ChannelService {
       ReadStatus readStatus = new ReadStatus(
           userRepository.findById(userId).orElseThrow(() -> new NonExistUserException(userId)),
           channel,
-          Instant.now()
+          Instant.now(),
+          true
       );
       readStatusRepository.save(readStatus);
 
