@@ -23,7 +23,8 @@ public class BinaryContentMapper {
         binaryContent.getId(),
         binaryContent.getFileName(),
         binaryContent.getSize(),
-        binaryContent.getContentType()
+        binaryContent.getContentType(),
+        binaryContent.getStatus()
 
     );
 
