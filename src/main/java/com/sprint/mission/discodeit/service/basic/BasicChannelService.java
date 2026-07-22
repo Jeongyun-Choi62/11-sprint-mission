@@ -28,6 +28,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -51,6 +53,7 @@ public class BasicChannelService implements ChannelService {
   @Override
   @PreAuthorize("hasRole('CHANNEL_MANAGER')")
   @Transactional
+  @CacheEvict(cacheNames = "channels", allEntries = true)
   public ChannelDto createPublic(PublicChannelCreateRequest publicChannelCreateRequest) {
 
     log.info("공개 채널 생성 요청: {}", publicChannelCreateRequest);
@@ -97,6 +100,7 @@ public class BasicChannelService implements ChannelService {
 
   @Override
   @Transactional
+  @CacheEvict(cacheNames = "channels", allEntries = true)
   public ChannelDto createPrivate(PrivateChannelCreateRequest privateChannelCreateRequest) {
 
     log.info("개인 채널 생성 : {}", privateChannelCreateRequest);
@@ -142,6 +146,7 @@ public class BasicChannelService implements ChannelService {
 
   @Override
   @Transactional(readOnly = true)
+  @Cacheable(cacheNames = "channels", key = "#userId")
   public List<ChannelDto> findAllByUserId(UUID userId) {
 
     //유저가 속한 채널을 쿼리 한번에 가져옴.
@@ -181,6 +186,7 @@ public class BasicChannelService implements ChannelService {
   @Override
   @PreAuthorize("hasRole('CHANNEL_MANAGER')")
   @Transactional
+  @CacheEvict(cacheNames = "channels", allEntries = true)
   public ChannelDto updateChannel(UUID channelId,
       PublicChanelUpdateRequest publicChanelUpdateRequest) {
 
@@ -215,6 +221,7 @@ public class BasicChannelService implements ChannelService {
 
   @Override
   @Transactional
+  @CacheEvict(cacheNames = "channels", allEntries = true)
   public void deleteChannel(UUID channelId) {
 
     log.info("채널 삭제 시작, channelId : {}", channelId);

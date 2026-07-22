@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -52,6 +54,7 @@ public class BasicUserService implements UserService {
 
   @Override
   @Transactional
+  @CacheEvict(cacheNames = "users", allEntries = true)
   public UserDto create(UserCreateRequest userCreateRequest, MultipartFile file) {
 
     log.info("유저 생성 요청 : {}", userCreateRequest);
@@ -133,6 +136,7 @@ public class BasicUserService implements UserService {
   }
 
   @Transactional(readOnly = true)
+  @Cacheable(cacheNames = "users")
   @Override
   public List<UserDto> findAll() {
 
@@ -148,6 +152,7 @@ public class BasicUserService implements UserService {
   @Override
   @Transactional
   @PreAuthorize("#userId == principal.userDto.id")
+  @CacheEvict(cacheNames = "users", allEntries = true)
   public UserDto updateUser(UUID userId, UserUpdateRequest userUpdateRequest, MultipartFile file) {
     log.info("유저 업데이트 요청, userId : {}, updateUserDto : {}", userId, userUpdateRequest);
 
@@ -243,6 +248,7 @@ public class BasicUserService implements UserService {
   @Override
   @Transactional
   @PreAuthorize("#userId == principal.userDto.id")
+  @CacheEvict(cacheNames = "users", allEntries = true)
   public boolean delete(UUID userId) {
 
     log.info("유저 삭제 요청, userId : {}", userId);

@@ -40,7 +40,7 @@ public class LocalBinaryContentStorage implements BinaryContentStorage {
   @Override
   public UUID put(UUID id, byte[] bytes) {
 
-    // 시간 체크
+    //시간 체크
 //    try {
 //      Thread.sleep(3000);
 //    } catch (InterruptedException e) {
